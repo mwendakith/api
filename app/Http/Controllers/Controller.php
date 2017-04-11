@@ -94,7 +94,7 @@ class Controller extends BaseController
 		     AVG(tat4) as collection_to_dispatch';
 	}
 
-	protected function hei_outcomes_query(){
+	protected function hei_validation_query(){
 		return 'SUM(validation_confirmedpos) as confirmed_pos,
 		 SUM(validation_repeattest) as repeat_test, 
 		 SUM(validation_viralload) as viral_load,
@@ -102,7 +102,7 @@ class Controller extends BaseController
 		  SUM(validation_unknownsite) as unknown_facility';
 	}
 
-	protected function hei_validation_query(){
+	protected function hei_outcomes_query(){
 		return 'SUM(ltfu) as lost_to_follow_up,
 		 SUM(dead) as dead, 
 		 SUM(adult) as adult,

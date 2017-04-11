@@ -65,6 +65,8 @@ $api->version('v1', function (Router $api) {
 
         $api->get('hei/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@hei_outcomes');
 
+        $api->get('hei_validation/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@hei_validation');
+
         $api->get('age_breakdown/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@age_breakdown');
 
         $api->get('entry_point/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@entry_point');
@@ -85,6 +87,8 @@ $api->version('v1', function (Router $api) {
 
         $api->get('hei/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@hei_outcomes');
 
+        $api->get('hei_validation/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@hei_validation');
+
         $api->get('age_breakdown/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@age_breakdown');
 
         $api->get('entry_point/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@entry_point');
@@ -92,6 +96,59 @@ $api->version('v1', function (Router $api) {
         $api->get('mprophylaxis/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@mother_prophylaxis');
 
         $api->get('iprophylaxis/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@infant_prophylaxis');
+    });
+
+    $api->group(['prefix' => 'partner'], function(Router $api) {
+
+        $api->get('partners', 'App\\Api\\V1\\Controllers\\PartnerController@partners');
+
+        $api->get('info/{partner}/', 'App\\Api\\V1\\Controllers\\PartnerController@info');
+
+        $api->get('summary/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@summary');
+
+        $api->get('hei/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@hei_outcomes');
+
+        $api->get('hei_validation/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@hei_validation');
+
+        $api->get('age_breakdown/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@age_breakdown');
+
+        $api->get('entry_point/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@entry_point');
+
+        $api->get('mprophylaxis/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@mother_prophylaxis');
+
+        $api->get('iprophylaxis/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@infant_prophylaxis');
+    });
+
+    $api->group(['prefix' => 'lab'], function(Router $api) {
+
+        $api->get('labs', 'App\\Api\\V1\\Controllers\\LabController@labs');
+
+        $api->get('info/{lab}/', 'App\\Api\\V1\\Controllers\\LabController@info');
+
+        $api->get('summary/{lab}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\LabController@summary');
+
+    });
+
+    $api->group(['prefix' => 'site'], function(Router $api) {
+
+        $api->get('sites', 'App\\Api\\V1\\Controllers\\SiteController@sites');
+
+        $api->get('unsupported_sites', 'App\\Api\\V1\\Controllers\\SiteController@unsupported_sites');
+
+        $api->get('info/{site}/', 'App\\Api\\V1\\Controllers\\SiteController@info');
+
+        $api->get('summary/{site}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SiteController@summary');
+
+        $api->get('hei/{site}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SiteController@hei_outcomes');
+
+        $api->get('hei_validation/{site}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SiteController@hei_validation');
+
+        $api->get('partner_sites/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SiteController@partner_sites');
+
+        $api->get('county_sites/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SiteController@county_sites');
+
+        $api->get('subcounty_sites/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SiteController@subcounty_sites');
+
     });
 
 

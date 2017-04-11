@@ -34,6 +34,8 @@ class NationalController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('national_summary')->select('month', DB::raw($raw))->where('year', $year)->where('month', $month)->groupBy('month')->get();
 		}
 
@@ -80,6 +82,8 @@ class NationalController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('national_summary')->select('month', DB::raw($raw))->where('year', $year)->where('month', $month)->groupBy('month')->get();
 		}
 
@@ -126,6 +130,8 @@ class NationalController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('national_summary')->select('month', DB::raw($raw))->where('year', $year)->where('month', $month)->groupBy('month')->get();
 		}
 
@@ -174,6 +180,8 @@ class NationalController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('national_agebreakdown')->select('month', DB::raw($raw))->where('year', $year)->where('month', $month)->groupBy('month')->get();
 		}
 
@@ -223,6 +231,8 @@ class NationalController extends Controller
 		// For a particular month
 		else if($type == 3){
 
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+
 			$data = DB::table('national_entrypoint')->select('month', DB::raw($raw))->leftJoin('entry_points', 'entry_points.ID', '=', 'national_entrypoint.entrypoint')->where('year', $year)->where('month', $month)->groupBy('name')->groupBy('month')->get();
 		}
 
@@ -270,6 +280,8 @@ class NationalController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 
 			$data = DB::table('national_mprophylaxis')->select('month', DB::raw($raw))->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_mprophylaxis.prophylaxis')->where('year', $year)->where('month', $month)->groupBy('name')->groupBy('month')->get();
 		}
@@ -319,6 +331,8 @@ class NationalController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 
 			$data = DB::table('national_iprophylaxis')->select('month', DB::raw($raw))->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_iprophylaxis.prophylaxis')->where('year', $year)->where('month', $month)->groupBy('name')->groupBy('month')->get();
 		}

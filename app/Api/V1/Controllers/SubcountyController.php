@@ -57,6 +57,8 @@ class SubcountyController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('subcounty_summary')
 			->select('month', DB::raw($raw))
 			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
@@ -141,6 +143,8 @@ class SubcountyController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('subcounty_summary')
 			->select('month', DB::raw($raw))
 			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
@@ -225,6 +229,8 @@ class SubcountyController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('subcounty_summary')
 			->select('month', DB::raw($raw))
 			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
@@ -310,6 +316,8 @@ class SubcountyController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('subcounty_agebreakdown')
 			->leftJoin('districts', 'districts.ID', '=', 'subcounty_agebreakdown.subcounty')
 			->select('month', DB::raw($raw))
@@ -399,6 +407,8 @@ class SubcountyController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 
 			$data = DB::table('subcounty_entrypoint')
 			->select('month', DB::raw($raw))
@@ -493,6 +503,8 @@ class SubcountyController extends Controller
 		// For a particular month
 		else if($type == 3){
 
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+
 			$data = DB::table('subcounty_mprophylaxis')
 			->select('month', DB::raw($raw))
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_mprophylaxis.prophylaxis')
@@ -586,6 +598,8 @@ class SubcountyController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 
 			$data = DB::table('subcounty_iprophylaxis')
 			->select('month', DB::raw($raw))

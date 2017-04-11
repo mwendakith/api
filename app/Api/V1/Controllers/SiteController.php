@@ -12,62 +12,95 @@ class SiteController extends Controller
 {
     //
 
-    public function subcounties(){
-    	return DB::table('districts')->orderBy('ID')->get();
+	public function unsupported_sites(){
+    	$raw = '';
+
+    	return DB::table('facilitys')
+			->select('facilitys.ID as site_id', 'facilitys.facilitycode as SiteMFLCode', 'facilitys.DHIScode as SiteDHISCode', 'facilitys.name as site', 'districts.ID as subcounty_id', 'districts.name as subcounty', 'countys.ID as county_id', 'countys.name as county')
+			->join('districts', 'districts.ID', '=', 'facilitys.district')
+			->join('countys', 'countys.ID', '=', 'districts.county')
+			->where('facilitys.partner', 0)->get();
     }
 
-    public function info($subcounty){
-    	return DB::table('districts')->where('ID', $subcounty)->orWhere('SubCountyDHISCode', $subcounty)->orWhere('SubCountyMFLCode', $subcounty)->get();
+
+    public function sites(){
+    	return DB::table('facilitys')
+    	->select('facilitys.ID as site_id', 'facilitys.facilitycode as SiteMFLCode', 'facilitys.DHIScode as SiteDHISCode', 'facilitys.name as site')->orderBy('ID')->get();
     }
 
-    public function summary($subcounty, $year, $type, $month=NULL){
+    public function info($site){
+    	$raw = '';
+
+    	return DB::table('facilitys')
+			->select('facilitys.ID as site_id', 'facilitys.facilitycode as SiteMFLCode', 'facilitys.DHIScode as SiteDHISCode', 'facilitys.name as site', 'districts.ID as subcounty_id', 'districts.name as subcounty', 'countys.ID as county_id', 'countys.name as county', 'partners.ID as partner_id', 'partners.name as partner')
+			->join('districts', 'districts.ID', '=', 'facilitys.district')
+			->join('countys', 'countys.ID', '=', 'districts.county')
+			->join('partners', 'partners.ID', '=', 'facilitys.partner')
+			->where('facilitys.ID', $site)->orWhere('facilitycode', $site)->orWhere('DHIScode', $site)->get();
+    }
+
+    public function summary($site, $year, $type, $month=NULL){
 
 		$data = NULL;
 
-		$raw = 'districts.ID as subcounty_id, districts.name as subcounty, ' . $this->summary_query();
+		$raw = 'facilitys.ID as site_id, facilitys.name as site, ' . $this->summary_query();
 		
 
 		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('subcounty_summary')
+			$data = DB::table('site_summary')
 			->select(DB::raw($raw))
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
+			->when($site, function($query) use ($site){
+				if($site != 0) return $query->where('facilitys.ID', $site);
+
+				else{
+					return $query->orderBy('all_tests')->limit(50);
+				}
 			})
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 
 		}
 
 		// For the whole year but has per month
 		else if($type == 2){
-			$data = DB::table('subcounty_summary')
+			$data = DB::table('site_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
+			->when($site, function($query) use ($site){
+				if($site != 0) return $query->where('facilitys.ID', $site);
+
+				else{
+					return $query->orderBy('all_tests')->limit(50);
+				}
 			})
 			->groupBy('month')
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
 		// For a particular month
 		else if($type == 3){
-			$data = DB::table('subcounty_summary')
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+			$data = DB::table('site_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
+			->when($site, function($query) use ($site){
+				if($site != 0) return $query->where('facilitys.ID', $site);
+
+				else{
+					return $query->orderBy('all_tests')->limit(50);
+				}
 			})
 			->where('month', $month)
 			->groupBy('month')
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
@@ -81,16 +114,20 @@ class SiteController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('subcounty_summary')
+			$data = DB::table('site_summary')
 			->select(DB::raw($raw))
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
+			->when($site, function($query) use ($site){
+				if($site != 0) return $query->where('facilitys.ID', $site);
+
+				else{
+					return $query->orderBy('all_tests')->limit(50);
+				}
 			})
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
@@ -104,54 +141,68 @@ class SiteController extends Controller
 
 	}
 
-	public function hei_outcomes($subcounty, $year, $type, $month=NULL){
+	public function hei_outcomes($site, $year, $type, $month=NULL){
 
 		$data = NULL;
 
-		$raw = 'districts.ID as subcounty_id, districts.name as subcounty, ' . $this->hei_outcomes_query();
+		$raw = 'facilitys.ID as site_id, facilitys.name as site, ' . $this->hei_outcomes_query();
 		
 
 		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('subcounty_summary')
+			$data = DB::table('site_summary')
 			->select(DB::raw($raw))
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->when($site, function($query) use ($site){
+				if($site != 0) return $query->where('facilitys.ID', $site);
+
+				else{
+					return $query->orderBy('lost_to_follow_up')->limit(50);
+				}
 			})
 			->where('year', $year)
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 
 		}
 
 		// For the whole year but has per month
 		else if($type == 2){
-			$data = DB::table('subcounty_summary')
+			$data = DB::table('site_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
+			->when($site, function($query) use ($site){
+				if($site != 0) return $query->where('facilitys.ID', $site);
+
+				else{
+					return $query->orderBy('lost_to_follow_up')->limit(50);
+				}
 			})
 			->groupBy('month')
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
 		// For a particular month
 		else if($type == 3){
-			$data = DB::table('subcounty_summary')
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+			$data = DB::table('site_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
+			->when($site, function($query) use ($site){
+				if($site != 0) return $query->where('facilitys.ID', $site);
+
+				else{
+					return $query->orderBy('lost_to_follow_up')->limit(50);
+				}
 			})
 			->where('month', $month)
 			->groupBy('month')
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
@@ -165,16 +216,20 @@ class SiteController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('subcounty_summary')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
+			$data = DB::table('site_summary')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->select(DB::raw($raw))
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
+			->when($site, function($query) use ($site){
+				if($site != 0) return $query->where('facilitys.ID', $site);
+
+				else{
+					return $query->orderBy('lost_to_follow_up')->limit(50);
+				}
 			})
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
@@ -188,54 +243,68 @@ class SiteController extends Controller
 
 	}
 
-	public function hei_validation($subcounty, $year, $type, $month=NULL){
+	public function hei_validation($site, $year, $type, $month=NULL){
 
 		$data = NULL;
 
-		$raw = 'districts.ID as subcounty_id, districts.name as subcounty, ' . $this->hei_validation_query();
+		$raw = 'facilitys.ID as site_id, facilitys.name as site, ' . $this->hei_validation_query();
 		
 
 		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('subcounty_summary')
+			$data = DB::table('site_summary')
 			->select(DB::raw($raw))
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->when($site, function($query) use ($site){
+				if($site != 0) return $query->where('facilitys.ID', $site);
+
+				else{
+					return $query->orderBy('confirmed_pos')->limit(50);
+				}
 			})
 			->where('year', $year)
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 
 		}
 
 		// For the whole year but has per month
 		else if($type == 2){
-			$data = DB::table('subcounty_summary')
+			$data = DB::table('site_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
+			->when($site, function($query) use ($site){
+				if($site != 0) return $query->where('facilitys.ID', $site);
+
+				else{
+					return $query->orderBy('confirmed_pos')->limit(50);
+				}
 			})
 			->groupBy('month')
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
 		// For a particular month
 		else if($type == 3){
-			$data = DB::table('subcounty_summary')
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+			$data = DB::table('site_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
+			->when($site, function($query) use ($site){
+				if($site != 0) return $query->where('facilitys.ID', $site);
+
+				else{
+					return $query->orderBy('confirmed_pos')->limit(50);
+				}
 			})
 			->where('month', $month)
 			->groupBy('month')
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
@@ -249,16 +318,20 @@ class SiteController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('subcounty_summary')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
+			$data = DB::table('site_summary')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->select(DB::raw($raw))
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
+			->when($site, function($query) use ($site){
+				if($site != 0) return $query->where('facilitys.ID', $site);
+
+				else{
+					return $query->orderBy('confirmed_pos')->limit(50);
+				}
 			})
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
@@ -273,54 +346,54 @@ class SiteController extends Controller
 	}
 
 
-	public function age_breakdown($subcounty, $year, $type, $month=NULL){
+	public function partner_sites($partner, $year, $type, $month=NULL){
 
 		$data = NULL;
 
-		$raw = 'districts.ID as subcounty_id, districts.name as subcounty, ' . $this->age_breakdown_query();
+		$raw = 'facilitys.ID as site_id, facilitys.name as site, ' . $this->summary_query();
 		
 
 		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('subcounty_agebreakdown')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_agebreakdown.subcounty')
+			$data = DB::table('site_summary')
 			->select(DB::raw($raw))
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
-			->groupBy('districts.ID', 'districts.name')
+			->where('facilitys.partner', $partner)
+			->orderBy('all_tests')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 
 		}
 
 		// For the whole year but has per month
 		else if($type == 2){
-			$data = DB::table('subcounty_agebreakdown')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_agebreakdown.subcounty')
+			$data = DB::table('site_summary')
 			->select('month', DB::raw($raw))
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
+			->where('facilitys.partner', $partner)
+			->orderBy('facilitys.ID')
+			->orderBy('site_summary.month')
 			->groupBy('month')
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
 		// For a particular month
 		else if($type == 3){
-			$data = DB::table('subcounty_agebreakdown')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_agebreakdown.subcounty')
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+			$data = DB::table('site_summary')
 			->select('month', DB::raw($raw))
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
+			->where('facilitys.partner', $partner)
+			->orderBy('all_tests')
 			->where('month', $month)
 			->groupBy('month')
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
@@ -334,16 +407,15 @@ class SiteController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('subcounty_agebreakdown')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_agebreakdown.subcounty')
+			$data = DB::table('site_summary')
 			->select(DB::raw($raw))
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
+			->where('facilitys.partner', $partner)
+			->orderBy('all_tests')
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
@@ -357,62 +429,57 @@ class SiteController extends Controller
 
 	}
 
+	public function county_sites($county, $year, $type, $month=NULL){
 
-	public function entry_point($subcounty, $year, $type, $month=NULL){
 		$data = NULL;
 
-		$raw = 'districts.ID as subcounty_id, districts.name as subcounty, ' . $this->entry_point_query();
+		$raw = 'facilitys.ID as site_id, facilitys.name as site, ' . $this->summary_query();
+		
 
-		  // Totals for the whole year
+		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('subcounty_entrypoint')
+			$data = DB::table('site_summary')
 			->select(DB::raw($raw))
-			->leftJoin('entry_points', 'entry_points.ID', '=', 'subcounty_entrypoint.entrypoint')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_entrypoint.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('districts', 'districts.ID', '=', 'facilitys.district')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
-			->groupBy('name')
-			->groupBy('districts.ID', 'districts.name')
+			->where('districts.county', $county)
+			->orderBy('all_tests')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 
 		}
 
 		// For the whole year but has per month
 		else if($type == 2){
-
-			$data = DB::table('subcounty_entrypoint')
+			$data = DB::table('site_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('entry_points', 'entry_points.ID', '=', 'subcounty_entrypoint.entrypoint')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_entrypoint.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('districts', 'districts.ID', '=', 'facilitys.district')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
-			->groupBy('name')
+			->where('districts.county', $county)
+			->orderBy('facilitys.ID')
+			->orderBy('site_summary.month')
 			->groupBy('month')
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
-
 		}
 
 		// For a particular month
 		else if($type == 3){
 
-			$data = DB::table('subcounty_entrypoint')
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+			$data = DB::table('site_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('entry_points', 'entry_points.ID', '=', 'subcounty_entrypoint.entrypoint')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_entrypoint.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('districts', 'districts.ID', '=', 'facilitys.district')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
+			->where('districts.county', $county)
+			->orderBy('all_tests')
 			->where('month', $month)
-			->groupBy('name')
 			->groupBy('month')
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
@@ -421,24 +488,21 @@ class SiteController extends Controller
 		else if($type == 4){
 
 			if($month < 1 || $month > 4) return $this->invalid_quarter($month);
-
+			
 			$my_range = $this->quarter_range($month);
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-
-			$data = DB::table('subcounty_entrypoint')
+			$data = DB::table('site_summary')
 			->select(DB::raw($raw))
-			->leftJoin('entry_points', 'entry_points.ID', '=', 'subcounty_entrypoint.entrypoint')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_entrypoint.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('districts', 'districts.ID', '=', 'facilitys.district')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
-			->groupBy('name')
+			->where('districts.county', $county)
+			->orderBy('all_tests')
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
@@ -446,66 +510,61 @@ class SiteController extends Controller
 		else{
 			return $this->invalid_type($type);
 		}
+
 		
 		return $data;
 
 	}
 
-	public function mother_prophylaxis($subcounty, $year, $type, $month=NULL){
+
+	public function subcounty_sites($subcounty, $year, $type, $month=NULL){
+
 		$data = NULL;
 
-		$raw = 'districts.ID as subcounty_id, districts.name as subcounty, ' . $this->mother_prophylaxis_query();
+		$raw = 'facilitys.ID as site_id, facilitys.name as site, ' . $this->summary_query();
+		
 
-		  // Totals for the whole year
+		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('subcounty_mprophylaxis')
+			$data = DB::table('site_summary')
 			->select(DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_mprophylaxis.prophylaxis')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_mprophylaxis.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
-			->groupBy('name')
-			->groupBy('districts.ID', 'districts.name')
+			->where('facilitys.district', $subcounty)
+			->orderBy('all_tests')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 
 		}
 
 		// For the whole year but has per month
 		else if($type == 2){
-
-			$data = DB::table('subcounty_mprophylaxis')
+			$data = DB::table('site_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_mprophylaxis.prophylaxis')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_mprophylaxis.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
-			->groupBy('name')
+			->where('facilitys.district', $subcounty)
+			->orderBy('facilitys.ID')
+			->orderBy('site_summary.month')
 			->groupBy('month')
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
-
 		}
 
 		// For a particular month
 		else if($type == 3){
 
-			$data = DB::table('subcounty_mprophylaxis')
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+			$data = DB::table('site_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_mprophylaxis.prophylaxis')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_mprophylaxis.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
+			->where('facilitys.district', $subcounty)
+			->orderBy('all_tests')
 			->where('month', $month)
-			->groupBy('name')
 			->groupBy('month')
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
@@ -514,24 +573,20 @@ class SiteController extends Controller
 		else if($type == 4){
 
 			if($month < 1 || $month > 4) return $this->invalid_quarter($month);
-
+			
 			$my_range = $this->quarter_range($month);
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-
-			$data = DB::table('subcounty_mprophylaxis')
+			$data = DB::table('site_summary')
 			->select(DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_mprophylaxis.prophylaxis')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_mprophylaxis.subcounty')
+			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
-			->groupBy('name')
+			->where('facilitys.district', $subcounty)
+			->orderBy('all_tests')
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
-			->groupBy('districts.ID', 'districts.name')
+			->groupBy('facilitys.ID', 'facilitys.name')
 			->get();
 		}
 
@@ -539,101 +594,12 @@ class SiteController extends Controller
 		else{
 			return $this->invalid_type($type);
 		}
+
 		
 		return $data;
 
 	}
 
 
-	public function infant_prophylaxis($subcounty, $year, $type, $month=NULL){
-		$data = NULL;
-
-		$raw = 'districts.ID as subcounty_id, districts.name as subcounty, ' . $this->infant_prophylaxis_query();
-
-		  // Totals for the whole year
-		if($type == 1){
-
-			$data = DB::table('subcounty_iprophylaxis')
-			->select(DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_iprophylaxis.prophylaxis')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_iprophylaxis.subcounty')
-			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
-			->groupBy('name')
-			->groupBy('districts.ID', 'districts.name')
-			->get();
-
-		}
-
-		// For the whole year but has per month
-		else if($type == 2){
-
-			$data = DB::table('subcounty_iprophylaxis')
-			->select('month', DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_iprophylaxis.prophylaxis')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_iprophylaxis.subcounty')
-			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
-			->groupBy('name')
-			->groupBy('month')
-			->groupBy('districts.ID', 'districts.name')
-			->get();
-
-		}
-
-		// For a particular month
-		else if($type == 3){
-
-			$data = DB::table('subcounty_iprophylaxis')
-			->select('month', DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_iprophylaxis.prophylaxis')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_iprophylaxis.subcounty')
-			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
-			->where('month', $month)
-			->groupBy('name')
-			->groupBy('month')
-			->groupBy('districts.ID', 'districts.name')
-			->get();
-		}
-
-		// For a particular quarter
-		// The month value will be used as the quarter value
-		else if($type == 4){
-
-			if($month < 1 || $month > 4) return $this->invalid_quarter($month);
-
-			$my_range = $this->quarter_range($month);
-			$lesser = $my_range[0];
-			$greater = $my_range[1];
-
-
-			$data = DB::table('subcounty_iprophylaxis')
-			->select(DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_iprophylaxis.prophylaxis')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_iprophylaxis.subcounty')
-			->where('year', $year)
-			->when($subcounty, function($query) use ($subcounty){
-				if($subcounty != 0) return $query->where('districts.ID', $subcounty);
-			})
-			->groupBy('name')->where('month', '>', $lesser)
-			->where('month', '<', $greater)
-			->groupBy('districts.ID', 'districts.name')
-			->get();
-		}
-
-		// Else an invalid type has been specified
-		else{
-			return $this->invalid_type($type);
-		}
-		
-		return $data;
-
-	}
+	
 }

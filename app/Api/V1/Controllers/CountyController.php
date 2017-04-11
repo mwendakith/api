@@ -58,6 +58,8 @@ class CountyController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('county_summary')
 			->select('month', DB::raw($raw))
 			->leftJoin('countys', 'countys.ID', '=', 'county_summary.county')
@@ -142,6 +144,8 @@ class CountyController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('county_summary')
 			->select('month', DB::raw($raw))
 			->leftJoin('countys', 'countys.ID', '=', 'county_summary.county')
@@ -226,6 +230,8 @@ class CountyController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('county_summary')
 			->select('month', DB::raw($raw))
 			->leftJoin('countys', 'countys.ID', '=', 'county_summary.county')
@@ -311,6 +317,8 @@ class CountyController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('county_agebreakdown')
 			->leftJoin('countys', 'countys.ID', '=', 'county_agebreakdown.county')
 			->select('month', DB::raw($raw))
@@ -400,6 +408,8 @@ class CountyController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 
 			$data = DB::table('county_entrypoint')
 			->select('month', DB::raw($raw))
@@ -494,6 +504,8 @@ class CountyController extends Controller
 		// For a particular month
 		else if($type == 3){
 
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+
 			$data = DB::table('county_mprophylaxis')
 			->select('month', DB::raw($raw))
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'county_mprophylaxis.prophylaxis')
@@ -587,6 +599,8 @@ class CountyController extends Controller
 
 		// For a particular month
 		else if($type == 3){
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
 
 			$data = DB::table('county_iprophylaxis')
 			->select('month', DB::raw($raw))

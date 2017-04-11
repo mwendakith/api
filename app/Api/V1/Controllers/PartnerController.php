@@ -3,7 +3,7 @@
 namespace App\Api\V1\Controllers;
 
 use Illuminate\Http\Request;
-use App\District;
+use App\Partner;
 use App\Http\Controllers\Controller;
 
 use DB;
@@ -30,9 +30,9 @@ class PartnerController extends Controller
 		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('subcounty_summary')
+			$data = DB::table('ip_summary')
 			->select(DB::raw($raw))
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_summary.partner')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -44,9 +44,9 @@ class PartnerController extends Controller
 
 		// For the whole year but has per month
 		else if($type == 2){
-			$data = DB::table('subcounty_summary')
+			$data = DB::table('ip_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_summary.partner')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -58,9 +58,11 @@ class PartnerController extends Controller
 
 		// For a particular month
 		else if($type == 3){
-			$data = DB::table('subcounty_summary')
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+			$data = DB::table('ip_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_summary.partner')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -81,9 +83,9 @@ class PartnerController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('subcounty_summary')
+			$data = DB::table('ip_summary')
 			->select(DB::raw($raw))
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_summary.partner')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -114,9 +116,9 @@ class PartnerController extends Controller
 		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('subcounty_summary')
+			$data = DB::table('ip_summary')
 			->select(DB::raw($raw))
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_summary.partner')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
@@ -128,9 +130,9 @@ class PartnerController extends Controller
 
 		// For the whole year but has per month
 		else if($type == 2){
-			$data = DB::table('subcounty_summary')
+			$data = DB::table('ip_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_summary.partner')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -142,9 +144,11 @@ class PartnerController extends Controller
 
 		// For a particular month
 		else if($type == 3){
-			$data = DB::table('subcounty_summary')
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+			$data = DB::table('ip_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_summary.partner')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -165,8 +169,8 @@ class PartnerController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('subcounty_summary')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_summary.partner')
+			$data = DB::table('ip_summary')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->select(DB::raw($raw))
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
@@ -198,9 +202,9 @@ class PartnerController extends Controller
 		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('subcounty_summary')
+			$data = DB::table('ip_summary')
 			->select(DB::raw($raw))
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_summary.partner')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
@@ -212,9 +216,9 @@ class PartnerController extends Controller
 
 		// For the whole year but has per month
 		else if($type == 2){
-			$data = DB::table('subcounty_summary')
+			$data = DB::table('ip_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_summary.partner')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -226,9 +230,11 @@ class PartnerController extends Controller
 
 		// For a particular month
 		else if($type == 3){
-			$data = DB::table('subcounty_summary')
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+			$data = DB::table('ip_summary')
 			->select('month', DB::raw($raw))
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_summary.partner')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -249,8 +255,8 @@ class PartnerController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('subcounty_summary')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_summary.partner')
+			$data = DB::table('ip_summary')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->select(DB::raw($raw))
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
@@ -283,8 +289,8 @@ class PartnerController extends Controller
 		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('subcounty_agebreakdown')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_agebreakdown.partner')
+			$data = DB::table('ip_agebreakdown')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_agebreakdown.partner')
 			->select(DB::raw($raw))
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
@@ -297,8 +303,8 @@ class PartnerController extends Controller
 
 		// For the whole year but has per month
 		else if($type == 2){
-			$data = DB::table('subcounty_agebreakdown')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_agebreakdown.partner')
+			$data = DB::table('ip_agebreakdown')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_agebreakdown.partner')
 			->select('month', DB::raw($raw))
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
@@ -311,8 +317,10 @@ class PartnerController extends Controller
 
 		// For a particular month
 		else if($type == 3){
-			$data = DB::table('subcounty_agebreakdown')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_agebreakdown.partner')
+
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+			$data = DB::table('ip_agebreakdown')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_agebreakdown.partner')
 			->select('month', DB::raw($raw))
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
@@ -334,8 +342,8 @@ class PartnerController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('subcounty_agebreakdown')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_agebreakdown.partner')
+			$data = DB::table('ip_agebreakdown')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_agebreakdown.partner')
 			->select(DB::raw($raw))
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
@@ -366,10 +374,10 @@ class PartnerController extends Controller
 		  // Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('subcounty_entrypoint')
+			$data = DB::table('ip_entrypoint')
 			->select(DB::raw($raw))
-			->leftJoin('entry_points', 'entry_points.ID', '=', 'subcounty_entrypoint.entrypoint')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_entrypoint.partner')
+			->leftJoin('entry_points', 'entry_points.ID', '=', 'ip_entrypoint.entrypoint')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_entrypoint.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -383,10 +391,10 @@ class PartnerController extends Controller
 		// For the whole year but has per month
 		else if($type == 2){
 
-			$data = DB::table('subcounty_entrypoint')
+			$data = DB::table('ip_entrypoint')
 			->select('month', DB::raw($raw))
-			->leftJoin('entry_points', 'entry_points.ID', '=', 'subcounty_entrypoint.entrypoint')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_entrypoint.partner')
+			->leftJoin('entry_points', 'entry_points.ID', '=', 'ip_entrypoint.entrypoint')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_entrypoint.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -401,10 +409,12 @@ class PartnerController extends Controller
 		// For a particular month
 		else if($type == 3){
 
-			$data = DB::table('subcounty_entrypoint')
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+
+			$data = DB::table('ip_entrypoint')
 			->select('month', DB::raw($raw))
-			->leftJoin('entry_points', 'entry_points.ID', '=', 'subcounty_entrypoint.entrypoint')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_entrypoint.partner')
+			->leftJoin('entry_points', 'entry_points.ID', '=', 'ip_entrypoint.entrypoint')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_entrypoint.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -427,10 +437,10 @@ class PartnerController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('subcounty_entrypoint')
+			$data = DB::table('ip_entrypoint')
 			->select(DB::raw($raw))
-			->leftJoin('entry_points', 'entry_points.ID', '=', 'subcounty_entrypoint.entrypoint')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_entrypoint.partner')
+			->leftJoin('entry_points', 'entry_points.ID', '=', 'ip_entrypoint.entrypoint')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_entrypoint.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -459,10 +469,10 @@ class PartnerController extends Controller
 		  // Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('subcounty_mprophylaxis')
+			$data = DB::table('ip_mprophylaxis')
 			->select(DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_mprophylaxis.prophylaxis')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_mprophylaxis.partner')
+			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_mprophylaxis.prophylaxis')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_mprophylaxis.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -476,10 +486,10 @@ class PartnerController extends Controller
 		// For the whole year but has per month
 		else if($type == 2){
 
-			$data = DB::table('subcounty_mprophylaxis')
+			$data = DB::table('ip_mprophylaxis')
 			->select('month', DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_mprophylaxis.prophylaxis')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_mprophylaxis.partner')
+			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_mprophylaxis.prophylaxis')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_mprophylaxis.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -494,10 +504,12 @@ class PartnerController extends Controller
 		// For a particular month
 		else if($type == 3){
 
-			$data = DB::table('subcounty_mprophylaxis')
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+
+			$data = DB::table('ip_mprophylaxis')
 			->select('month', DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_mprophylaxis.prophylaxis')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_mprophylaxis.partner')
+			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_mprophylaxis.prophylaxis')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_mprophylaxis.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -520,10 +532,10 @@ class PartnerController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('subcounty_mprophylaxis')
+			$data = DB::table('ip_mprophylaxis')
 			->select(DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_mprophylaxis.prophylaxis')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_mprophylaxis.partner')
+			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_mprophylaxis.prophylaxis')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_mprophylaxis.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -553,10 +565,10 @@ class PartnerController extends Controller
 		  // Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('subcounty_iprophylaxis')
+			$data = DB::table('ip_iprophylaxis')
 			->select(DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_iprophylaxis.prophylaxis')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_iprophylaxis.partner')
+			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_iprophylaxis.prophylaxis')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_iprophylaxis.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -570,10 +582,10 @@ class PartnerController extends Controller
 		// For the whole year but has per month
 		else if($type == 2){
 
-			$data = DB::table('subcounty_iprophylaxis')
+			$data = DB::table('ip_iprophylaxis')
 			->select('month', DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_iprophylaxis.prophylaxis')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_iprophylaxis.partner')
+			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_iprophylaxis.prophylaxis')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_iprophylaxis.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -588,10 +600,12 @@ class PartnerController extends Controller
 		// For a particular month
 		else if($type == 3){
 
-			$data = DB::table('subcounty_iprophylaxis')
+			if($month < 1 || $month > 12) return $this->invalid_month($month);
+
+			$data = DB::table('ip_iprophylaxis')
 			->select('month', DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_iprophylaxis.prophylaxis')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_iprophylaxis.partner')
+			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_iprophylaxis.prophylaxis')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_iprophylaxis.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
@@ -614,10 +628,10 @@ class PartnerController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('subcounty_iprophylaxis')
+			$data = DB::table('ip_iprophylaxis')
 			->select(DB::raw($raw))
-			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_iprophylaxis.prophylaxis')
-			->leftJoin('partners', 'partners.ID', '=', 'subcounty_iprophylaxis.partner')
+			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_iprophylaxis.prophylaxis')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_iprophylaxis.partner')
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
