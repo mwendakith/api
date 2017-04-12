@@ -74,6 +74,30 @@ class Controller extends BaseController
 		return array($lesser, $greater);
 	}
 
+	protected function quarter_description($month){
+		$str;
+		switch ($month) {
+			case 1:
+				$str = "From January to March.";
+				break;
+			case 2:
+				$str = "From April to June.";
+				break;
+			case 3:
+				$str = "From July to September.";
+				break;
+			case 4:
+				$str = "From October to December.";
+				break;
+			
+			default:
+				// return $this->invalid_quarter($month);
+				break;
+		}
+
+		return $str;
+	}
+
 	protected function summary_query(){
 		return 'SUM(alltests) as all_tests,
 		 SUM(pos) as positives, 
@@ -86,12 +110,46 @@ class Controller extends BaseController
 		  SUM(rejected) as rejected,
 		   SUM(actualinfants) as infants, 
 		   SUM(actualinfantsPOS) as infants_positive,
-		    SUM(infantsless2m) as infants_less_2m, SUM(adults) as adults, 
-		    SUM(adultsPOS) as adults_positive,
-		     AVG(tat1) as collection_to_lab_receipt, 
-		     AVG(tat2) as lab_receipt_to_testing, 
-		     AVG(tat3) as tested_to_dispatch, 
-		     AVG(tat4) as collection_to_dispatch';
+		    SUM(infantsless2m) as infants_less_2m, 
+		    SUM(adults) as adults, 
+		    SUM(adultsPOS) as `adults positive`,
+		     AVG(tat1) as `collection to lab receipt`, 
+		     AVG(tat2) as `lab receipt to testing`, 
+		     AVG(tat3) as `tested to dispatch`, 
+		     AVG(tat4) as `collection to dispatch`';
+	}
+
+	protected function partner_summary_query(){
+		return 'SUM(alltests) as all_tests,
+		 SUM(pos) as positives, 
+		 SUM(neg) as negatives,
+		  SUM(redraw) as redraws, 
+		  SUM(firstdna) as first_DNA_PCR, 
+		  SUM(confirmdna) as repeat_confirmatory_PCR, 
+		  AVG(sitessending) as sites_sending, 
+		  AVG(medage) as median_age, 
+		  SUM(rejected) as rejected,
+		   SUM(actualinfants) as infants, 
+		   SUM(actualinfantsPOS) as infants_positive,
+		    SUM(infantsless2m) as infants_less_2m, 
+		    SUM(adults) as adults';
+	}
+
+	protected function lab_summary_query(){
+		return 'SUM(alltests) as all_tests,
+		 SUM(pos) as positives, 
+		 SUM(neg) as negatives,
+		  SUM(redraw) as redraws, 
+		  SUM(confirmdna) as repeat_confirmatory_PCR, 
+		  AVG(sitessending) as sites_sending, 
+		  SUM(rejected) as rejected,
+		  SUM(eqatests) as eqa,
+		  SUM(batches) as batches,
+		  SUM(received) as `received samples`,
+		     AVG(tat1) as `collection to lab_receipt`, 
+		     AVG(tat2) as `lab receipt to testing`, 
+		     AVG(tat3) as `tested to dispatch`, 
+		     AVG(tat4) as `collection to dispatch`';
 	}
 
 	protected function hei_validation_query(){
@@ -142,6 +200,14 @@ class Controller extends BaseController
 		return 'SUM(pos) as positives, 
 		 SUM(neg) as negatives,
 		  prophylaxis.name';
+	}
+
+
+	protected function output_data($data, $type, $year, $month=NULL){
+		if($type == 1){
+			//$data['year'] = $year;
+			return $data;
+		}
 	}
 
 
