@@ -23,20 +23,35 @@ class NationalController extends Controller
 		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('national_summary')->select(DB::raw($raw))->where('year', $year)->get();
+			$data = DB::table('national_summary')
+			->select('year', DB::raw($raw))
+			->where('year', $year)
+			->groupBy('year')
+			->get();
 
 		}
 
 		// For the whole year but has per month
 		else if($type == 2){
-			$data = DB::table('national_summary')->select('month', DB::raw($raw))->where('year', $year)->groupBy('month')->get();
+			$data = DB::table('national_summary')
+			->select('year', 'month', DB::raw($raw))
+			->where('year', $year)
+			->groupBy('month')
+			->groupBy('year')
+			->get();
 		}
 
 		// For a particular month
 		else if($type == 3){
 
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
-			$data = DB::table('national_summary')->select('month', DB::raw($raw))->where('year', $year)->where('month', $month)->groupBy('month')->get();
+			$data = DB::table('national_summary')
+			->select('year', 'month', DB::raw($raw))
+			->where('year', $year)
+			->where('month', $month)
+			->groupBy('month')
+			->groupBy('year')
+			->get();
 		}
 
 		// For a particular quarter
@@ -49,7 +64,20 @@ class NationalController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('national_summary')->select(DB::raw($raw))->where('year', $year)->where('month', '>', $lesser)->where('month', '<', $greater)->get();
+			$data = DB::table('national_summary')
+			->select('year', DB::raw($raw))
+			->where('year', $year)
+			->where('month', '>', $lesser)
+			->where('month', '<', $greater)
+			->groupBy('year')
+			->get();
+			
+			$a = "Q" . $month;
+			$b = $this->quarter_description($month);
+
+			$temp = (array) $data[0];
+			array_unshift($temp, $b, $a);
+			$data = array($temp);
 		}
 
 		// Else an invalid type has been specified
@@ -57,7 +85,7 @@ class NationalController extends Controller
 			return $this->invalid_type($type);
 		}
 
-		
+
 		return $data;
 
 	}
@@ -71,20 +99,31 @@ class NationalController extends Controller
 		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('national_summary')->select(DB::raw($raw))->where('year', $year)->get();
+			$data = DB::table('national_summary')->select('year', DB::raw($raw))->where('year', $year)->get();
 
 		}
 
 		// For the whole year but has per month
 		else if($type == 2){
-			$data = DB::table('national_summary')->select('month', DB::raw($raw))->where('year', $year)->groupBy('month')->get();
+			$data = DB::table('national_summary')
+			->select('year', 'month', DB::raw($raw))
+			->where('year', $year)
+			->groupBy('month')
+			->groupBy('year')
+			->get();
 		}
 
 		// For a particular month
 		else if($type == 3){
 
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
-			$data = DB::table('national_summary')->select('month', DB::raw($raw))->where('year', $year)->where('month', $month)->groupBy('month')->get();
+			$data = DB::table('national_summary')
+			->select('year', 'month', DB::raw($raw))
+			->where('year', $year)
+			->where('month', $month)
+			->groupBy('month')
+			->groupBy('year')
+			->get();
 		}
 
 		// For a particular quarter
@@ -97,7 +136,20 @@ class NationalController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('national_summary')->select(DB::raw($raw))->where('year', $year)->where('month', '>', $lesser)->where('month', '<', $greater)->get();
+			$data = DB::table('national_summary')
+			->select('year', DB::raw($raw))
+			->where('year', $year)
+			->where('month', '>', $lesser)
+			->where('month', '<', $greater)
+			->groupBy('year')
+			->get();
+			
+			$a = "Q" . $month;
+			$b = $this->quarter_description($month);
+
+			$temp = (array) $data[0];
+			array_unshift($temp, $b, $a);
+			$data = array($temp);
 		}
 
 		// Else an invalid type has been specified
@@ -119,20 +171,35 @@ class NationalController extends Controller
 		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('national_summary')->select(DB::raw($raw))->where('year', $year)->get();
+			$data = DB::table('national_summary')
+			->select('year', DB::raw($raw))
+			->where('year', $year)
+			->groupBy('year')
+			->get();
 
 		}
 
 		// For the whole year but has per month
 		else if($type == 2){
-			$data = DB::table('national_summary')->select('month', DB::raw($raw))->where('year', $year)->groupBy('month')->get();
+			$data = DB::table('national_summary')
+			->select('year', 'month', DB::raw($raw))
+			->where('year', $year)
+			->groupBy('month')
+			->groupBy('year')
+			->get();
 		}
 
 		// For a particular month
 		else if($type == 3){
 
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
-			$data = DB::table('national_summary')->select('month', DB::raw($raw))->where('year', $year)->where('month', $month)->groupBy('month')->get();
+			$data = DB::table('national_summary')
+			->select('year', 'month', DB::raw($raw))
+			->where('year', $year)
+			->where('month', $month)
+			->groupBy('month')
+			->groupBy('year')
+			->get();
 		}
 
 		// For a particular quarter
@@ -145,7 +212,20 @@ class NationalController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('national_summary')->select(DB::raw($raw))->where('year', $year)->where('month', '>', $lesser)->where('month', '<', $greater)->get();
+			$data = DB::table('national_summary')
+			->select('year', DB::raw($raw))
+			->where('year', $year)
+			->where('month', '>', $lesser)
+			->where('month', '<', $greater)
+			->groupBy('year')
+			->get();
+			
+			$a = "Q" . $month;
+			$b = $this->quarter_description($month);
+
+			$temp = (array) $data[0];
+			array_unshift($temp, $b, $a);
+			$data = array($temp);
 		}
 
 		// Else an invalid type has been specified
@@ -169,20 +249,35 @@ class NationalController extends Controller
 		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('national_agebreakdown')->select(DB::raw($raw))->where('year', $year)->get();
+			$data = DB::table('national_agebreakdown')
+			->select('year', DB::raw($raw))
+			->where('year', $year)
+			->groupBy('year')
+			->get();
 
 		}
 
 		// For the whole year but has per month
 		else if($type == 2){
-			$data = DB::table('national_agebreakdown')->select('month', DB::raw($raw))->where('year', $year)->groupBy('month')->get();
+			$data = DB::table('national_agebreakdown')
+			->select('year', 'month', DB::raw($raw))
+			->where('year', $year)
+			->groupBy('month')
+			->groupBy('year')
+			->get();
 		}
 
 		// For a particular month
 		else if($type == 3){
 
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
-			$data = DB::table('national_agebreakdown')->select('month', DB::raw($raw))->where('year', $year)->where('month', $month)->groupBy('month')->get();
+			$data = DB::table('national_agebreakdown')
+			->select('year', 'month', DB::raw($raw))
+			->where('year', $year)
+			->where('month', $month)
+			->groupBy('month')
+			->groupBy('year')
+			->get();
 		}
 
 		// For a particular quarter
@@ -195,7 +290,20 @@ class NationalController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('national_agebreakdown')->select(DB::raw($raw))->where('year', $year)->where('month', '>', $lesser)->where('month', '<', $greater)->get();
+			$data = DB::table('national_agebreakdown')
+			->select('year', DB::raw($raw))
+			->where('year', $year)
+			->where('month', '>', $lesser)
+			->where('month', '<', $greater)
+			->groupBy('year')
+			->get();
+			
+			$a = "Q" . $month;
+			$b = $this->quarter_description($month);
+
+			$temp = (array) $data[0];
+			array_unshift($temp, $b, $a);
+			$data = array($temp);
 		}
 
 		// Else an invalid type has been specified
@@ -217,14 +325,27 @@ class NationalController extends Controller
 		  // Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('national_entrypoint')->select(DB::raw($raw))->leftJoin('entry_points', 'entry_points.ID', '=', 'national_entrypoint.entrypoint')->where('year', $year)->groupBy('name')->get();
+			$data = DB::table('national_entrypoint')
+			->select('year', DB::raw($raw))
+			->leftJoin('entry_points', 'entry_points.ID', '=', 'national_entrypoint.entrypoint')
+			->where('year', $year)
+			->groupBy('name')
+			->groupBy('year')
+			->get();
 
 		}
 
 		// For the whole year but has per month
 		else if($type == 2){
 
-			$data = DB::table('national_entrypoint')->select('month', DB::raw($raw))->leftJoin('entry_points', 'entry_points.ID', '=', 'national_entrypoint.entrypoint')->where('year', $year)->groupBy('name')->groupBy('month')->get();
+			$data = DB::table('national_entrypoint')
+			->select('year', 'month', DB::raw($raw))
+			->leftJoin('entry_points', 'entry_points.ID', '=', 'national_entrypoint.entrypoint')
+			->where('year', $year)
+			->groupBy('name')
+			->groupBy('month')
+			->groupBy('year')
+			->get();
 
 		}
 
@@ -233,7 +354,15 @@ class NationalController extends Controller
 
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
 
-			$data = DB::table('national_entrypoint')->select('month', DB::raw($raw))->leftJoin('entry_points', 'entry_points.ID', '=', 'national_entrypoint.entrypoint')->where('year', $year)->where('month', $month)->groupBy('name')->groupBy('month')->get();
+			$data = DB::table('national_entrypoint')
+			->select('year', 'month', DB::raw($raw))
+			->leftJoin('entry_points', 'entry_points.ID', '=', 'national_entrypoint.entrypoint')
+			->where('year', $year)
+			->where('month', $month)
+			->groupBy('name')
+			->groupBy('month')
+			->groupBy('year')
+			->get();
 		}
 
 		// For a particular quarter
@@ -247,7 +376,22 @@ class NationalController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('national_entrypoint')->select(DB::raw($raw))->leftJoin('entry_points', 'entry_points.ID', '=', 'national_entrypoint.entrypoint')->where('year', $year)->groupBy('name')->where('month', '>', $lesser)->where('month', '<', $greater)->get();
+			$data = DB::table('national_entrypoint')
+			->select('year', DB::raw($raw))
+			->leftJoin('entry_points', 'entry_points.ID', '=', 'national_entrypoint.entrypoint')
+			->where('year', $year)
+			->groupBy('name')
+			->where('month', '>', $lesser)
+			->where('month', '<', $greater)
+			->groupBy('year')
+			->get();
+			
+			$a = "Q" . $month;
+			$b = $this->quarter_description($month);
+
+			$temp = (array) $data[0];
+			array_unshift($temp, $b, $a);
+			$data = array($temp);
 		}
 
 		// Else an invalid type has been specified
@@ -267,14 +411,27 @@ class NationalController extends Controller
 		  // Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('national_mprophylaxis')->select(DB::raw($raw))->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_mprophylaxis.prophylaxis')->where('year', $year)->groupBy('name')->get();
+			$data = DB::table('national_mprophylaxis')
+			->select('year', DB::raw($raw))
+			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_mprophylaxis.prophylaxis')
+			->where('year', $year)
+			->groupBy('name')
+			->groupBy('year')
+			->get();
 
 		}
 
 		// For the whole year but has per month
 		else if($type == 2){
 
-			$data = DB::table('national_mprophylaxis')->select('month', DB::raw($raw))->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_mprophylaxis.prophylaxis')->where('year', $year)->groupBy('name')->groupBy('month')->get();
+			$data = DB::table('national_mprophylaxis')
+			->select('year', 'month', DB::raw($raw))
+			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_mprophylaxis.prophylaxis')
+			->where('year', $year)
+			->groupBy('name')
+			->groupBy('month')
+			->groupBy('year')
+			->get();
 
 		}
 
@@ -283,7 +440,14 @@ class NationalController extends Controller
 
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
 
-			$data = DB::table('national_mprophylaxis')->select('month', DB::raw($raw))->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_mprophylaxis.prophylaxis')->where('year', $year)->where('month', $month)->groupBy('name')->groupBy('month')->get();
+			$data = DB::table('national_mprophylaxis')
+			->select('year', 'month', DB::raw($raw))->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_mprophylaxis.prophylaxis')
+			->where('year', $year)
+			->where('month', $month)
+			->groupBy('name')
+			->groupBy('month')
+			->groupBy('year')
+			->get();
 		}
 
 		// For a particular quarter
@@ -297,7 +461,22 @@ class NationalController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('national_mprophylaxis')->select(DB::raw($raw))->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_mprophylaxis.prophylaxis')->where('year', $year)->groupBy('name')->where('month', '>', $lesser)->where('month', '<', $greater)->get();
+			$data = DB::table('national_mprophylaxis')
+			->select('year', DB::raw($raw))
+			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_mprophylaxis.prophylaxis')
+			->where('year', $year)
+			->groupBy('name')
+			->where('month', '>', $lesser)
+			->where('month', '<', $greater)
+			->groupBy('year')
+			->get();
+			
+			$a = "Q" . $month;
+			$b = $this->quarter_description($month);
+
+			$temp = (array) $data[0];
+			array_unshift($temp, $b, $a);
+			$data = array($temp);
 		}
 
 		// Else an invalid type has been specified
@@ -318,14 +497,27 @@ class NationalController extends Controller
 		  // Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('national_iprophylaxis')->select(DB::raw($raw))->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_iprophylaxis.prophylaxis')->where('year', $year)->groupBy('name')->get();
+			$data = DB::table('national_iprophylaxis')
+			->select('year', DB::raw($raw))
+			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_iprophylaxis.prophylaxis')
+			->where('year', $year)
+			->groupBy('name')
+			->groupBy('year')
+			->get();
 
 		}
 
 		// For the whole year but has per month
 		else if($type == 2){
 
-			$data = DB::table('national_iprophylaxis')->select('month', DB::raw($raw))->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_iprophylaxis.prophylaxis')->where('year', $year)->groupBy('name')->groupBy('month')->get();
+			$data = DB::table('national_iprophylaxis')
+			->select('year', 'month', DB::raw($raw))
+			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_iprophylaxis.prophylaxis')
+			->where('year', $year)
+			->groupBy('name')
+			->groupBy('month')
+			->groupBy('year')
+			->get();
 
 		}
 
@@ -334,7 +526,15 @@ class NationalController extends Controller
 
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
 
-			$data = DB::table('national_iprophylaxis')->select('month', DB::raw($raw))->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_iprophylaxis.prophylaxis')->where('year', $year)->where('month', $month)->groupBy('name')->groupBy('month')->get();
+			$data = DB::table('national_iprophylaxis')
+			->select('year', 'month', DB::raw($raw))
+			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_iprophylaxis.prophylaxis')
+			->where('year', $year)
+			->where('month', $month)
+			->groupBy('name')
+			->groupBy('month')
+			->groupBy('year')
+			->get();
 		}
 
 		// For a particular quarter
@@ -348,7 +548,22 @@ class NationalController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('national_iprophylaxis')->select(DB::raw($raw))->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_iprophylaxis.prophylaxis')->where('year', $year)->groupBy('name')->where('month', '>', $lesser)->where('month', '<', $greater)->get();
+			$data = DB::table('national_iprophylaxis')
+			->select('year', DB::raw($raw))
+			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_iprophylaxis.prophylaxis')
+			->where('year', $year)
+			->groupBy('name')
+			->where('month', '>', $lesser)
+			->where('month', '<', $greater)
+			->groupBy('year')
+			->get();
+			
+			$a = "Q" . $month;
+			$b = $this->quarter_description($month);
+
+			$temp = (array) $data[0];
+			array_unshift($temp, $b, $a);
+			$data = array($temp);
 		}
 
 		// Else an invalid type has been specified

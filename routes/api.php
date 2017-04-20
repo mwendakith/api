@@ -31,125 +31,134 @@ $api->version('v1', function (Router $api) {
         ]);
     });
 
-    $api->get('hello', function() {
-        return response()->json([
-            'message' => 'This is a simple example of item returned by your APIs. Everyone can see it.'
-        ]);
-    });
+    
+
+    //$api->group(['middleware' => 'jwt.auth'], function(Router $api) {
+        $api->group(['middleware' => 'api.throttle', 'limit' => 10, 'expires' => 1], function(Router $api) {
+
+            $api->get('hello', function() {
+                return response()->json([
+                    'message' => 'This is a simple example of item returned by your APIs. Everyone can see it.'
+                ]);
+            });
 
 
-    $api->group(['prefix' => 'national'], function(Router $api) {
+            $api->group(['prefix' => 'national'], function(Router $api) {
 
-        $api->get('summary/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\NationalController@summary');
+                $api->get('summary/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\NationalController@summary');
 
-        $api->get('hei/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\NationalController@hei_outcomes');
+                $api->get('hei/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\NationalController@hei_outcomes');
 
-        $api->get('hei_validation/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\NationalController@hei_validation');
+                $api->get('hei_validation/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\NationalController@hei_validation');
 
-        $api->get('age_breakdown/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\NationalController@age_breakdown');
+                $api->get('age_breakdown/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\NationalController@age_breakdown');
 
-        $api->get('entry_point/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\NationalController@entry_point');
+                $api->get('entry_point/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\NationalController@entry_point');
 
-        $api->get('mprophylaxis/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\NationalController@mother_prophylaxis');
+                $api->get('mprophylaxis/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\NationalController@mother_prophylaxis');
 
-        $api->get('iprophylaxis/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\NationalController@infant_prophylaxis');
-    });
+                $api->get('iprophylaxis/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\NationalController@infant_prophylaxis');
+            });
 
-    $api->group(['prefix' => 'county'], function(Router $api) {
+            $api->group(['prefix' => 'county'], function(Router $api) {
 
-        $api->get('counties', 'App\\Api\\V1\\Controllers\\CountyController@counties');
+                $api->get('counties', 'App\\Api\\V1\\Controllers\\CountyController@counties');
 
-        $api->get('info/{county}/', 'App\\Api\\V1\\Controllers\\CountyController@info');
+                $api->get('info/{county}/', 'App\\Api\\V1\\Controllers\\CountyController@info');
 
-        $api->get('summary/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@summary');
+                $api->get('summary/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@summary');
 
-        $api->get('hei/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@hei_outcomes');
+                $api->get('hei/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@hei_outcomes');
 
-        $api->get('hei_validation/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@hei_validation');
+                $api->get('hei_validation/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@hei_validation');
 
-        $api->get('age_breakdown/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@age_breakdown');
+                $api->get('age_breakdown/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@age_breakdown');
 
-        $api->get('entry_point/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@entry_point');
+                $api->get('entry_point/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@entry_point');
 
-        $api->get('mprophylaxis/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@mother_prophylaxis');
+                $api->get('mprophylaxis/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@mother_prophylaxis');
 
-        $api->get('iprophylaxis/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@infant_prophylaxis');
-    });
+                $api->get('iprophylaxis/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@infant_prophylaxis');
+
+                $api->get('county_facilities/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\CountyController@county_sites');
+            });
 
 
-    $api->group(['prefix' => 'subcounty'], function(Router $api) {
+            $api->group(['prefix' => 'subcounty'], function(Router $api) {
 
-        $api->get('subcounties', 'App\\Api\\V1\\Controllers\\SubcountyController@subcounties');
+                $api->get('subcounties', 'App\\Api\\V1\\Controllers\\SubcountyController@subcounties');
 
-        $api->get('info/{subcounty}/', 'App\\Api\\V1\\Controllers\\SubcountyController@info');
+                $api->get('info/{subcounty}/', 'App\\Api\\V1\\Controllers\\SubcountyController@info');
 
-        $api->get('summary/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@summary');
+                $api->get('summary/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@summary');
 
-        $api->get('hei/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@hei_outcomes');
+                $api->get('hei/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@hei_outcomes');
 
-        $api->get('hei_validation/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@hei_validation');
+                $api->get('hei_validation/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@hei_validation');
 
-        $api->get('age_breakdown/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@age_breakdown');
+                $api->get('age_breakdown/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@age_breakdown');
 
-        $api->get('entry_point/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@entry_point');
+                $api->get('entry_point/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@entry_point');
 
-        $api->get('mprophylaxis/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@mother_prophylaxis');
+                $api->get('mprophylaxis/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@mother_prophylaxis');
 
-        $api->get('iprophylaxis/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@infant_prophylaxis');
-    });
+                $api->get('iprophylaxis/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@infant_prophylaxis');
 
-    $api->group(['prefix' => 'partner'], function(Router $api) {
+                $api->get('subcounty_facilities/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SubcountyController@subcounty_sites');
+            });
 
-        $api->get('partners', 'App\\Api\\V1\\Controllers\\PartnerController@partners');
+            $api->group(['prefix' => 'partner'], function(Router $api) {
 
-        $api->get('info/{partner}/', 'App\\Api\\V1\\Controllers\\PartnerController@info');
+                $api->get('partners', 'App\\Api\\V1\\Controllers\\PartnerController@partners');
 
-        $api->get('summary/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@summary');
+                $api->get('info/{partner}/', 'App\\Api\\V1\\Controllers\\PartnerController@info');
 
-        $api->get('hei/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@hei_outcomes');
+                $api->get('summary/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@summary');
 
-        $api->get('hei_validation/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@hei_validation');
+                $api->get('hei/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@hei_outcomes');
 
-        $api->get('age_breakdown/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@age_breakdown');
+                $api->get('hei_validation/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@hei_validation');
 
-        $api->get('entry_point/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@entry_point');
+                $api->get('age_breakdown/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@age_breakdown');
 
-        $api->get('mprophylaxis/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@mother_prophylaxis');
+                $api->get('entry_point/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@entry_point');
 
-        $api->get('iprophylaxis/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@infant_prophylaxis');
-    });
+                $api->get('mprophylaxis/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@mother_prophylaxis');
 
-    $api->group(['prefix' => 'lab'], function(Router $api) {
+                $api->get('iprophylaxis/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@infant_prophylaxis');
 
-        $api->get('labs', 'App\\Api\\V1\\Controllers\\LabController@labs');
+                $api->get('partner_facilities/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\PartnerController@partner_sites');
+            });
 
-        $api->get('info/{lab}/', 'App\\Api\\V1\\Controllers\\LabController@info');
+            $api->group(['prefix' => 'lab'], function(Router $api) {
 
-        $api->get('summary/{lab}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\LabController@summary');
+                $api->get('labs', 'App\\Api\\V1\\Controllers\\LabController@labs');
 
-    });
+                $api->get('info/{lab}/', 'App\\Api\\V1\\Controllers\\LabController@info');
 
-    $api->group(['prefix' => 'site'], function(Router $api) {
+                $api->get('summary/{lab}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\LabController@summary');
 
-        $api->get('sites', 'App\\Api\\V1\\Controllers\\SiteController@sites');
+            });
 
-        $api->get('unsupported_sites', 'App\\Api\\V1\\Controllers\\SiteController@unsupported_sites');
+            $api->group(['prefix' => 'facility'], function(Router $api) {
 
-        $api->get('info/{site}/', 'App\\Api\\V1\\Controllers\\SiteController@info');
+                $api->get('facilities', 'App\\Api\\V1\\Controllers\\SiteController@sites');
 
-        $api->get('summary/{site}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SiteController@summary');
+                $api->get('unsupported_facilities', 'App\\Api\\V1\\Controllers\\SiteController@unsupported_sites');
 
-        $api->get('hei/{site}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SiteController@hei_outcomes');
+                $api->get('info/{site}/', 'App\\Api\\V1\\Controllers\\SiteController@info');
 
-        $api->get('hei_validation/{site}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SiteController@hei_validation');
+                $api->get('summary/{site}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SiteController@summary');
 
-        $api->get('partner_sites/{partner}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SiteController@partner_sites');
+                $api->get('hei/{site}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SiteController@hei_outcomes');
 
-        $api->get('county_sites/{county}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SiteController@county_sites');
+                $api->get('hei_validation/{site}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SiteController@hei_validation');
 
-        $api->get('subcounty_sites/{subcounty}/{year}/{type}/{month?}', 'App\\Api\\V1\\Controllers\\SiteController@subcounty_sites');
+            });
 
-    });
+        });
+
+    //});
 
 
 });

@@ -24,20 +24,21 @@ class LabController extends Controller
 
 		$data = NULL;
 
-		$raw = 'labs.ID as lab_id, labs.name as lab, ' . $this->summary_query();
+		$raw = 'labs.ID as lab_id, labs.name as lab, ' . $this->lab_summary_query();
+
 		
 
 		// Totals for the whole year
 		if($type == 1){
 
 			$data = DB::table('lab_summary')
-			->select(DB::raw($raw))
+			->select('year', DB::raw($raw))
 			->leftJoin('labs', 'labs.ID', '=', 'lab_summary.lab')
 			->where('year', $year)
 			->when($lab, function($query) use ($lab){
 				if($lab != 0) return $query->where('labs.ID', $lab);
 			})
-			->groupBy('labs.ID', 'labs.name')
+			->groupBy('labs.ID', 'labs.name', 'year')
 			->get();
 
 		}
@@ -45,14 +46,14 @@ class LabController extends Controller
 		// For the whole year but has per month
 		else if($type == 2){
 			$data = DB::table('lab_summary')
-			->select('month', DB::raw($raw))
+			->select('year', 'month', DB::raw($raw))
 			->leftJoin('labs', 'labs.ID', '=', 'lab_summary.lab')
 			->where('year', $year)
 			->when($lab, function($query) use ($lab){
 				if($lab != 0) return $query->where('labs.ID', $lab);
 			})
 			->groupBy('month')
-			->groupBy('labs.ID', 'labs.name')
+			->groupBy('labs.ID', 'labs.name', 'year')
 			->get();
 		}
 
@@ -61,7 +62,7 @@ class LabController extends Controller
 
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('lab_summary')
-			->select('month', DB::raw($raw))
+			->select('year', 'month', DB::raw($raw))
 			->leftJoin('labs', 'labs.ID', '=', 'lab_summary.lab')
 			->where('year', $year)
 			->when($lab, function($query) use ($lab){
@@ -69,7 +70,7 @@ class LabController extends Controller
 			})
 			->where('month', $month)
 			->groupBy('month')
-			->groupBy('labs.ID', 'labs.name')
+			->groupBy('labs.ID', 'labs.name', 'year')
 			->get();
 		}
 
@@ -84,7 +85,7 @@ class LabController extends Controller
 			$greater = $my_range[1];
 
 			$data = DB::table('lab_summary')
-			->select(DB::raw($raw))
+			->select('year', DB::raw($raw))
 			->leftJoin('labs', 'labs.ID', '=', 'lab_summary.lab')
 			->where('year', $year)
 			->when($lab, function($query) use ($lab){
@@ -92,8 +93,18 @@ class LabController extends Controller
 			})
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
-			->groupBy('labs.ID', 'labs.name')
+			->groupBy('labs.ID', 'labs.name', 'year')
 			->get();
+
+			
+			$a = "Q" . $month;
+			$b = $this->quarter_description($month);
+
+			$temp = (array) $data[0];
+			array_unshift($temp, $b, $a);
+			$data = array($temp);
+			
+			
 		}
 
 		// Else an invalid type has been specified
