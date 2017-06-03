@@ -9,7 +9,11 @@ $api->version('v1', function (Router $api) {
     $api->group(['prefix' => 'v1'], function(Router $api) {
 
         $api->group(['prefix' => 'auth'], function(Router $api) {
-            $api->post('signup', 'App\\Api\\V1\\Controllers\\Auth\\SignUpController@signUp');
+            $api->group(['middleware' => 'jwt.auth'], function(Router $api) {
+                $api->post('signup', 'App\\Api\\V1\\Controllers\\Auth\\SignUpController@signUp');
+                $api->get('users', 'App\\Api\\V1\\Controllers\\Auth\\SignUpController@users');
+                $api->get('user_types', 'App\\Api\\V1\\Controllers\\Auth\\SignUpController@user_types');
+            });
             $api->post('login', 'App\\Api\\V1\\Controllers\\Auth\\LoginController@login');
 
             $api->post('recovery', 'App\\Api\\V1\\Controllers\\Auth\\ForgotPasswordController@sendResetEmail');
@@ -33,7 +37,7 @@ $api->version('v1', function (Router $api) {
 
     
 
-        //$api->group(['middleware' => 'jwt.auth'], function(Router $api) {
+        $api->group(['middleware' => 'jwt.auth'], function(Router $api) {
             $api->group(['middleware' => 'api.throttle', 'limit' => 5, 'expires' => 1], function(Router $api) {
 
                 $api->get('hello', function() {
@@ -163,6 +167,6 @@ $api->version('v1', function (Router $api) {
 
             });
 
-        //});
+        });
     });
 });

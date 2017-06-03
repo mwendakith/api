@@ -4,15 +4,24 @@ namespace App\Api\V1\Controllers\Auth;
 
 use Config;
 use App\User;
-use Tymon\JWTAuth\JWTAuth;
+use App\UserType;
+
+use JWTAuth;
 use App\Http\Controllers\Controller;
 use App\Api\V1\Requests\SignUpRequest;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class SignUpController extends Controller
 {
     public function signUp(SignUpRequest $request, JWTAuth $JWTAuth)
     {
+        $currentUser = JWTAuth::parseToken()->authenticate();
+        if($currentUser->user_type_id != 1){
+            throw new AccessDeniedHttpException();
+        }
+
+
         $user = new User($request->all());
         if(!$user->save()) {
             throw new HttpException(500);
@@ -29,5 +38,21 @@ class SignUpController extends Controller
             'status' => 'ok',
             'token' => $token
         ], 201);
+    }
+
+    public function users(){
+        $currentUser = JWTAuth::parseToken()->authenticate();
+        if($currentUser->user_type_id == 1){
+            return User::all();
+        }
+        throw new AccessDeniedHttpException();
+    }
+
+    public function user_types(){
+        $currentUser = JWTAuth::parseToken()->authenticate();
+        if($currentUser->user_type_id == 1){
+            return UserType::all();
+        }
+        throw new AccessDeniedHttpException();
     }
 }
