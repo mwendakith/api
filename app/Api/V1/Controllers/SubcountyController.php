@@ -29,7 +29,7 @@ class SubcountyController extends Controller
     	return DB::table('districts')->where('ID', $subcounty)->orWhere('SubCountyDHISCode', $subcounty)->orWhere('SubCountyMFLCode', $subcounty)->get();
     }
 
-    public function summary($subcounty, $year, $type, $month=NULL){
+    public function summary($subcounty, $type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -132,7 +132,7 @@ class SubcountyController extends Controller
 
 	}
 
-	public function hei_outcomes($subcounty, $year, $type, $month=NULL){
+	public function hei_outcomes($subcounty, $type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -234,7 +234,7 @@ class SubcountyController extends Controller
 
 	}
 
-	public function hei_validation($subcounty, $year, $type, $month=NULL){
+	public function hei_validation($subcounty, $type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -337,7 +337,7 @@ class SubcountyController extends Controller
 	}
 
 
-	public function age_breakdown($subcounty, $year, $type, $month=NULL){
+	public function age_breakdown($subcounty, $type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -440,7 +440,7 @@ class SubcountyController extends Controller
 	}
 
 
-	public function entry_point($subcounty, $year, $type, $month=NULL){
+	public function entry_point($subcounty, $type, $year, $month=NULL){
 		$data = NULL;
 
 		$raw = 'districts.ID as subcounty_id, districts.SubCountyDHISCode as SubCountyDHISCode, districts.SubCountyMFLCode as SubCountyMFLCode, districts.name as subcounty, ' . $this->entry_point_query();
@@ -552,7 +552,7 @@ class SubcountyController extends Controller
 
 	}
 
-	public function mother_prophylaxis($subcounty, $year, $type, $month=NULL){
+	public function mother_prophylaxis($subcounty, $type, $year, $month=NULL){
 		$data = NULL;
 
 		$raw = 'districts.ID as subcounty_id, districts.SubCountyDHISCode as SubCountyDHISCode, districts.SubCountyMFLCode as SubCountyMFLCode, districts.name as subcounty, ' . $this->mother_prophylaxis_query();
@@ -665,7 +665,7 @@ class SubcountyController extends Controller
 	}
 
 
-	public function infant_prophylaxis($subcounty, $year, $type, $month=NULL){
+	public function infant_prophylaxis($subcounty, $type, $year, $month=NULL){
 		$data = NULL;
 
 		$raw = 'districts.ID as subcounty_id, districts.SubCountyDHISCode as SubCountyDHISCode, districts.SubCountyMFLCode as SubCountyMFLCode, districts.name as subcounty, ' . $this->infant_prophylaxis_query();
@@ -776,7 +776,7 @@ class SubcountyController extends Controller
 
 	}
 
-	public function subcounty_sites($subcounty, $year, $type, $month=NULL){
+	public function subcounty_sites($subcounty, $type, $year, $month=NULL){
 
 		$data = NULL;
 

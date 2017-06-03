@@ -20,7 +20,7 @@ class PartnerController extends Controller
     	return DB::table('partners')->where('ID', $partner)->orWhere('partnerDHISCode', $partner)->get();
     }
 
-    public function summary($partner, $year, $type, $month=NULL){
+    public function summary($partner, $type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -113,7 +113,7 @@ class PartnerController extends Controller
 
 	}
 
-	public function hei_outcomes($partner, $year, $type, $month=NULL){
+	public function hei_outcomes($partner, $type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -206,7 +206,7 @@ class PartnerController extends Controller
 
 	}
 
-	public function hei_validation($partner, $year, $type, $month=NULL){
+	public function hei_validation($partner, $type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -300,7 +300,7 @@ class PartnerController extends Controller
 	}
 
 
-	public function age_breakdown($partner, $year, $type, $month=NULL){
+	public function age_breakdown($partner, $type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -394,7 +394,7 @@ class PartnerController extends Controller
 	}
 
 
-	public function entry_point($partner, $year, $type, $month=NULL){
+	public function entry_point($partner, $type, $year, $month=NULL){
 		$data = NULL;
 
 		$raw = 'partners.ID as partner_id, partners.name as partner, ' . $this->entry_point_query();
@@ -496,7 +496,7 @@ class PartnerController extends Controller
 
 	}
 
-	public function mother_prophylaxis($partner, $year, $type, $month=NULL){
+	public function mother_prophylaxis($partner, $type, $year, $month=NULL){
 		$data = NULL;
 
 		$raw = 'partners.ID as partner_id, partners.name as partner, ' . $this->mother_prophylaxis_query();
@@ -599,7 +599,7 @@ class PartnerController extends Controller
 	}
 
 
-	public function infant_prophylaxis($partner, $year, $type, $month=NULL){
+	public function infant_prophylaxis($partner, $type, $year, $month=NULL){
 		$data = NULL;
 
 		$raw = 'partners.ID as partner_id, partners.name as partner, ' . $this->infant_prophylaxis_query();
@@ -700,7 +700,7 @@ class PartnerController extends Controller
 
 	}
 
-	public function partner_sites($partner, $year, $type, $month=NULL){
+	public function partner_sites($partner, $type, $year, $month=NULL){
 
 		$data = NULL;
 

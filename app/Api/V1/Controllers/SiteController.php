@@ -53,7 +53,7 @@ class SiteController extends Controller
 			->get();
     }
 
-    public function summary($site, $year, $type, $month=NULL){
+    public function summary($site, $type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -168,7 +168,7 @@ class SiteController extends Controller
 
 	}
 
-	public function hei_outcomes($site, $year, $type, $month=NULL){
+	public function hei_outcomes($site, $type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -278,7 +278,7 @@ class SiteController extends Controller
 
 	}
 
-	public function hei_validation($site, $year, $type, $month=NULL){
+	public function hei_validation($site, $type, $year, $month=NULL){
 
 		$data = NULL;
 

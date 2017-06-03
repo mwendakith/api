@@ -29,7 +29,7 @@ class CountyController extends Controller
     	return DB::table('countys')->where('ID', $county)->orWhere('CountyDHISCode', $county)->orWhere('CountyMFLCode', $county)->get();
     }
 
-    public function summary($county, $year, $type, $month=NULL){
+    public function summary($county, $type, $year, $month=NULL){
 
     	// return $county;
 
@@ -137,7 +137,7 @@ class CountyController extends Controller
 
 	}
 
-	public function hei_outcomes($county, $year, $type, $month=NULL){
+	public function hei_outcomes($county, $type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -243,7 +243,7 @@ class CountyController extends Controller
 
 	}
 
-	public function hei_validation($county, $year, $type, $month=NULL){
+	public function hei_validation($county, $type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -350,7 +350,7 @@ class CountyController extends Controller
 	}
 
 
-	public function age_breakdown($county, $year, $type, $month=NULL){
+	public function age_breakdown($county, $type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -457,7 +457,7 @@ class CountyController extends Controller
 	}
 
 
-	public function entry_point($county, $year, $type, $month=NULL){
+	public function entry_point($county, $type, $year, $month=NULL){
 		$data = NULL;
 
 		$raw = 'countys.ID as county_id, CountyDHISCode as CountyDHISCode, CountyMFLCode as CountyMFLCode, countys.name as county, ' . $this->entry_point_query();
@@ -573,7 +573,7 @@ class CountyController extends Controller
 
 	}
 
-	public function mother_prophylaxis($county, $year, $type, $month=NULL){
+	public function mother_prophylaxis($county, $type, $year, $month=NULL){
 		$data = NULL;
 
 		$raw = 'countys.ID as county_id, CountyDHISCode as CountyDHISCode, CountyMFLCode as CountyMFLCode, countys.name as county, ' . $this->mother_prophylaxis_query();
@@ -690,7 +690,7 @@ class CountyController extends Controller
 	}
 
 
-	public function infant_prophylaxis($county, $year, $type, $month=NULL){
+	public function infant_prophylaxis($county, $type, $year, $month=NULL){
 		$data = NULL;
 
 		$raw = 'countys.ID as county_id, CountyDHISCode as CountyDHISCode, CountyMFLCode as CountyMFLCode, countys.name as county, ' . $this->infant_prophylaxis_query();
@@ -805,7 +805,7 @@ class CountyController extends Controller
 
 	}
 
-	public function county_sites($county, $year, $type, $month=NULL){
+	public function county_sites($county, $type, $year, $month=NULL){
 
 		$data = NULL;
 

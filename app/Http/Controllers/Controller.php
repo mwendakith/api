@@ -12,11 +12,11 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     
-    protected function pass_message($message){
+    protected function pass_error($message){
     	return response()
             ->json([
                 'error' => 500,
-                'message' => 'Month ' . $message . ' is invalid. Value must be between 1 and 12.'
+                'message' =>  $message
             ]);
     }
 
@@ -202,12 +202,73 @@ class Controller extends BaseController
 		  prophylaxis.name';
 	}
 
+	protected function patient_query(){
+		return 'PatientID, FacilityMFLcode, FacilityDHISCode, FacilityCounty, FacilitySubcounty, FacilityPartner, Age, Gender, motherregimen, infantregimen, entrypoint, feedingtype, datecollected, datereceived, datetested, result, datedispatched, labtestedin';
+	}
+
 
 	protected function output_data($data, $type, $year, $month=NULL){
 		if($type == 1){
 			//$data['year'] = $year;
 			return $data;
 		}
+	}
+
+	protected function multiple_year($year, $month=NULL, $year2=NULL, $month2=NULL){
+		 return "( (year = " . $year . " AND month >= " . $month . ") OR (year = " . $year2 . " AND month <= " . $month . ") OR (year > " . $year . " AND year < " . $year2 . ")  )";
+	}
+
+	protected function describe_multiple($year, $month=NULL, $year2=NULL, $month2=NULL){
+		return "For the period from " . $this->resolve_month($month) . ", {$year} to " . $this->resolve_month($month2) . ", {$year2}."; 
+
+	}
+
+	protected function resolve_month($month)
+	{
+		switch ($month) {
+			case 1:
+				$value = 'January';
+				break;
+			case 2:
+				$value = 'February';
+				break;
+			case 3:
+				$value = 'March';
+				break;
+			case 4:
+				$value = 'April';
+				break;
+			case 5:
+				$value = 'May';
+				break;
+			case 6:
+				$value = 'June';
+				break;
+			case 7:
+				$value = 'July';
+				break;
+			case 8:
+				$value = 'August';
+				break;
+			case 9:
+				$value = 'September';
+				break;
+			case 10:
+				$value = 'October';
+				break;
+			case 11:
+				$value = 'November';
+				break;
+			case 12:
+				$value = 'December';
+				break;
+			default:
+				$value = NULL;
+				break;
+		}
+
+		return $value;
+
 	}
 
 

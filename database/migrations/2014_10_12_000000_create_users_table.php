@@ -13,7 +13,7 @@ class CreateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('users', function (Blueprint $table) {
+        Schema::create('administrators', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_type_id')->unsigned()->default(6);
             $table->string('name');
@@ -33,6 +33,9 @@ class CreateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('users');
+        Schema::dropIfExists('administrators');
+        // Schema::table('users', function (Blueprint $table) {
+        //     $table->dropColumn(['user_type_id', 'name', 'email', 'password', 'remember_token', 'created_at', 'updated_at']);
+        // });
     }
 }

@@ -20,7 +20,7 @@ class LabController extends Controller
     	return DB::table('labs')->where('ID', $lab)->get();
     }
 
-    public function summary($lab, $year, $type, $month=NULL){
+    public function summary($lab, $type, $year, $month=NULL){
 
 		$data = NULL;
 

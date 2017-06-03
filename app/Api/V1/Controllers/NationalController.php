@@ -12,7 +12,7 @@ class NationalController extends Controller
 {
     //
 
-	public function summary($year, $type, $month=NULL){
+	public function summary($type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -80,6 +80,38 @@ class NationalController extends Controller
 			$data = array($temp);
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$data = DB::table('national_summary')
+				->select('year', DB::raw($raw))
+				->where('year', $year)
+				->whereBetween('month', [$month, $month2])
+				->groupBy('year')
+				->get();
+			}
+
+			if($year < $year2){
+				$data = DB::table('national_summary')
+				->select( DB::raw($raw))
+				->whereRaw($q)
+				->get();
+
+				$desc = $this->describe_multiple($year, $month, $year2, $month2);
+				$temp = (array) $data[0];
+				array_unshift($temp, $desc);
+				$data = array($temp);
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
@@ -90,7 +122,7 @@ class NationalController extends Controller
 
 	}
 
-	public function hei_outcomes($year, $type, $month=NULL){
+	public function hei_outcomes($type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -99,7 +131,11 @@ class NationalController extends Controller
 		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('national_summary')->select('year', DB::raw($raw))->where('year', $year)->get();
+			$data = DB::table('national_summary')
+			->select('year', DB::raw($raw))
+			->where('year', $year)
+			->groupBy('year')
+			->get();
 
 		}
 
@@ -162,7 +198,7 @@ class NationalController extends Controller
 
 	}
 
-	public function hei_validation($year, $type, $month=NULL){
+	public function hei_validation($type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -239,7 +275,7 @@ class NationalController extends Controller
 	}
 
 
-	public function age_breakdown($year, $type, $month=NULL){
+	public function age_breakdown($type, $year, $month=NULL){
 
 		$data = NULL;
 
@@ -317,7 +353,7 @@ class NationalController extends Controller
 	}
 
 
-	public function entry_point($year, $type, $month=NULL){
+	public function entry_point($type, $year, $month=NULL){
 		$data = NULL;
 
 		$raw = $this->entry_point_query();
@@ -403,7 +439,7 @@ class NationalController extends Controller
 
 	}
 
-	public function mother_prophylaxis($year, $type, $month=NULL){
+	public function mother_prophylaxis($type, $year, $month=NULL){
 		$data = NULL;
 
 		$raw = $this->mother_prophylaxis_query();
@@ -489,7 +525,7 @@ class NationalController extends Controller
 	}
 
 
-	public function infant_prophylaxis($year, $type, $month=NULL){
+	public function infant_prophylaxis($type, $year, $month=NULL){
 		$data = NULL;
 
 		$raw = $this->infant_prophylaxis_query();
