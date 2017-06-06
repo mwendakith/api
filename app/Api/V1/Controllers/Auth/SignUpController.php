@@ -41,18 +41,18 @@ class SignUpController extends Controller
     }
 
     public function users(){
-        $currentUser = JWTAuth::parseToken()->authenticate();
-        if($currentUser->user_type_id == 1){
+        //$currentUser = JWTAuth::parseToken()->authenticate();
+        //if($currentUser->user_type_id == 1){
             return User::all();
-        }
-        throw new AccessDeniedHttpException();
+        //}
+        //throw new AccessDeniedHttpException();
     }
 
     public function user_types(){
-        $currentUser = JWTAuth::parseToken()->authenticate();
-        if($currentUser->user_type_id == 1){
+        //$currentUser = JWTAuth::parseToken()->authenticate();
+        //if($currentUser->user_type_id == 1){
             return UserType::all();
-        }
-        throw new AccessDeniedHttpException();
+        //}
+        //throw new AccessDeniedHttpException();
     }
 }

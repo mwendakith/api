@@ -14,6 +14,8 @@ $api->version('v1', function (Router $api) {
                 $api->get('users', 'App\\Api\\V1\\Controllers\\Auth\\SignUpController@users');
                 $api->get('user_types', 'App\\Api\\V1\\Controllers\\Auth\\SignUpController@user_types');
             });
+		$api->get('test', 'App\\Api\\V1\\Controllers\\Auth\\SignUpController@users');
+		 $api->get('test2', 'App\\Api\\V1\\Controllers\\Auth\\SignUpController@user_types');
             $api->post('login', 'App\\Api\\V1\\Controllers\\Auth\\LoginController@login');
 
             $api->post('recovery', 'App\\Api\\V1\\Controllers\\Auth\\ForgotPasswordController@sendResetEmail');
