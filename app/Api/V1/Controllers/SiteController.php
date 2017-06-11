@@ -4,11 +4,11 @@ namespace App\Api\V1\Controllers;
 
 use Illuminate\Http\Request;
 use App\Facility;
-use App\Http\Controllers\Controller;
+use App\Api\V1\Controllers\BaseController;
 
 use DB;
 
-class SiteController extends Controller
+class SiteController extends BaseController
 {
     //
 
@@ -133,7 +133,7 @@ class SiteController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('site_summary')
+			$d = DB::table('site_summary')
 			->select('year', DB::raw($raw))
 			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
@@ -153,9 +153,11 @@ class SiteController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -244,7 +246,7 @@ class SiteController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('site_summary')
+			$d = DB::table('site_summary')
 			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
@@ -259,13 +261,15 @@ class SiteController extends Controller
 			->where('month', '<', $greater)
 			->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.facilitycode', 'facilitys.DHIScode', 'year')
 			->get();
-
+			
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -354,7 +358,7 @@ class SiteController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('site_summary')
+			$d = DB::table('site_summary')
 			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
@@ -373,9 +377,11 @@ class SiteController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified

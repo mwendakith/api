@@ -4,11 +4,11 @@ namespace App\Api\V1\Controllers;
 
 use Illuminate\Http\Request;
 use App\County;
-use App\Http\Controllers\Controller;
+use App\Api\V1\Controllers\BaseController;
 
 use DB;
 
-class CountyController extends Controller
+class CountyController extends BaseController
 {
     //
 
@@ -104,7 +104,7 @@ class CountyController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('county_summary')
+			$d = DB::table('county_summary')
 			->select('year', DB::raw($raw))
 			->leftJoin('countys', 'countys.ID', '=', 'county_summary.county')
 			->where('year', $year)
@@ -122,9 +122,11 @@ class CountyController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -210,7 +212,7 @@ class CountyController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('county_summary')
+			$d = DB::table('county_summary')
 			->leftJoin('countys', 'countys.ID', '=', 'county_summary.county')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
@@ -227,10 +229,15 @@ class CountyController extends Controller
 			
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
+			
+			$a = "Q" . $month;
+			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -316,7 +323,7 @@ class CountyController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('county_summary')
+			$d = DB::table('county_summary')
 			->leftJoin('countys', 'countys.ID', '=', 'county_summary.county')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
@@ -334,8 +341,11 @@ class CountyController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 			$data = array($temp);
 		}
 
@@ -423,7 +433,7 @@ class CountyController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('county_agebreakdown')
+			$d = DB::table('county_agebreakdown')
 			->leftJoin('countys', 'countys.ID', '=', 'county_agebreakdown.county')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
@@ -441,9 +451,11 @@ class CountyController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -539,7 +551,7 @@ class CountyController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('county_entrypoint')
+			$d = DB::table('county_entrypoint')
 			->select('year', DB::raw($raw))
 			->leftJoin('entry_points', 'entry_points.ID', '=', 'county_entrypoint.entrypoint')
 			->leftJoin('countys', 'countys.ID', '=', 'county_entrypoint.county')
@@ -559,9 +571,11 @@ class CountyController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -655,7 +669,7 @@ class CountyController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('county_mprophylaxis')
+			$d = DB::table('county_mprophylaxis')
 			->select('year', DB::raw($raw))
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'county_mprophylaxis.prophylaxis')
 			->leftJoin('countys', 'countys.ID', '=', 'county_mprophylaxis.county')
@@ -675,9 +689,11 @@ class CountyController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -772,7 +788,7 @@ class CountyController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('county_iprophylaxis')
+			$d = DB::table('county_iprophylaxis')
 			->select('year', DB::raw($raw))
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'county_iprophylaxis.prophylaxis')
 			->leftJoin('countys', 'countys.ID', '=', 'county_iprophylaxis.county')
@@ -791,9 +807,11 @@ class CountyController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -874,7 +892,7 @@ class CountyController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('site_summary')
+			$d = DB::table('site_summary')
 			->select('year', DB::raw($raw))
 			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->join('districts', 'districts.ID', '=', 'facilitys.district')
@@ -890,9 +908,11 @@ class CountyController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified

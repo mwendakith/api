@@ -4,11 +4,11 @@ namespace App\Api\V1\Controllers;
 
 use Illuminate\Http\Request;
 use App\Partner;
-use App\Http\Controllers\Controller;
+use App\Api\V1\Controllers\BaseController;
 
 use DB;
 
-class PartnerController extends Controller
+class PartnerController extends BaseController
 {
     //
 
@@ -83,7 +83,7 @@ class PartnerController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('ip_summary')
+			$d = DB::table('ip_summary')
 			->select('year', DB::raw($raw))
 			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
@@ -98,9 +98,11 @@ class PartnerController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -176,7 +178,7 @@ class PartnerController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('ip_summary')
+			$d = DB::table('ip_summary')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
@@ -191,9 +193,11 @@ class PartnerController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -269,7 +273,7 @@ class PartnerController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('ip_summary')
+			$d = DB::table('ip_summary')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
@@ -284,9 +288,11 @@ class PartnerController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -363,7 +369,7 @@ class PartnerController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('ip_agebreakdown')
+			$d = DB::table('ip_agebreakdown')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_agebreakdown.partner')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
@@ -378,9 +384,11 @@ class PartnerController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -465,7 +473,7 @@ class PartnerController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('ip_entrypoint')
+			$d = DB::table('ip_entrypoint')
 			->select('year', DB::raw($raw))
 			->leftJoin('entry_points', 'entry_points.ID', '=', 'ip_entrypoint.entrypoint')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_entrypoint.partner')
@@ -482,9 +490,11 @@ class PartnerController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -567,7 +577,7 @@ class PartnerController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('ip_mprophylaxis')
+			$d = DB::table('ip_mprophylaxis')
 			->select('year', DB::raw($raw))
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_mprophylaxis.prophylaxis')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_mprophylaxis.partner')
@@ -584,9 +594,11 @@ class PartnerController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -670,7 +682,7 @@ class PartnerController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('ip_iprophylaxis')
+			$d = DB::table('ip_iprophylaxis')
 			->select('year', DB::raw($raw))
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_iprophylaxis.prophylaxis')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_iprophylaxis.partner')
@@ -686,9 +698,11 @@ class PartnerController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -761,7 +775,7 @@ class PartnerController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('site_summary')
+			$d = DB::table('site_summary')
 			->select('year', DB::raw($raw))
 			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
@@ -775,9 +789,11 @@ class PartnerController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified

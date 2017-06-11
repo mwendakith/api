@@ -4,11 +4,11 @@ namespace App\Api\V1\Controllers;
 
 use Illuminate\Http\Request;
 use App\District;
-use App\Http\Controllers\Controller;
+use App\Api\V1\Controllers\BaseController;
 
 use DB;
 
-class SubcountyController extends Controller
+class SubcountyController extends BaseController
 {
     //
 
@@ -100,7 +100,7 @@ class SubcountyController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('subcounty_summary')
+			$d = DB::table('subcounty_summary')
 			->select('year', DB::raw($raw))
 			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
 			->where('year', $year)
@@ -117,9 +117,11 @@ class SubcountyController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -202,7 +204,7 @@ class SubcountyController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('subcounty_summary')
+			$d = DB::table('subcounty_summary')
 			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
@@ -219,9 +221,11 @@ class SubcountyController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -304,7 +308,7 @@ class SubcountyController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('subcounty_summary')
+			$d = DB::table('subcounty_summary')
 			->leftJoin('districts', 'districts.ID', '=', 'subcounty_summary.subcounty')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
@@ -321,9 +325,11 @@ class SubcountyController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -407,7 +413,7 @@ class SubcountyController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('subcounty_agebreakdown')
+			$d = DB::table('subcounty_agebreakdown')
 			->leftJoin('districts', 'districts.ID', '=', 'subcounty_agebreakdown.subcounty')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
@@ -424,9 +430,11 @@ class SubcountyController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -519,7 +527,7 @@ class SubcountyController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('subcounty_entrypoint')
+			$d = DB::table('subcounty_entrypoint')
 			->select('year', DB::raw($raw))
 			->leftJoin('entry_points', 'entry_points.ID', '=', 'subcounty_entrypoint.entrypoint')
 			->leftJoin('districts', 'districts.ID', '=', 'subcounty_entrypoint.subcounty')
@@ -538,9 +546,11 @@ class SubcountyController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -631,7 +641,7 @@ class SubcountyController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('subcounty_mprophylaxis')
+			$d = DB::table('subcounty_mprophylaxis')
 			->select('year', DB::raw($raw))
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_mprophylaxis.prophylaxis')
 			->leftJoin('districts', 'districts.ID', '=', 'subcounty_mprophylaxis.subcounty')
@@ -650,9 +660,11 @@ class SubcountyController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -744,7 +756,7 @@ class SubcountyController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('subcounty_iprophylaxis')
+			$d = DB::table('subcounty_iprophylaxis')
 			->select('year', DB::raw($raw))
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'subcounty_iprophylaxis.prophylaxis')
 			->leftJoin('districts', 'districts.ID', '=', 'subcounty_iprophylaxis.subcounty')
@@ -762,9 +774,11 @@ class SubcountyController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -841,7 +855,7 @@ class SubcountyController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('site_summary')
+			$d = DB::table('site_summary')
 			->select('year', DB::raw($raw))
 			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->join('districts', 'districts.ID', '=', 'facilitys.district')
@@ -856,9 +870,11 @@ class SubcountyController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified

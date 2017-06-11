@@ -4,11 +4,11 @@ namespace App\Api\V1\Controllers;
 
 use Illuminate\Http\Request;
 use App\National;
-use App\Http\Controllers\Controller;
+use App\Api\V1\Controllers\BaseController;
 
 use DB;
 
-class NationalController extends Controller
+class NationalController extends BaseController
 {
     //
 
@@ -64,7 +64,7 @@ class NationalController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('national_summary')
+			$d = DB::table('national_summary')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
 			->where('month', '>', $lesser)
@@ -75,9 +75,11 @@ class NationalController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// For Multiple Months across years
@@ -90,7 +92,7 @@ class NationalController extends Controller
 			// return $this->pass_error($q);
 
 			if($year == $year2 && $month < $month2){
-				$data = DB::table('national_summary')
+				$d = DB::table('national_summary')
 				->select('year', DB::raw($raw))
 				->where('year', $year)
 				->whereBetween('month', [$month, $month2])
@@ -99,15 +101,19 @@ class NationalController extends Controller
 			}
 
 			if($year < $year2){
-				$data = DB::table('national_summary')
+				$d = DB::table('national_summary')
 				->select( DB::raw($raw))
 				->whereRaw($q)
 				->get();
 
-				$desc = $this->describe_multiple($year, $month, $year2, $month2);
-				$temp = (array) $data[0];
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
 				array_unshift($temp, $desc);
-				$data = array($temp);
+				$data[$i] = $temp;
 			}
 			
 		}
@@ -172,20 +178,22 @@ class NationalController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('national_summary')
+			$d = DB::table('national_summary')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
 			->groupBy('year')
 			->get();
-			
+
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -248,7 +256,7 @@ class NationalController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('national_summary')
+			$d = DB::table('national_summary')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
 			->where('month', '>', $lesser)
@@ -256,12 +264,16 @@ class NationalController extends Controller
 			->groupBy('year')
 			->get();
 			
+			
+			
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -326,7 +338,7 @@ class NationalController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('national_agebreakdown')
+			$d = DB::table('national_agebreakdown')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
 			->where('month', '>', $lesser)
@@ -337,9 +349,11 @@ class NationalController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -412,7 +426,7 @@ class NationalController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('national_entrypoint')
+			$d = DB::table('national_entrypoint')
 			->select('year', DB::raw($raw))
 			->leftJoin('entry_points', 'entry_points.ID', '=', 'national_entrypoint.entrypoint')
 			->where('year', $year)
@@ -425,9 +439,11 @@ class NationalController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -497,7 +513,7 @@ class NationalController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('national_mprophylaxis')
+			$d = DB::table('national_mprophylaxis')
 			->select('year', DB::raw($raw))
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_mprophylaxis.prophylaxis')
 			->where('year', $year)
@@ -510,9 +526,11 @@ class NationalController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified
@@ -584,7 +602,7 @@ class NationalController extends Controller
 			$greater = $my_range[1];
 
 
-			$data = DB::table('national_iprophylaxis')
+			$d = DB::table('national_iprophylaxis')
 			->select('year', DB::raw($raw))
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_iprophylaxis.prophylaxis')
 			->where('year', $year)
@@ -597,9 +615,11 @@ class NationalController extends Controller
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 		}
 
 		// Else an invalid type has been specified

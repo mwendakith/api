@@ -4,11 +4,11 @@ namespace App\Api\V1\Controllers;
 
 use Illuminate\Http\Request;
 use App\Lab;
-use App\Http\Controllers\Controller;
+use App\Api\V1\Controllers\BaseController;
 
 use DB;
 
-class LabController extends Controller
+class LabController extends BaseController
 {
     //
 
@@ -84,7 +84,7 @@ class LabController extends Controller
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$data = DB::table('lab_summary')
+			$d = DB::table('lab_summary')
 			->select('year', DB::raw($raw))
 			->leftJoin('labs', 'labs.ID', '=', 'lab_summary.lab')
 			->where('year', $year)
@@ -95,14 +95,15 @@ class LabController extends Controller
 			->where('month', '<', $greater)
 			->groupBy('labs.ID', 'labs.name', 'year')
 			->get();
-
 			
 			$a = "Q" . $month;
 			$b = $this->quarter_description($month);
 
-			$temp = (array) $data[0];
-			array_unshift($temp, $b, $a);
-			$data = array($temp);
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$temp = (array) $d[$i];
+				array_unshift($temp, $b, $a);
+				$data[$i] = $temp;
+			}
 			
 			
 		}
