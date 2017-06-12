@@ -33,7 +33,7 @@ class SubcountyController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'districts.ID as subcounty_id, districts.SubCountyDHISCode as SubCountyDHISCode, districts.SubCountyMFLCode as SubCountyMFLCode, districts.name as subcounty, ' . $this->summary_query();
+		$raw = $this->subcounty_string . $this->summary_query();
 
 		$key = $this->set_key($subcounty);
 		
@@ -138,7 +138,7 @@ class SubcountyController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'districts.ID as subcounty_id, districts.SubCountyDHISCode as SubCountyDHISCode, districts.SubCountyMFLCode as SubCountyMFLCode, districts.name as subcounty, ' . $this->hei_outcomes_query();
+		$raw = $this->subcounty_string . $this->hei_outcomes_query();
 		
 		$key = $this->set_key($subcounty);
 
@@ -242,7 +242,7 @@ class SubcountyController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'districts.ID as subcounty_id, districts.SubCountyDHISCode as SubCountyDHISCode, districts.SubCountyMFLCode as SubCountyMFLCode, districts.name as subcounty, ' . $this->hei_validation_query();
+		$raw = $this->subcounty_string . $this->hei_validation_query();
 		
 		$key = $this->set_key($subcounty);
 
@@ -347,7 +347,7 @@ class SubcountyController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'districts.ID as subcounty_id, districts.SubCountyDHISCode as SubCountyDHISCode, districts.SubCountyMFLCode as SubCountyMFLCode, districts.name as subcounty, ' . $this->age_breakdown_query();
+		$raw = $this->subcounty_string . $this->age_breakdown_query();
 		
 		$key = $this->set_key($subcounty);
 
@@ -451,7 +451,7 @@ class SubcountyController extends BaseController
 	public function entry_point($subcounty, $type, $year, $month=NULL){
 		$data = NULL;
 
-		$raw = 'districts.ID as subcounty_id, districts.SubCountyDHISCode as SubCountyDHISCode, districts.SubCountyMFLCode as SubCountyMFLCode, districts.name as subcounty, ' . $this->entry_point_query();
+		$raw = $this->subcounty_string . $this->entry_point_query();
 
 		$key = $this->set_key($subcounty);
 
@@ -565,7 +565,7 @@ class SubcountyController extends BaseController
 	public function mother_prophylaxis($subcounty, $type, $year, $month=NULL){
 		$data = NULL;
 
-		$raw = 'districts.ID as subcounty_id, districts.SubCountyDHISCode as SubCountyDHISCode, districts.SubCountyMFLCode as SubCountyMFLCode, districts.name as subcounty, ' . $this->mother_prophylaxis_query();
+		$raw = $this->subcounty_string . $this->mother_prophylaxis_query();
 
 		$key = $this->set_key($subcounty);
 
@@ -680,7 +680,7 @@ class SubcountyController extends BaseController
 	public function infant_prophylaxis($subcounty, $type, $year, $month=NULL){
 		$data = NULL;
 
-		$raw = 'districts.ID as subcounty_id, districts.SubCountyDHISCode as SubCountyDHISCode, districts.SubCountyMFLCode as SubCountyMFLCode, districts.name as subcounty, ' . $this->infant_prophylaxis_query();
+		$raw = $this->subcounty_string . $this->infant_prophylaxis_query();
 
 		$key = $this->set_key($subcounty);
 
@@ -794,7 +794,7 @@ class SubcountyController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'facilitys.ID as facility_id, facilitys.facilitycode as facilityMFLCode, facilitys.DHIScode as facilityDHISCode, facilitys.name as facility, ' . $this->summary_query();
+		$raw = $this->site_string . $this->summary_query();
 
 		$key = $this->set_key($subcounty);		
 

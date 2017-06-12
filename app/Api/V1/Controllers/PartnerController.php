@@ -24,7 +24,7 @@ class PartnerController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'partners.ID as partner_id, partners.name as partner, ' . $this->partner_summary_query();
+		$raw = $this->partner_string . $this->partner_summary_query();
 		
 
 		// Totals for the whole year
@@ -119,7 +119,7 @@ class PartnerController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'partners.ID as partner_id, partners.name as partner, ' . $this->hei_outcomes_query();
+		$raw = $this->partner_string . $this->hei_outcomes_query();
 		
 
 		// Totals for the whole year
@@ -214,7 +214,7 @@ class PartnerController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'partners.ID as partner_id, partners.name as partner, ' . $this->hei_validation_query();
+		$raw = $this->partner_string . $this->hei_validation_query();
 		
 
 		// Totals for the whole year
@@ -310,7 +310,7 @@ class PartnerController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'partners.ID as partner_id, partners.name as partner, ' . $this->age_breakdown_query();
+		$raw = $this->partner_string . $this->age_breakdown_query();
 		
 
 		// Totals for the whole year
@@ -405,7 +405,7 @@ class PartnerController extends BaseController
 	public function entry_point($partner, $type, $year, $month=NULL){
 		$data = NULL;
 
-		$raw = 'partners.ID as partner_id, partners.name as partner, ' . $this->entry_point_query();
+		$raw = $this->partner_string . $this->entry_point_query();
 
 		  // Totals for the whole year
 		if($type == 1){
@@ -509,7 +509,7 @@ class PartnerController extends BaseController
 	public function mother_prophylaxis($partner, $type, $year, $month=NULL){
 		$data = NULL;
 
-		$raw = 'partners.ID as partner_id, partners.name as partner, ' . $this->mother_prophylaxis_query();
+		$raw = $this->partner_string . $this->mother_prophylaxis_query();
 
 		  // Totals for the whole year
 		if($type == 1){
@@ -614,7 +614,7 @@ class PartnerController extends BaseController
 	public function infant_prophylaxis($partner, $type, $year, $month=NULL){
 		$data = NULL;
 
-		$raw = 'partners.ID as partner_id, partners.name as partner, ' . $this->infant_prophylaxis_query();
+		$raw = $this->partner_string . $this->infant_prophylaxis_query();
 
 		  // Totals for the whole year
 		if($type == 1){
@@ -718,7 +718,7 @@ class PartnerController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'facilitys.ID as facility_id, facilitys.facilitycode as facilityMFLCode, facilitys.DHIScode as facilityDHISCode, facilitys.name as facility, ' . $this->summary_query();
+		$raw = $this->site_string . $this->summary_query();
 		
 
 		// Totals for the whole year

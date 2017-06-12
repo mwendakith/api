@@ -57,7 +57,7 @@ class SiteController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'facilitys.ID as facility_id, facilitys.facilitycode as facilityMFLCode, facilitys.DHIScode as facilityDHISCode, facilitys.name as facility, ' . $this->summary_query();
+		$raw = $this->site_string . $this->summary_query();
 
 		$key = $this->set_key($site);
 		
@@ -174,7 +174,7 @@ class SiteController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'facilitys.ID as facility_id, facilitys.facilitycode as facilityMFLCode, facilitys.DHIScode as facilityDHISCode, facilitys.name as facility, ' . $this->hei_outcomes_query();
+		$raw = $this->site_string . $this->hei_outcomes_query();
 		
 		$key = $this->set_key($site);
 
@@ -286,7 +286,7 @@ class SiteController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'facilitys.ID as facility_id, facilitys.facilitycode as facilityMFLCode, facilitys.DHIScode as facilityDHISCode, facilitys.name as facility, ' . $this->hei_validation_query();
+		$raw = $this->site_string . $this->hei_validation_query();
 		
 		$key = $this->set_key($site);
 

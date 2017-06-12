@@ -24,7 +24,7 @@ class LabController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'labs.ID as lab_id, labs.name as lab, ' . $this->lab_summary_query();
+		$raw = $this->lab_string . $this->lab_summary_query();
 
 		
 

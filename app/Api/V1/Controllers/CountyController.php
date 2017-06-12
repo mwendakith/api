@@ -35,7 +35,7 @@ class CountyController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'countys.ID as county_id, CountyDHISCode as CountyDHISCode, CountyMFLCode as CountyMFLCode, CountyDHISCode as CountyDHISCode, CountyMFLCode as CountyMFLCode, countys.name as county, ' . $this->summary_query();
+		$raw = $this->county_string . $this->summary_query();
 
 		$key = $this->set_key($county);
 
@@ -143,7 +143,7 @@ class CountyController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'countys.ID as county_id, CountyDHISCode as CountyDHISCode, CountyMFLCode as CountyMFLCode, countys.name as county, ' . $this->hei_outcomes_query();
+		$raw = $this->county_string . $this->hei_outcomes_query();
 		
 		$key = $this->set_key($county);
 
@@ -254,7 +254,7 @@ class CountyController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'countys.ID as county_id, CountyDHISCode as CountyDHISCode, CountyMFLCode as CountyMFLCode, countys.name as county, ' . $this->hei_validation_query();
+		$raw = $this->county_string . $this->hei_validation_query();
 		
 		$key = $this->set_key($county);
 
@@ -364,7 +364,7 @@ class CountyController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'countys.ID as county_id, CountyDHISCode as CountyDHISCode, CountyMFLCode as CountyMFLCode, countys.name as county, ' . $this->age_breakdown_query();
+		$raw = $this->county_string . $this->age_breakdown_query();
 		
 		$key = $this->set_key($county);
 
@@ -472,7 +472,7 @@ class CountyController extends BaseController
 	public function entry_point($county, $type, $year, $month=NULL){
 		$data = NULL;
 
-		$raw = 'countys.ID as county_id, CountyDHISCode as CountyDHISCode, CountyMFLCode as CountyMFLCode, countys.name as county, ' . $this->entry_point_query();
+		$raw = $this->county_string . $this->entry_point_query();
 
 		$key = $this->set_key($county);
 
@@ -590,7 +590,7 @@ class CountyController extends BaseController
 	public function mother_prophylaxis($county, $type, $year, $month=NULL){
 		$data = NULL;
 
-		$raw = 'countys.ID as county_id, CountyDHISCode as CountyDHISCode, CountyMFLCode as CountyMFLCode, countys.name as county, ' . $this->mother_prophylaxis_query();
+		$raw = $this->county_string . $this->mother_prophylaxis_query();
 
 		$key = $this->set_key($county);
 
@@ -709,7 +709,7 @@ class CountyController extends BaseController
 	public function infant_prophylaxis($county, $type, $year, $month=NULL){
 		$data = NULL;
 
-		$raw = 'countys.ID as county_id, CountyDHISCode as CountyDHISCode, CountyMFLCode as CountyMFLCode, countys.name as county, ' . $this->infant_prophylaxis_query();
+		$raw = $this->county_string . $this->infant_prophylaxis_query();
 
 		$key = $this->set_key($county);
 
@@ -827,7 +827,7 @@ class CountyController extends BaseController
 
 		$data = NULL;
 
-		$raw = 'facilitys.ID as facility_id, facilitys.facilitycode as facilityMFLCode, facilitys.DHIScode as facilityDHISCode, facilitys.name as facility, ' . $this->summary_query();
+		$raw = $this->site_string . $this->summary_query();
 
 		
 		$key = $this->set_key($county);
