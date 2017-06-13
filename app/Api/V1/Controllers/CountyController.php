@@ -29,7 +29,7 @@ class CountyController extends BaseController
     	return DB::table('countys')->where('ID', $county)->orWhere('CountyDHISCode', $county)->orWhere('CountyMFLCode', $county)->get();
     }
 
-    public function summary($county, $type, $year, $month=NULL){
+    public function summary($county, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
     	// return $county;
 
@@ -123,9 +123,11 @@ class CountyController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -139,7 +141,7 @@ class CountyController extends BaseController
 
 	}
 
-	public function hei_outcomes($county, $type, $year, $month=NULL){
+	public function hei_outcomes($county, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -234,9 +236,11 @@ class CountyController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -250,7 +254,7 @@ class CountyController extends BaseController
 
 	}
 
-	public function hei_validation($county, $type, $year, $month=NULL){
+	public function hei_validation($county, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -342,9 +346,11 @@ class CountyController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 			$data = array($temp);
 		}
@@ -360,7 +366,7 @@ class CountyController extends BaseController
 	}
 
 
-	public function age_breakdown($county, $type, $year, $month=NULL){
+	public function age_breakdown($county, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -452,9 +458,11 @@ class CountyController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -469,7 +477,7 @@ class CountyController extends BaseController
 	}
 
 
-	public function entry_point($county, $type, $year, $month=NULL){
+	public function entry_point($county, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 		$data = NULL;
 
 		$raw = $this->county_string . $this->entry_point_query();
@@ -572,9 +580,11 @@ class CountyController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -587,7 +597,7 @@ class CountyController extends BaseController
 
 	}
 
-	public function mother_prophylaxis($county, $type, $year, $month=NULL){
+	public function mother_prophylaxis($county, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 		$data = NULL;
 
 		$raw = $this->county_string . $this->mother_prophylaxis_query();
@@ -690,9 +700,11 @@ class CountyController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -706,7 +718,7 @@ class CountyController extends BaseController
 	}
 
 
-	public function infant_prophylaxis($county, $type, $year, $month=NULL){
+	public function infant_prophylaxis($county, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 		$data = NULL;
 
 		$raw = $this->county_string . $this->infant_prophylaxis_query();
@@ -808,9 +820,11 @@ class CountyController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -823,7 +837,7 @@ class CountyController extends BaseController
 
 	}
 
-	public function county_sites($county, $type, $year, $month=NULL){
+	public function county_sites($county, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -909,9 +923,11 @@ class CountyController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 

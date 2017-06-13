@@ -20,7 +20,7 @@ class PartnerController extends BaseController
     	return DB::table('partners')->where('ID', $partner)->orWhere('partnerDHISCode', $partner)->get();
     }
 
-    public function summary($partner, $type, $year, $month=NULL){
+    public function summary($partner, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -99,9 +99,11 @@ class PartnerController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -115,7 +117,7 @@ class PartnerController extends BaseController
 
 	}
 
-	public function hei_outcomes($partner, $type, $year, $month=NULL){
+	public function hei_outcomes($partner, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -194,9 +196,11 @@ class PartnerController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -210,7 +214,7 @@ class PartnerController extends BaseController
 
 	}
 
-	public function hei_validation($partner, $type, $year, $month=NULL){
+	public function hei_validation($partner, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -289,9 +293,11 @@ class PartnerController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -306,7 +312,7 @@ class PartnerController extends BaseController
 	}
 
 
-	public function age_breakdown($partner, $type, $year, $month=NULL){
+	public function age_breakdown($partner, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -385,9 +391,11 @@ class PartnerController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -402,7 +410,7 @@ class PartnerController extends BaseController
 	}
 
 
-	public function entry_point($partner, $type, $year, $month=NULL){
+	public function entry_point($partner, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 		$data = NULL;
 
 		$raw = $this->partner_string . $this->entry_point_query();
@@ -491,9 +499,11 @@ class PartnerController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -506,7 +516,7 @@ class PartnerController extends BaseController
 
 	}
 
-	public function mother_prophylaxis($partner, $type, $year, $month=NULL){
+	public function mother_prophylaxis($partner, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 		$data = NULL;
 
 		$raw = $this->partner_string . $this->mother_prophylaxis_query();
@@ -595,9 +605,11 @@ class PartnerController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -611,7 +623,7 @@ class PartnerController extends BaseController
 	}
 
 
-	public function infant_prophylaxis($partner, $type, $year, $month=NULL){
+	public function infant_prophylaxis($partner, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 		$data = NULL;
 
 		$raw = $this->partner_string . $this->infant_prophylaxis_query();
@@ -699,9 +711,11 @@ class PartnerController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -714,7 +728,7 @@ class PartnerController extends BaseController
 
 	}
 
-	public function partner_sites($partner, $type, $year, $month=NULL){
+	public function partner_sites($partner, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -790,9 +804,11 @@ class PartnerController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 

@@ -76,9 +76,11 @@ class NationalController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -128,7 +130,7 @@ class NationalController extends BaseController
 
 	}
 
-	public function hei_outcomes($type, $year, $month=NULL){
+	public function hei_outcomes($type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -190,9 +192,11 @@ class NationalController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -206,7 +210,7 @@ class NationalController extends BaseController
 
 	}
 
-	public function hei_validation($type, $year, $month=NULL){
+	public function hei_validation($type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -270,9 +274,11 @@ class NationalController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -287,7 +293,7 @@ class NationalController extends BaseController
 	}
 
 
-	public function age_breakdown($type, $year, $month=NULL){
+	public function age_breakdown($type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -350,9 +356,11 @@ class NationalController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -367,7 +375,7 @@ class NationalController extends BaseController
 	}
 
 
-	public function entry_point($type, $year, $month=NULL){
+	public function entry_point($type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 		$data = NULL;
 
 		$raw = $this->entry_point_query();
@@ -440,9 +448,11 @@ class NationalController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -455,7 +465,7 @@ class NationalController extends BaseController
 
 	}
 
-	public function mother_prophylaxis($type, $year, $month=NULL){
+	public function mother_prophylaxis($type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 		$data = NULL;
 
 		$raw = $this->mother_prophylaxis_query();
@@ -527,9 +537,11 @@ class NationalController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -543,7 +555,7 @@ class NationalController extends BaseController
 	}
 
 
-	public function infant_prophylaxis($type, $year, $month=NULL){
+	public function infant_prophylaxis($type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 		$data = NULL;
 
 		$raw = $this->infant_prophylaxis_query();
@@ -616,9 +628,11 @@ class NationalController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 

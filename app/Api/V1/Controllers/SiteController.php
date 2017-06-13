@@ -53,7 +53,7 @@ class SiteController extends BaseController
 			->get();
     }
 
-    public function summary($site, $type, $year, $month=NULL){
+    public function summary($site, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -154,9 +154,11 @@ class SiteController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -170,7 +172,7 @@ class SiteController extends BaseController
 
 	}
 
-	public function hei_outcomes($site, $type, $year, $month=NULL){
+	public function hei_outcomes($site, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -266,9 +268,11 @@ class SiteController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
@@ -282,7 +286,7 @@ class SiteController extends BaseController
 
 	}
 
-	public function hei_validation($site, $type, $year, $month=NULL){
+	public function hei_validation($site, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 
 		$data = NULL;
 
@@ -378,9 +382,11 @@ class SiteController extends BaseController
 			$b = $this->quarter_description($month);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $b, $a);
-				$data[$i] = $temp;
+				$data[$i]['Quarter'] = $a;
+				$data[$i]['Period'] = $b;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 		}
 
