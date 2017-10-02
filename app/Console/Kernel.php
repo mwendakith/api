@@ -14,6 +14,11 @@ class Kernel extends ConsoleKernel
      */
     protected $commands = [
         //
+        
+        Commands\EidNegatives::class,
+        Commands\EidPositives::class,
+
+        Commands\SendReport::class,
     ];
 
     /**

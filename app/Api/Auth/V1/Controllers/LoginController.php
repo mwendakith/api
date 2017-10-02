@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Api\V1\Controllers\Auth;
+namespace App\Api\Auth\V1\Controllers;
 
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Tymon\JWTAuth\JWTAuth;
-use App\Api\V1\Controllers\BaseController;
-use App\Api\V1\Requests\LoginRequest;
+use App\Http\Controllers\Controller;
+use App\Api\Auth\V1\Requests\LoginRequest;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-class LoginController extends BaseController
+class LoginController extends Controller
 {
     public function login(LoginRequest $request, JWTAuth $JWTAuth)
     {

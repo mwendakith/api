@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Api\V1\Controllers;
+namespace App\Api\Eid\V1\Controllers;
 
 
 
@@ -10,16 +10,17 @@ use Illuminate\Http\Request;
 
 class BaseController extends Controller
 {
+	protected $county_string = 'countys.ID as county_id, CountyDHISCode as CountyDHISCode, CountyMFLCode as CountyMFLCode, countys.name as County, ';
 
-	protected $county_string = 'countys.ID as county_id, CountyDHISCode as CountyDHISCode, CountyMFLCode as CountyMFLCode, countys.name as county, ';
-
-	protected $subcounty_string = 'districts.ID as subcounty_id, districts.SubCountyDHISCode as SubCountyDHISCode, districts.SubCountyMFLCode as SubCountyMFLCode, districts.name as subcounty, ';
+	protected $subcounty_string = 'districts.ID as subcounty_id, districts.SubCountyDHISCode as SubCountyDHISCode, districts.SubCountyMFLCode as SubCountyMFLCode, districts.name as Subcounty, ';
 
 	protected $site_string = 'facilitys.ID as facility_id, facilitys.facilitycode as facilityMFLCode, facilitys.DHIScode as facilityDHISCode, facilitys.name as facility, ';
 
-	protected $partner_string = 'partners.ID as partner_id, partners.name as partner, ';
+	protected $partner_string = 'partners.ID as Partner_id, partners.name as Partner, ';
 
-	protected $lab_string = 'labs.ID as lab_id, labs.name as lab, ';
+	protected $lab_string = 'labs.ID as lab_id, labs.name as Lab, ';
+
+	protected $patient_string = 'count(*) as `tests`, FacilityMFLcode, patientID';
 
 	protected function pass_error($message){
     	return response()
@@ -108,15 +109,15 @@ class BaseController extends Controller
 	}
 
 	protected function summary_query(){
-		return 'SUM(alltests) as all_tests,
-		 SUM(pos) as positives, 
-		 SUM(neg) as negatives,
-		  SUM(redraw) as redraws, 
-		  SUM(firstdna) as first_DNA_PCR, 
-		  SUM(confirmdna) as repeat_confirmatory_PCR, 
-		  AVG(sitessending) as sites_sending, 
-		  AVG(medage) as median_age, 
-		  SUM(rejected) as rejected,
+		return 'SUM(alltests) as `Total Tests`,
+		 SUM(pos) as `Positive`, 
+		 SUM(neg) as `Negative`,
+		  SUM(redraw) as `Redraws`, 
+		  SUM(rejected) as `Rejected`, 
+		  SUM(firstdna) as `First DNA PCR With Valid Results`, 
+		  SUM(confirmdna) as `Repeat Positive Confirmatory Tests`, 
+		  AVG(sitessending) as `Sites Sending`, 
+		  AVG(medage) as `Median Age of Testing`, 
 		   SUM(actualinfants) as infants, 
 		   SUM(actualinfantsPOS) as infants_positive,
 		    SUM(infantsless2m) as infants_less_2m, 
@@ -133,11 +134,11 @@ class BaseController extends Controller
 		 SUM(pos) as positives, 
 		 SUM(neg) as negatives,
 		  SUM(redraw) as redraws, 
+		  SUM(rejected) as rejected,
 		  SUM(firstdna) as first_DNA_PCR, 
 		  SUM(confirmdna) as repeat_confirmatory_PCR, 
 		  AVG(sitessending) as sites_sending, 
 		  AVG(medage) as median_age, 
-		  SUM(rejected) as rejected,
 		   SUM(actualinfants) as infants, 
 		   SUM(actualinfantsPOS) as infants_positive,
 		    SUM(infantsless2m) as infants_less_2m, 
@@ -196,27 +197,27 @@ class BaseController extends Controller
 	protected function entry_point_query(){
 		return 'SUM(pos) as positives, 
 		 SUM(neg) as negatives,
-		  entry_points.name';
+		  entry_points.name as EntryPoint';
 	}
 
 	protected function mother_prophylaxis_query(){
 		return 'SUM(pos) as positives, 
 		 SUM(neg) as negatives,
-		  prophylaxis.name';
+		  prophylaxis.name as MotherProphylaxis';
 	}
 
 	protected function infant_prophylaxis_query(){
 		return 'SUM(pos) as positives, 
 		 SUM(neg) as negatives,
-		  prophylaxis.name';
+		  prophylaxis.name as InfantProphylaxis';
 	}
 
 	protected function patient_query(){
-		return 'PatientID, FacilityMFLcode, FacilityDHISCode, FacilityCounty, FacilitySubcounty, FacilityPartner, Age, Gender, motherregimen, infantregimen, entrypoint, feedingtype, datecollected, datereceived, datetested, result, datedispatched, labtestedin';
+		return 'PatientID, facilitys.name as Facility, districts.name as Subcounty, countys.name as County, partners.name as Partner, Age, Gender, mp.name as MotherProphylaxis, ip.name as InfantProphylaxis, entry_points.name as EntryPoint, feedings.name as FeedingType, datecollected, datereceived, datetested, results.Name as Result, datedispatched, labtestedin, labs.name as Lab, rejectedreasons.Name as RejectedReason, receivedstatus.name as ReceivedStatus';
 	}
 
 
-	protected function output_data($data, $type, $year, $month=NULL){
+	protected function output_data($data, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
 		if($type == 1){
 			//$data['year'] = $year;
 			return $data;
@@ -230,6 +231,60 @@ class BaseController extends Controller
 	protected function describe_multiple($year, $month=NULL, $year2=NULL, $month2=NULL){
 		return "For the period from " . $this->resolve_month($month) . ", {$year} to " . $this->resolve_month($month2) . ", {$year2}."; 
 
+	}
+
+	protected function check_data(&$data){
+		if ($data == null) {
+			return $this->pass_error("No data found");
+		}else{
+			if(gettype($data) == "object"){
+				if($data->isEmpty()){
+					return $this->pass_error("No data found");
+				}
+			}
+			return $data;
+		}
+	}
+
+	public function set_date($year, $month, $year2, $month2){
+
+		
+		$min = $year . '-' . $month . '-01';
+
+		$max = $year2 . '-' . ($month2+1) . '-01';
+
+		return array($min, $max);
+
+	}
+
+	public function set_quarters($year, $quarter){
+		$greater;
+		$lesser;
+
+		switch ($quarter) {
+			case 1:
+				$greater = 3;
+				$lesser = 1;
+				break;
+			case 2:
+				$greater = 6;
+				$lesser = 4;
+				break;
+			case 3:
+				$greater = 9;
+				$lesser = 7;
+				break;
+			case 4:
+				$greater = 12;
+				$lesser = 10;
+				break;
+			
+			default:
+				// return $this->invalid_quarter($month);
+				break;
+		}
+
+		return $this->set_date($year, $lesser, $year, $greater);
 	}
 
 	protected function resolve_month($month)

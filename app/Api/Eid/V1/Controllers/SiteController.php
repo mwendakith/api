@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Api\V1\Controllers;
+namespace App\Api\Eid\V1\Controllers;
 
 use Illuminate\Http\Request;
 use App\Facility;
-use App\Api\V1\Controllers\BaseController;
+use App\Api\Eid\V1\Controllers\BaseController;
 
 use DB;
 
@@ -21,11 +21,23 @@ class SiteController extends BaseController
 		}
     }
 
+
 	public function unsupported_sites(){
     	$raw = '';
 
     	return DB::table('facilitys')
-			->select('facilitys.ID as facility_id', 'facilitys.facilitycode as SiteMFLCode', 'facilitys.DHIScode as SiteDHISCode', 'facilitys.name as site', 'districts.ID as subcounty_id', 'districts.name as subcounty', 'countys.ID as county_id', 'countys.name as county')
+			->select('facilitys.ID as facility_id',
+			'facilitys.facilitycode as FacilityMFLCode',
+			'facilitys.DHIScode as FacilityDHISCode',
+			'facilitys.name as Facility', 
+			'districts.ID as subcounty_id',
+			'districts.SubCountyDHISCode as SubCountyDHISCode', 
+			'districts.SubCountyMFLCode as SubCountyMFLCode', 
+			'districts.name as subcounty', 
+			'countys.ID as county_id', 
+			'countys.CountyDHISCode as CountyDHISCode', 
+			'countys.CountyMFLCode as CountyMFLCode',
+			'countys.name as county')
 			->join('districts', 'districts.ID', '=', 'facilitys.district')
 			->join('countys', 'countys.ID', '=', 'districts.county')
 			->where('facilitys.partner', 0)
@@ -35,7 +47,7 @@ class SiteController extends BaseController
 
     public function sites(){
     	return DB::table('facilitys')
-    	->select('facilitys.ID as facility_id', 'facilitys.facilitycode as facilityMFLCode', 'facilitys.DHIScode as facilityDHISCode', 'facilitys.name as facility')->orderBy('ID')
+    	->select(DB::raw($this->site_string . 'longitude, latitude'))->orderBy('ID')
     	->get();
     }
 
@@ -162,13 +174,63 @@ class SiteController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('site_summary')
+				->select('year', DB::raw($raw))
+				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+				->where('year', $year)
+				->when($county, function($query) use ($county, $key){
+					if($county != "0" || $county != 0){
+						return $query->where($key, $county);
+					}
+				})
+				->whereBetween('month', [$month, $month2])
+				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode', 'year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('site_summary')
+				->select( DB::raw($raw))
+				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+				->whereRaw($q)
+				->when($county, function($query) use ($county, $key){
+					if($county != "0" || $county != 0){
+						return $query->where($key, $county);
+					}
+				})
+				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode')
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 
@@ -276,13 +338,63 @@ class SiteController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('site_summary')
+				->select('year', DB::raw($raw))
+				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+				->where('year', $year)
+				->when($county, function($query) use ($county, $key){
+					if($county != "0" || $county != 0){
+						return $query->where($key, $county);
+					}
+				})
+				->whereBetween('month', [$month, $month2])
+				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode', 'year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('site_summary')
+				->select( DB::raw($raw))
+				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+				->whereRaw($q)
+				->when($county, function($query) use ($county, $key){
+					if($county != "0" || $county != 0){
+						return $query->where($key, $county);
+					}
+				})
+				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode')
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 
@@ -390,13 +502,63 @@ class SiteController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('site_summary')
+				->select('year', DB::raw($raw))
+				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+				->where('year', $year)
+				->when($county, function($query) use ($county, $key){
+					if($county != "0" || $county != 0){
+						return $query->where($key, $county);
+					}
+				})
+				->whereBetween('month', [$month, $month2])
+				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode', 'year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('site_summary')
+				->select( DB::raw($raw))
+				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+				->whereRaw($q)
+				->when($county, function($query) use ($county, $key){
+					if($county != "0" || $county != 0){
+						return $query->where($key, $county);
+					}
+				})
+				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode')
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 

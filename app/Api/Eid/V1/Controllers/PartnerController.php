@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Api\V1\Controllers;
+namespace App\Api\Eid\V1\Controllers;
 
 use Illuminate\Http\Request;
 use App\Partner;
-use App\Api\V1\Controllers\BaseController;
+use App\Api\Eid\V1\Controllers\BaseController;
 
 use DB;
 
@@ -107,13 +107,63 @@ class PartnerController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('ip_summary')
+				->select('year', DB::raw($raw))
+				->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
+				->where('year', $year)
+				->when($partner, function($query) use ($partner, $key){
+					if($partner != "0" || $partner != 0){
+						return $query->where('partners.ID', $partner);
+					}
+				})
+				->whereBetween('month', [$month, $month2])
+				->groupBy('partners.ID', 'partners.name', 'year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('ip_summary')
+				->select( DB::raw($raw))
+				->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
+				->whereRaw($q)
+				->when($partner, function($query) use ($partner, $key){
+					if($partner != "0" || $partner != 0){
+						return $query->where('partners.ID', $partner);
+					}
+				})
+				->groupBy('partners.ID', 'partners.name')
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 
@@ -204,13 +254,63 @@ class PartnerController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('ip_summary')
+				->select('year', DB::raw($raw))
+				->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
+				->where('year', $year)
+				->when($partner, function($query) use ($partner, $key){
+					if($partner != "0" || $partner != 0){
+						return $query->where('partners.ID', $partner);
+					}
+				})
+				->whereBetween('month', [$month, $month2])
+				->groupBy('partners.ID', 'partners.name', 'year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('ip_summary')
+				->select( DB::raw($raw))
+				->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
+				->whereRaw($q)
+				->when($partner, function($query) use ($partner, $key){
+					if($partner != "0" || $partner != 0){
+						return $query->where('partners.ID', $partner);
+					}
+				})
+				->groupBy('partners.ID', 'partners.name')
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 
@@ -301,13 +401,63 @@ class PartnerController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('ip_summary')
+				->select('year', DB::raw($raw))
+				->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
+				->where('year', $year)
+				->when($partner, function($query) use ($partner, $key){
+					if($partner != "0" || $partner != 0){
+						return $query->where('partners.ID', $partner);
+					}
+				})
+				->whereBetween('month', [$month, $month2])
+				->groupBy('partners.ID', 'partners.name', 'year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('ip_summary')
+				->select( DB::raw($raw))
+				->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
+				->whereRaw($q)
+				->when($partner, function($query) use ($partner, $key){
+					if($partner != "0" || $partner != 0){
+						return $query->where('partners.ID', $partner);
+					}
+				})
+				->groupBy('partners.ID', 'partners.name')
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 
@@ -399,13 +549,63 @@ class PartnerController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('ip_agebreakdown')
+				->select('year', DB::raw($raw))
+				->leftJoin('partners', 'partners.ID', '=', 'ip_agebreakdown.partner')
+				->where('year', $year)
+				->when($partner, function($query) use ($partner, $key){
+					if($partner != "0" || $partner != 0){
+						return $query->where('partners.ID', $partner);
+					}
+				})
+				->whereBetween('month', [$month, $month2])
+				->groupBy('partners.ID', 'partners.name', 'year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('ip_agebreakdown')
+				->select( DB::raw($raw))
+				->leftJoin('partners', 'partners.ID', '=', 'ip_agebreakdown.partner')
+				->whereRaw($q)
+				->when($partner, function($query) use ($partner, $key){
+					if($partner != "0" || $partner != 0){
+						return $query->where('partners.ID', $partner);
+					}
+				})
+				->groupBy('partners.ID', 'partners.name')
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 
@@ -507,12 +707,64 @@ class PartnerController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('ip_entrypoint')
+				->select('year', DB::raw($raw))
+				->leftJoin('entry_points', 'entry_points.ID', '=', 'ip_entrypoint.entrypoint')
+				->leftJoin('partners', 'partners.ID', '=', 'ip_entrypoint.partner')
+				->where('year', $year)
+				->when($partner, function($query) use ($partner, $key){
+					if($partner != "0" || $partner != 0){
+						return $query->where('partners.ID', $partner);
+					}
+				})
+				->whereBetween('month', [$month, $month2])
+				->groupBy('partners.ID', 'partners.name', 'year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('ip_entrypoint')
+				->select( DB::raw($raw))
+				->leftJoin('entry_points', 'entry_points.ID', '=', 'ip_entrypoint.entrypoint')
+				->leftJoin('partners', 'partners.ID', '=', 'ip_entrypoint.partner')
+				->whereRaw($q)
+				->when($partner, function($query) use ($partner, $key){
+					if($partner != "0" || $partner != 0){
+						return $query->where('partners.ID', $partner);
+					}
+				})
+				->groupBy('partners.ID', 'partners.name')
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 
@@ -613,12 +865,64 @@ class PartnerController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('ip_mprophylaxis')
+				->select('year', DB::raw($raw))
+				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_mprophylaxis.prophylaxis')
+				->leftJoin('partners', 'partners.ID', '=', 'ip_mprophylaxis.partner')
+				->where('year', $year)
+				->when($partner, function($query) use ($partner, $key){
+					if($partner != "0" || $partner != 0){
+						return $query->where('partners.ID', $partner);
+					}
+				})
+				->whereBetween('month', [$month, $month2])
+				->groupBy('partners.ID', 'partners.name', 'year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('ip_mprophylaxis')
+				->select( DB::raw($raw))
+				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_mprophylaxis.prophylaxis')
+				->leftJoin('partners', 'partners.ID', '=', 'ip_mprophylaxis.partner')
+				->whereRaw($q)
+				->when($partner, function($query) use ($partner, $key){
+					if($partner != "0" || $partner != 0){
+						return $query->where('partners.ID', $partner);
+					}
+				})
+				->groupBy('partners.ID', 'partners.name')
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 
@@ -719,12 +1023,64 @@ class PartnerController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('ip_iprophylaxis')
+				->select('year', DB::raw($raw))
+				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_iprophylaxis.prophylaxis')
+				->leftJoin('partners', 'partners.ID', '=', 'ip_iprophylaxis.partner')
+				->where('year', $year)
+				->when($partner, function($query) use ($partner, $key){
+					if($partner != "0" || $partner != 0){
+						return $query->where('partners.ID', $partner);
+					}
+				})
+				->whereBetween('month', [$month, $month2])
+				->groupBy('partners.ID', 'partners.name', 'year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('ip_iprophylaxis')
+				->select( DB::raw($raw))
+				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_iprophylaxis.prophylaxis')
+				->leftJoin('partners', 'partners.ID', '=', 'ip_iprophylaxis.partner')
+				->whereRaw($q)
+				->when($partner, function($query) use ($partner, $key){
+					if($partner != "0" || $partner != 0){
+						return $query->where('partners.ID', $partner);
+					}
+				})
+				->groupBy('partners.ID', 'partners.name')
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 
@@ -743,7 +1099,7 @@ class PartnerController extends BaseController
 			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
 			->where('facilitys.partner', $partner)
-			->orderBy('all_tests')
+			->orderBy('alltests')
 			->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.facilitycode', 'facilitys.DHIScode', 'year')
 			->get();
 
@@ -772,7 +1128,7 @@ class PartnerController extends BaseController
 			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
 			->where('facilitys.partner', $partner)
-			->orderBy('all_tests')
+			->orderBy('alltests')
 			->where('month', $month)
 			->groupBy('month')
 			->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.facilitycode', 'facilitys.DHIScode', 'year')
@@ -794,7 +1150,7 @@ class PartnerController extends BaseController
 			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
 			->where('facilitys.partner', $partner)
-			->orderBy('all_tests')
+			->orderBy('alltests')
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
 			->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.facilitycode', 'facilitys.DHIScode', 'year')
@@ -812,13 +1168,55 @@ class PartnerController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('site_summary')
+				->select('year', DB::raw($raw))
+				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+				->where('year', $year)
+				->where('facilitys.partner', $partner)
+				->whereBetween('month', [$month, $month2])
+				->groupBy('partners.ID', 'partners.name', 'year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('site_summary')
+				->select( DB::raw($raw))
+				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+				->whereRaw($q)
+				->where('facilitys.partner', $partner)
+				->groupBy('partners.ID', 'partners.name')
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 }

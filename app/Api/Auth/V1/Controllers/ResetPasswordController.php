@@ -1,16 +1,16 @@
 <?php
 
-namespace App\Api\V1\Controllers\Auth;
+namespace App\Api\Auth\V1\Controllers;
 
 use Config;
 use App\User;
 use Tymon\JWTAuth\JWTAuth;
-use App\Api\V1\Controllers\BaseController;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Password;
-use App\Api\V1\Requests\ResetPasswordRequest;
+use App\Api\V1\Auth\Requests\ResetPasswordRequest;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class ResetPasswordController extends BaseController
+class ResetPasswordController extends Controller
 {
     public function resetPassword(ResetPasswordRequest $request, JWTAuth $JWTAuth)
     {

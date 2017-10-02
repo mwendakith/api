@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Api\V1\Controllers;
+namespace App\Api\Eid\V1\Controllers;
 
 use Illuminate\Http\Request;
 use App\National;
-use App\Api\V1\Controllers\BaseController;
+use App\Api\Eid\V1\Controllers\BaseController;
 
 use DB;
 
@@ -113,9 +113,10 @@ class NationalController extends BaseController
 			$desc = $this->describe_multiple($year, $month, $year2, $month2);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
-				$temp = (array) $d[$i];
-				array_unshift($temp, $desc);
-				$data[$i] = $temp;
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
 			}
 			
 		}
@@ -125,8 +126,7 @@ class NationalController extends BaseController
 			return $this->invalid_type($type);
 		}
 
-
-		return $data;
+		return $this->check_data($data);
 
 	}
 
@@ -200,13 +200,50 @@ class NationalController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('national_summary')
+				->select('year', DB::raw($raw))
+				->where('year', $year)
+				->whereBetween('month', [$month, $month2])
+				->groupBy('year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('national_summary')
+				->select( DB::raw($raw))
+				->whereRaw($q)
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 
@@ -282,13 +319,50 @@ class NationalController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('national_summary')
+				->select('year', DB::raw($raw))
+				->where('year', $year)
+				->whereBetween('month', [$month, $month2])
+				->groupBy('year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('national_summary')
+				->select( DB::raw($raw))
+				->whereRaw($q)
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 
@@ -364,13 +438,50 @@ class NationalController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('national_agebreakdown')
+				->select('year', DB::raw($raw))
+				->where('year', $year)
+				->whereBetween('month', [$month, $month2])
+				->groupBy('year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('national_agebreakdown')
+				->select( DB::raw($raw))
+				->whereRaw($q)
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 
@@ -456,12 +567,51 @@ class NationalController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('national_entrypoint')
+				->select('year', DB::raw($raw))
+				->leftJoin('entry_points', 'entry_points.ID', '=', 'national_entrypoint.entrypoint')
+				->where('year', $year)
+				->whereBetween('month', [$month, $month2])
+				->groupBy('year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('national_entrypoint')
+				->select( DB::raw($raw))
+				->leftJoin('entry_points', 'entry_points.ID', '=', 'national_entrypoint.entrypoint')
+				->whereRaw($q)
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 
@@ -545,12 +695,51 @@ class NationalController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('national_mprophylaxis')
+				->select('year', DB::raw($raw))
+				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_mprophylaxis.prophylaxis')
+				->where('year', $year)
+				->whereBetween('month', [$month, $month2])
+				->groupBy('year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('national_mprophylaxis')
+				->select( DB::raw($raw))
+				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_mprophylaxis.prophylaxis')
+				->whereRaw($q)
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 
@@ -636,12 +825,51 @@ class NationalController extends BaseController
 			}
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('national_iprophylaxis')
+				->select('year', DB::raw($raw))
+				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_mprophylaxis.prophylaxis')
+				->where('year', $year)
+				->whereBetween('month', [$month, $month2])
+				->groupBy('year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('national_iprophylaxis')
+				->select( DB::raw($raw))
+				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'national_mprophylaxis.prophylaxis')
+				->whereRaw($q)
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 

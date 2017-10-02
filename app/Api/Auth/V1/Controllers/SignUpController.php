@@ -1,18 +1,18 @@
 <?php
 
-namespace App\Api\V1\Controllers\Auth;
+namespace App\Api\Auth\V1\Controllers;
 
 use Config;
 use App\User;
 use App\UserType;
 
 use JWTAuth;
-use App\Api\V1\Controllers\BaseController;
-use App\Api\V1\Requests\SignUpRequest;
+use App\Http\Controllers\Controller;
+use App\Api\Auth\V1\Requests\SignUpRequest;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
-class SignUpController extends BaseController
+class SignUpController extends Controller
 {
     public function signUp(SignUpRequest $request, JWTAuth $JWTAuth)
     {

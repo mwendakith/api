@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Api\V1\Controllers;
+namespace App\Api\Eid\V1\Controllers;
 
 use Illuminate\Http\Request;
 use App\Lab;
-use App\Api\V1\Controllers\BaseController;
+use App\Api\Eid\V1\Controllers\BaseController;
 
 use DB;
 
@@ -110,13 +110,63 @@ class LabController extends BaseController
 			
 		}
 
+		// For Multiple Months across years
+		else if($type == 5){
+
+			if($year > $year2) return $this->pass_error('From year is greater');
+			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+			$q = $this->multiple_year($year, $month, $year2, $month2);
+			// return $this->pass_error($q);
+
+			if($year == $year2 && $month < $month2){
+				$d = DB::table('lab_summary')
+				->select('year', DB::raw($raw))
+				->leftJoin('labs', 'labs.ID', '=', 'lab_summary.lab')
+				->where('year', $year)
+				->when($subcounty, function($query) use ($subcounty, $key){
+					if($subcounty != "0" || $subcounty != 0){
+						return $query->where($key, $subcounty);
+					}
+				})
+				->whereBetween('month', [$month, $month2])
+				->groupBy('labs.ID', 'labs.name', 'year')
+				->get();
+			}
+
+			if($year < $year2){
+				$d = DB::table('lab_summary')
+				->select( DB::raw($raw))
+				->leftJoin('labs', 'labs.ID', '=', 'lab_summary.lab')
+				->whereRaw($q)
+				->when($subcounty, function($query) use ($subcounty, $key){
+					if($subcounty != "0" || $subcounty != 0){
+						return $query->where($key, $subcounty);
+					}
+				})
+				->groupBy('labs.ID', 'labs.name')
+				->get();
+
+				
+			}
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
+
+			for ($i=0; $i < sizeof($d); $i++) { 
+				$data[$i]['Period'] = $desc;
+				foreach ($d[$i] as $obj_prop => $ob_val) {
+					$data[$i][$obj_prop] = $ob_val;
+				}
+			}
+			
+		}
+
 		// Else an invalid type has been specified
 		else{
 			return $this->invalid_type($type);
 		}
 
 		
-		return $data;
+		return $this->check_data($data);
 
 	}
 

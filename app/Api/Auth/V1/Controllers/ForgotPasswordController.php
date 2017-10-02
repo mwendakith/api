@@ -1,15 +1,15 @@
 <?php
 
-namespace App\Api\V1\Controllers\Auth;
+namespace App\Api\Auth\V1\Controllers;
 
 use App\User;
-use App\Api\V1\Controllers\BaseController;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Password;
-use App\Api\V1\Requests\ForgotPasswordRequest;
+use App\Api\Auth\V1\Requests\ForgotPasswordRequest;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ForgotPasswordController extends BaseController
+class ForgotPasswordController extends Controller
 {
     public function sendResetEmail(ForgotPasswordRequest $request)
     {
