@@ -23,10 +23,10 @@ class PatientController extends BaseController
     private function set_site($site){
     	$c;
     	if(is_numeric($site)){
-			$c = "patients_eid.FacilityMFLcode"; 
+			$c = "patients.FacilityMFLcode"; 
 		}
 		else{
-			$c = "patients_eid.FacilityDHIScode";
+			$c = "patients.FacilityDHIScode";
 		}
 		return [$site, $c];
     }
