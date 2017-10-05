@@ -223,7 +223,6 @@ class PatientController extends BaseController
     private function return_patients($data){
 
     	if ($data->isEmpty()) { return $this->pass_error("No data found"); }
-    	$b = true;
 
     	$info["one"] = 0;
     	$info["two"] = 0;
@@ -231,15 +230,14 @@ class PatientController extends BaseController
     	$info["three_g"] = 0;
     	$info["total_patients"] = 0;
     	$info["total_tests"] = 0;
+
+        $info['highest'] = $data->max('tests');
     	
 
     	foreach ($data as $key => $value) {
     		$tests = $value->tests;
     		$totals = $value->totals;
-    		if($b){
-    			$b = false;
-    			$info['highest'] = $tests;
-    		}
+            
     		$info["total_patients"] += $totals;
 
     		$info["total_tests"] += ($tests * $totals);
