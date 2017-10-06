@@ -103,7 +103,7 @@ class PatientController extends BaseController
 		}
 
 		$sql .= " group by facility, patient) gp ";
-		$sql .= " group by gp.tests order by tests desc ";
+		$sql .= " group by gp.tests order by tests asc ";
 
 		$data = DB::connection('vl')->select($sql);
 
