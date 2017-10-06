@@ -23,10 +23,10 @@ class PatientController extends BaseController
     private function set_site($site){
     	$c;
     	if(is_numeric($site)){
-			$c = "patients.FacilityMFLcode"; 
+			$c = "view_facilitys.facilitycode"; 
 		}
 		else{
-			$c = "patients.FacilityDHIScode";
+			$c = "view_facilitys.DHIScode";
 		}
 		return [$site, $c];
     }
@@ -76,14 +76,15 @@ class PatientController extends BaseController
 
     	$sql = "select count(gp.tests) as totals, gp.tests
 				from (
-				select count(*) as `tests`, FacilityMFLcode, patientID
-				from patients "; 
+				select count(*) as `tests`, facility, patient
+				from viralsamples "; 
 
-		if($division > 0 && $division < 4){
-			$sql .= " join view_facilitys ON patients.FacilityMFLcode=view_facilitys.facilitycode ";
+		if($division > 0){
+			$sql .= " join view_facilitys ON viralsamples.facility=view_facilitys.ID ";
 		}
 
-		$sql .= " where receivedstatus!=2 ";
+        $sql .= " where viralsamples.rcategory between 1 and 4 ";
+		$sql .= " and viralsamples.flag=1 and viralsamples.repeatt=0 ";
 
 		switch ($type) {
 			case 1:
@@ -101,10 +102,10 @@ class PatientController extends BaseController
 			$sql .= " and {$div[1]} = {$div[0]} ";
 		}
 
-		$sql .= " group by FacilityMFLcode, patientID) gp ";
+		$sql .= " group by facility, patient) gp ";
 		$sql .= " group by gp.tests order by totals desc ";
 
-		$data = DB::select($sql);
+		$data = DB::connection('vl')->select($sql);
 
 		$data = collect($data);
 
@@ -305,6 +306,67 @@ class PatientController extends BaseController
 	public function test2(){
 		return redirect('api/vl/v1/patient/viralloads');
 	}
+
+    private function get_patients_old($division, $type, $year, $div, $month=null, $year2=null, $month2=null){
+
+        $my_range;
+
+        if($type == 4){
+            if($month < 1 || $month > 4) return $this->invalid_quarter($month);
+            
+            $my_range = $this->set_quarters($year, $month);
+        }
+
+        if($type == 5){
+            if($year > $year2) return $this->pass_error('From year is greater');
+            if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+
+            $my_range = $this->set_date($year, $month, $year2, $month2);
+        }
+
+        if($type == 2 || $type > 5){
+            return $this->invalid_type($type);
+        }
+
+        $sql = "select count(gp.tests) as totals, gp.tests
+                from (
+                select count(*) as `tests`, FacilityMFLcode, patientID
+                from patients "; 
+
+        if($division > 0 && $division < 4){
+            $sql .= " join view_facilitys ON patients.FacilityMFLcode=view_facilitys.facilitycode ";
+        }
+
+        $sql .= " where receivedstatus!=2 ";
+
+        switch ($type) {
+            case 1:
+                $sql .= " and year(datetested) = {$year} ";
+                break;
+            case 3:
+                $sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
+                break;
+            default:
+                $sql .= " and datetested > '{$my_range[0]}' and datetested < '{$my_range[1]}' ";
+                break;
+        }
+
+        if($division != 1){
+            $sql .= " and {$div[1]} = {$div[0]} ";
+        }
+
+        $sql .= " group by FacilityMFLcode, patientID) gp ";
+        $sql .= " group by gp.tests order by totals desc ";
+
+        $data = DB::connection('vl')->select($sql);
+
+        $data = collect($data);
+
+        return $data;
+
+        // return $this->return_patients($data);
+
+    }
 
 	
 
