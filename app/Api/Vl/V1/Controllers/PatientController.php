@@ -94,7 +94,9 @@ class PatientController extends BaseController
 				$sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
 				break;
 			default:
-				$sql .= " and datetested > '{$my_range[0]}' and datetested < '{$my_range[1]}' ";
+				$sql .= " and ((year(datetested)={$year} and month(datetested)>={$month})
+ 					or (year(datetested)={$year2} and month(datetested)<={$month2} )
+					or (year(datetested)>{$year} and year(datetested)<{$year2}  )) ";
 				break;
 		}
 
