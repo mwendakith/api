@@ -84,7 +84,8 @@ class PatientController extends BaseController
 		}
 
         $sql .= " where viralsamples.rcategory between 1 and 4 ";
-		$sql .= " and viralsamples.flag=1 and viralsamples.repeatt=0 ";
+        $sql .= " and viralsamples.flag=1 and viralsamples.repeatt=0 ";
+		$sql .= " and (patient != '' or patient != 'null' or patient is not null) ";
 
 		switch ($type) {
 			case 1:
@@ -100,7 +101,7 @@ class PatientController extends BaseController
 				break;
 		}
 
-		if($division != 1){
+		if($division != 0){
 			$sql .= " and {$div[1]} = {$div[0]} ";
 		}
 
