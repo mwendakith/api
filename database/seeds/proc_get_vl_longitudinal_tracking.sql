@@ -15,7 +15,7 @@ BEGIN
     END IF;
 
     SET @QUERY = CONCAT(@QUERY, " where viralsamples.rcategory between 1 and 4 and viralsamples.flag=1 and viralsamples.repeatt=0
-                 and patient != '' and patient != 'null' and patient is not null ");
+                 and patient != '' and patient != 'null' and patient is not null  and facility != 7148 ");
 
 
     IF(type = 1) THEN 

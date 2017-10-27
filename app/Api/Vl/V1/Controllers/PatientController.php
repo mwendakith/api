@@ -23,22 +23,22 @@ class PatientController extends BaseController
     private function set_site($site){
     	$c;
     	if(is_numeric($site)){
-			$c = "view_facilitys.facilitycode"; 
+			$c = "facilitycode"; 
 		}
 		else{
-			$c = "view_facilitys.DHIScode";
+			$c = "DHIScode";
 		}
 		return [$site, $c];
     }
 
     private function set_county($county){
 		$data = DB::table('countys')->select('ID')->where('CountyMFLCode', $county)->orWhere('CountyDHISCode', $county)->first();
-		return [$data->ID, 'view_facilitys.county'];
+		return [$data->ID, 'county'];
     }
 
     private function set_subcounty($subcounty){
 		$data = DB::table('districts')->select('ID')->where('SubCountyMFLCode', $subcounty)->orWhere('SubCountyDHISCode', $subcounty)->first();
-		return [$data->ID, 'view_facilitys.district'];
+		return [$data->ID, 'district'];
     }
 
     private function store_raw($year){
@@ -96,7 +96,7 @@ class PatientController extends BaseController
 		// 		break;
 		// 	default:
 		// 		$sql .= " and ((year(datetested)={$year} and month(datetested)>={$month})
- 		//			 or (year(datetested)={$year2} and month(datetested)<={$month2} )
+ 					 // or (year(datetested)={$year2} and month(datetested)<={$month2} )
 		// 			or (year(datetested)>{$year} and year(datetested)<{$year2}  )) ";
 		// 		break;
 		// }
@@ -108,13 +108,11 @@ class PatientController extends BaseController
 		// $sql .= " group by facility, patient) gp ";
 		// $sql .= " group by gp.tests order by tests asc ";
 
-        // $data = DB::connection('vl')->select($sql);
-
         $sql = "call proc_get_vl_longitudinal_tracking({$division}, {$type}, '{$div[1]}', {$div[0]}, {$year}, {$month}, {$year2}, {$month2})";
 
 		$data = DB::connection('vl')->select($sql);
 
-		$data = collect($data);
+		// $data = collect($data);
 
 		return $data;
 
@@ -165,7 +163,7 @@ class PatientController extends BaseController
     }
 
     public function partner_viralloads($partner, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
-    	$div = [$partner, 'view_facilitys.partner'];
+    	$div = [$partner, 'partner'];
     	return $this->get_patients(3, $type, $year, $div, $month, $year2, $month2); 
     }
 
