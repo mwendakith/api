@@ -66,17 +66,17 @@ class PatientController extends BaseController
         $multiple_param;
 
     	if($type == 5){
-    		if($year > $year2){return $this->pass_error('From year is greater')};
+    		if($year > $year2){return $this->pass_error('From year is greater');}
             else{
-                $multiple_param = ' and ((year(datetested)={$year} and month(datetested)>={$month})
+                $multiple_param = " and ((year(datetested)={$year} and month(datetested)>={$month})
                      or (year(datetested)={$year2} and month(datetested)<={$month2} )
-                    or (year(datetested)>{$year} and year(datetested)<{$year2}  )) ';
+                    or (year(datetested)>{$year} and year(datetested)<{$year2}  )) ";
             }
 
 			if($year == $year2){ 
-                if($month >= $month2){return $this->pass_error('From month is greater')};
+                if($month >= $month2){return $this->pass_error('From month is greater');}
                 else{
-                    $multiple_param = ' and year(datetested)={$year} and month(datetested) between {$month} and {$month2}  ';
+                    $multiple_param = " and year(datetested)={$year} and month(datetested) between {$month} and {$month2}  ";
                 }
             }
 
