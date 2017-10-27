@@ -63,9 +63,22 @@ class PatientController extends BaseController
 			$my_range = $this->set_quarters($year, $month);
     	}
 
+        $multiple_param;
+
     	if($type == 5){
     		if($year > $year2) return $this->pass_error('From year is greater');
-			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+            else{
+                $multiple_param = ' and ((year(datetested)={$year} and month(datetested)>={$month})
+                     or (year(datetested)={$year2} and month(datetested)<={$month2} )
+                    or (year(datetested)>{$year} and year(datetested)<{$year2}  )) ';
+            }
+
+			if($year == $year2){ 
+                if($month >= $month2) return $this->pass_error('From month is greater');
+                else{
+                    $multiple_param = ' and year(datetested)={$year} and month(datetested) between {$month} and {$month2}  ';
+                }
+            }
 
 			$my_range = $this->set_date($year, $month, $year2, $month2);
     	}
@@ -95,9 +108,7 @@ class PatientController extends BaseController
 				$sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
 				break;
 			default:
-				$sql .= " and ((year(datetested)={$year} and month(datetested)>={$month})
- 					 or (year(datetested)={$year2} and month(datetested)<={$month2} )
-					or (year(datetested)>{$year} and year(datetested)<{$year2}  )) ";
+				$sql .= $multiple_param;
 				break;
 		}
 
