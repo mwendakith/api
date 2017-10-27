@@ -74,41 +74,41 @@ class PatientController extends BaseController
     		return $this->invalid_type($type);
     	}
 
-    	// $sql = "select count(gp.tests) as totals, gp.tests
-		// 		from (
-		// 		select count(*) as `tests`, facility, patient
-		// 		from viralsamples "; 
+    	$sql = "select count(gp.tests) as totals, gp.tests
+				from (
+				select count(*) as `tests`, facility, patient
+				from viralsamples "; 
 
-		// if($division > 0){
-		// 	$sql .= " join view_facilitys ON viralsamples.facility=view_facilitys.ID ";
-		// }
+		if($division > 0){
+			$sql .= " join view_facilitys ON viralsamples.facility=view_facilitys.ID ";
+		}
 
-        // $sql .= " where viralsamples.rcategory between 1 and 4 ";
-        // $sql .= " and viralsamples.flag=1 and viralsamples.repeatt=0 ";
-		// $sql .= " and patient != '' and patient != 'null' and patient is not null ";
+        $sql .= " where viralsamples.rcategory between 1 and 4 ";
+        $sql .= " and viralsamples.flag=1 and viralsamples.repeatt=0 ";
+		$sql .= " and patient != '' and patient != 'null' and patient is not null ";
 
-		// switch ($type) {
-		// 	case 1:
-		// 		$sql .= " and year(datetested) = {$year} ";
-		// 		break;
-		// 	case 3:
-		// 		$sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
-		// 		break;
-		// 	default:
-		// 		$sql .= " and ((year(datetested)={$year} and month(datetested)>={$month})
- 					 // or (year(datetested)={$year2} and month(datetested)<={$month2} )
-		// 			or (year(datetested)>{$year} and year(datetested)<{$year2}  )) ";
-		// 		break;
-		// }
+		switch ($type) {
+			case 1:
+				$sql .= " and year(datetested) = {$year} ";
+				break;
+			case 3:
+				$sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
+				break;
+			default:
+				$sql .= " and ((year(datetested)={$year} and month(datetested)>={$month})
+ 					 or (year(datetested)={$year2} and month(datetested)<={$month2} )
+					or (year(datetested)>{$year} and year(datetested)<{$year2}  )) ";
+				break;
+		}
 
-		// if($division != 0){
-		// 	$sql .= " and {$div[1]} = {$div[0]} ";
-		// }
+		if($division != 0){
+			$sql .= " and {$div[1]} = {$div[0]} ";
+		}
 
-		// $sql .= " group by facility, patient) gp ";
-		// $sql .= " group by gp.tests order by tests asc ";
+		$sql .= " group by facility, patient) gp ";
+		$sql .= " group by gp.tests order by tests asc ";
 
-        $sql = "call proc_get_vl_longitudinal_tracking({$division}, {$type}, '{$div[1]}', {$div[0]}, {$year}, {$month}, {$year2}, {$month2})";
+        // $sql = "call proc_get_vl_longitudinal_tracking({$division}, {$type}, '{$div[1]}', {$div[0]}, {$year}, {$month}, {$year2}, {$month2})";
 
 		$data = DB::connection('vl')->select($sql);
 
