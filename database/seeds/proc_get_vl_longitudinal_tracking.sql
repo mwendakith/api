@@ -27,9 +27,13 @@ BEGIN
     END IF;
 
     IF(type = 5) THEN 
-      SET @QUERY = CONCAT(@QUERY, " and ((year(datetested)=",year," and month(datetested)>=",month,")
+      IF(year = to_year) THEN
+        SET @QUERY = CONCAT(@QUERY, " and year(datetested)=",year," and month(datetested) between ",month," and ",to_month," ");
+      ELSE
+        SET @QUERY = CONCAT(@QUERY, " and ((year(datetested)=",year," and month(datetested)>=",month,")
                     or (year(datetested)=",to_year," and month(datetested)<=",to_month," )
                     or (year(datetested)>",year," and year(datetested)<",to_year,"  )) ");
+      END IF;
     END IF;
 
     IF(division > 0) THEN 
