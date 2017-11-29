@@ -67,11 +67,24 @@ class PatientController extends BaseController
 			$my_range = $this->set_quarters($year, $month);
     	}
 
-    	if($type == 5){
-    		if($year > $year2) return $this->pass_error('From year is greater');
-			if($year == $year2 && $month >= $month2) return $this->pass_error('From month is greater');
+        $multiple_param;
 
-			$my_range = $this->set_date($year, $month, $year2, $month2);
+    	if($type == 5){
+            if($year > $year2){return $this->pass_error('From year is greater');}
+            else{
+                $multiple_param = " and ((year(datetested)={$year} and month(datetested)>={$month})
+                     or (year(datetested)={$year2} and month(datetested)<={$month2} )
+                    or (year(datetested)>{$year} and year(datetested)<{$year2}  )) ";
+            }
+
+            if($year == $year2){ 
+                if($month >= $month2){return $this->pass_error('From month is greater');}
+                else{
+                    $multiple_param = " and year(datetested)={$year} and month(datetested) between {$month} and {$month2}  ";
+                }
+            }
+
+            $my_range = $this->set_date($year, $month, $year2, $month2);
     	}
 
     	if($type == 2 || $type > 5){
@@ -80,14 +93,15 @@ class PatientController extends BaseController
 
     	$sql = "select count(gp.tests) as totals, gp.tests
 				from (
-				select count(*) as `tests`, FacilityMFLcode, patientID
-				from patients_eid "; 
+				select count(*) as `tests`, samples.facility, samples.patient
+				from samples
+                join patients ON samples.patientautoid=patients.autoID "; 
 
 		if($division > 0 && $division < 4){
-			$sql .= " join view_facilitys ON patients_eid.FacilityMFLcode=view_facilitys.facilitycode ";
+			$sql .= " join view_facilitys ON samples.facility=view_facilitys.id ";
 		}
 
-		$sql .= " where pcrtype=1 and result between 1 and 2 and age between 0.00001 and 24 ";
+		$sql .= " where pcrtype=1 and result between 1 and 2 and patients.age between 0.00001 and 24 ";
 
 		switch ($type) {
 			case 1:
@@ -97,20 +111,18 @@ class PatientController extends BaseController
 				$sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
 				break;
 			default:
-				$sql .= " and datetested > '{$my_range[0]}' and datetested < '{$my_range[1]}' ";
+				$sql .= $multiple_param;;
 				break;
 		}
 
-		if($division != 1){
+		if($division != 0){
 			$sql .= " and {$div[1]} = {$div[0]} ";
 		}
 
-		$sql .= " group by FacilityMFLcode, patientID) gp ";
+		$sql .= " group by samples.facility, samples.patient) gp ";
 		$sql .= " group by gp.tests order by totals asc ";
 
-		$data = DB::select($sql);
-
-
+		$data = DB::connection('eid')->select($sql);
 
 		$data = collect($data);
 
