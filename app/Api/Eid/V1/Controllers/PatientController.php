@@ -126,9 +126,93 @@ class PatientController extends BaseController
 
 		$data = collect($data);
 
-		// return $data;
+		return $data;
 
-		return $this->return_patients($data);
+		// return $this->return_patients($data);
+
+    }
+
+    private function get_patients_detailed($division, $type, $pcrtype, $age, $year, $div, $month=null, $year2=null, $month2=null){
+
+        $my_range;
+
+        if($type == 4){
+            if($month < 1 || $month > 4) return $this->invalid_quarter($month);
+            
+            $my_range = $this->set_quarters($year, $month);
+        }
+
+        $multiple_param;
+
+        if($type == 5){
+            if($year > $year2){return $this->pass_error('From year is greater');}
+            else{
+                $multiple_param = " and ((year(datetested)={$year} and month(datetested)>={$month})
+                     or (year(datetested)={$year2} and month(datetested)<={$month2} )
+                    or (year(datetested)>{$year} and year(datetested)<{$year2}  )) ";
+            }
+
+            if($year == $year2){ 
+                if($month >= $month2){return $this->pass_error('From month is greater');}
+                else{
+                    $multiple_param = " and year(datetested)={$year} and month(datetested) between {$month} and {$month2} ";
+                }
+            }
+
+            $my_range = $this->set_date($year, $month, $year2, $month2);
+        }
+
+        if($type == 2 || $type > 5){
+            return $this->invalid_type($type);
+        }
+
+        $sql = "select count(gp.tests) as totals, gp.tests
+                from (
+                select count(*) as `tests`, samples.facility, samples.patient
+                from samples
+                join patients ON samples.patientautoid=patients.autoID "; 
+
+        if($division > 0 && $division < 4){
+            $sql .= " join view_facilitys ON samples.facility=view_facilitys.id ";
+        }
+
+        $sql .= " where result between 1 and 2 ";
+
+        if($pcrtype != 0){
+            $sql .= " and pcrtype = {$pcrtype} ";
+        }
+
+        if($age != 0){
+            $age_range = DB::connection('eid')->table('age_bands')->where('ID', $age)->first();
+            $sql .= " and patients.age between {$age_range->lower} and {$age_range->upper} ";
+        }
+
+        switch ($type) {
+            case 1:
+                $sql .= " and year(datetested) = {$year} ";
+                break;
+            case 3:
+                $sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
+                break;
+            default:
+                $sql .= $multiple_param;;
+                break;
+        }
+
+        if($division != 0){
+            $sql .= " and {$div[1]} = {$div[0]} ";
+        }
+
+        $sql .= " group by samples.facility, samples.patient) gp ";
+        $sql .= " group by gp.tests order by totals asc ";
+
+        $data = DB::connection('eid')->select($sql);
+
+        $data = collect($data);
+
+        return $data;
+
+        // return $this->return_patients($data);
 
     }
 
@@ -181,6 +265,32 @@ class PatientController extends BaseController
     	
     	$div = [$partner, 'view_facilitys.partner'];
     	return $this->get_patients(3, $type, $year, $div, $month, $year2, $month2);
+    }
+
+
+
+    public function national_tests2($type, $pcrtype, $age, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        return $this->get_patients_detailed(0, $type, $year, $pcrtype, $age, [0, 0], $month, $year2, $month2);
+    }
+
+    public function county_tests2($county, $type, $pcrtype, $age, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = $this->set_county($county);
+        return $this->get_patients_detailed(1, $type, $pcrtype, $age, $year, $div, $month, $year2, $month2);
+    }
+
+    public function subcounty_tests2($subcounty, $type, $pcrtype, $age, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = $this->set_subcounty($subcounty);
+        return $this->get_patients_detailed(2, $type, $pcrtype, $age, $year, $div, $month, $year2, $month2);
+    }
+
+    public function partner_tests2($partner, $type, $pcrtype, $age, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = [$partner, 'view_facilitys.partner'];
+        return $this->get_patients_detailed(3, $type, $pcrtype, $age, $year, $div, $month, $year2, $month2);
+    }
+
+    public function facility_tests2($site, $type, $pcrtype, $age, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = $this->set_site($site);
+        return $this->get_patients_detailed(4, $type, $pcrtype, $age, $year, $div, $month, $year2, $month2);
     }
 
     public function format_return(&$data=null){

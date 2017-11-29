@@ -36,7 +36,7 @@ $api->get('/', function(){ return 'Hello World'; });
 $api->group(['prefix' => 'eid'], function(Router $api) {
     $api->group(['prefix' => 'ver2.0', 'namespace' => 'App\\Api\\Eid\\V1\\Controllers'], function(Router $api) {
 
-        $api->group(['middleware' => 'api.throttle', 'limit' => 5, 'expires' => 1], function(Router $api) {
+        $api->group(['middleware' => 'api.throttle', 'limit' => 100, 'expires' => 1], function(Router $api) {
 
             $api->get('/', function(){ return 'Hello World'; }); 
 
@@ -183,6 +183,20 @@ $api->group(['prefix' => 'eid'], function(Router $api) {
             $api->get('partner/{site}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@partner_tests');
 
         });
+
+        $api->group(['prefix' => 'patient2'], function(Router $api) {
+
+            $api->get('national/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@national_tests2');
+
+            $api->get('county/{county}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@county_tests2');
+
+            $api->get('subcounty/{subcounty}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@subcounty_tests2');
+
+            $api->get('facility/{site}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@facility_tests2');
+
+            $api->get('partner/{site}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@partner_tests2');
+
+        });
         
     });
 });
@@ -193,7 +207,7 @@ $api->group(['prefix' => 'eid'], function(Router $api) {
 $api->group(['prefix' => 'vl'], function(Router $api) {
     $api->group(['prefix' => 'ver2.0', 'namespace' => 'App\\Api\\Vl\\V1\\Controllers'], function(Router $api) {
 
-        $api->group(['middleware' => 'api.throttle', 'limit' => 5, 'expires' => 1], function(Router $api) {
+        $api->group(['middleware' => 'api.throttle', 'limit' => 100, 'expires' => 1], function(Router $api) {
         
             $api->get('/', function(){ return 'Hello World'; });
 
