@@ -272,7 +272,7 @@ class PatientController extends BaseController
 
 
     public function national_tests2($type, $pcrtype, $age, $year, $month=NULL, $year2=NULL, $month2=NULL){
-        return $this->get_patients_detailed(0, $type, $year, $pcrtype, $age, [0, 0], $month, $year2, $month2);
+        return $this->get_patients_detailed(0, $type, $pcrtype, $age, $year, [0, 0], $month, $year2, $month2);
     }
 
     public function county_tests2($county, $type, $pcrtype, $age, $year, $month=NULL, $year2=NULL, $month2=NULL){
