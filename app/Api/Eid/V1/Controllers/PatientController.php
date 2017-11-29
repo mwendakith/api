@@ -206,8 +206,6 @@ class PatientController extends BaseController
         $sql .= " group by samples.facility, samples.patient) gp ";
         $sql .= " group by gp.tests order by tests asc ";
 
-        return $sql;
-
         $data = DB::connection('eid')->select($sql);
 
         $data = collect($data);
