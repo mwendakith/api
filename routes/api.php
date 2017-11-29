@@ -186,15 +186,15 @@ $api->group(['prefix' => 'eid'], function(Router $api) {
 
         $api->group(['prefix' => 'patient2'], function(Router $api) {
 
-            $api->get('national/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@national_tests2');
+            $api->get('national/{type}/{pcrtype}/{age}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@national_tests2');
 
-            $api->get('county/{county}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@county_tests2');
+            $api->get('county/{county}/{type}/{pcrtype}/{age}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@county_tests2');
 
-            $api->get('subcounty/{subcounty}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@subcounty_tests2');
+            $api->get('subcounty/{subcounty}/{type}/{pcrtype}/{age}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@subcounty_tests2');
 
-            $api->get('facility/{site}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@facility_tests2');
+            $api->get('facility/{site}/{type}/{pcrtype}/{age}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@facility_tests2');
 
-            $api->get('partner/{site}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@partner_tests2');
+            $api->get('partner/{site}/{type}/{pcrtype}/{age}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@partner_tests2');
 
         });
         

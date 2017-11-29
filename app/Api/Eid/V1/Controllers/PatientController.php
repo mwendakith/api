@@ -120,7 +120,7 @@ class PatientController extends BaseController
 		}
 
 		$sql .= " group by samples.facility, samples.patient) gp ";
-		$sql .= " group by gp.tests order by totals asc ";
+		$sql .= " group by gp.tests order by tests asc ";
 
 		$data = DB::connection('eid')->select($sql);
 
@@ -204,7 +204,7 @@ class PatientController extends BaseController
         }
 
         $sql .= " group by samples.facility, samples.patient) gp ";
-        $sql .= " group by gp.tests order by totals asc ";
+        $sql .= " group by gp.tests order by tests asc ";
 
         $data = DB::connection('eid')->select($sql);
 
