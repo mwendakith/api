@@ -14,6 +14,7 @@ class Eid extends Model
 {
     //
     public function positives_report($year=null, $month=null){
+    	echo "Method start \n";
     	if($year==null){
     		$year = Date('Y');
     	}
@@ -69,8 +70,10 @@ class Eid extends Model
 				$result[$i]['patient_id'] = $patient->patient;
 				$result[$i]['negative_sample_id'] = $d->ID;
 				$result[$i]['negative_date'] = $d->datetested;
+				$result[$i]['negative_pcr'] = $d->pcrtype;
 				$result[$i]['positive_sample_id'] = $patient->ID;
 				$result[$i]['positive_date'] = $patient->datetested;
+				$result[$i]['positive_pcr'] = $patient->pcrtype;
 				$i++;
 
 				echo "Found 1 \n";
@@ -95,6 +98,7 @@ class Eid extends Model
     }
 
     public function negatives_report($year=null, $month=null){
+    	echo "Method start \n";
     	if($year==null){
     		$year = Date('Y');
     	}
@@ -149,9 +153,11 @@ class Eid extends Model
 
 				$result[$i]['negative_sample_id'] = $patient->ID; 
 				$result[$i]['negative_date'] = $patient->datetested;
+				$result[$i]['negative_pcr'] = $patient->pcrtype;
 
 				$result[$i]['positive_sample_id'] = $d->ID;
 				$result[$i]['positive_date'] =  $d->datetested;
+				$result[$i]['positive_pcr'] = $d->pcrtype;
 				$i++;
 
 				echo "Found 1 \n";
