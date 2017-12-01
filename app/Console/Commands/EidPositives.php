@@ -41,6 +41,9 @@ class EidPositives extends Command
         //
         $year = $this->argument('year');
         $eid = new Eid;
-        $eid->positives_report($year);
+        $output = $eid->positives_report($year);
+
+        $this->info($output);
+
     }
 }

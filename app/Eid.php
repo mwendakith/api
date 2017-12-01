@@ -61,6 +61,8 @@ class Eid extends Model
 			->where('samples.eqa', 0)
 			->first();
 
+
+
 			if($d != null){
 				$result[$i]['laboratory'] = $patient->lab;
 				$result[$i]['facility'] = $patient->facility;
@@ -70,6 +72,8 @@ class Eid extends Model
 				$result[$i]['positive_sample_id'] = $patient->ID;
 				$result[$i]['positive_date'] = $patient->datetested;
 				$i++;
+
+				echo "Found 1 \n";
 			}
 
 
@@ -149,6 +153,8 @@ class Eid extends Model
 				$result[$i]['positive_sample_id'] = $d->ID;
 				$result[$i]['positive_date'] =  $d->datetested;
 				$i++;
+
+				echo "Found 1 \n";
 			}
 
 

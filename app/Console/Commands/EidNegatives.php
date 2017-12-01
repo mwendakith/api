@@ -41,6 +41,8 @@ class EidNegatives extends Command
         //
         $year = $this->argument('year');
         $eid = new Eid;
-        $eid->negatives_report($year);
+        $output = $eid->negatives_report($year);
+
+        $this->info($output);
     }
 }
