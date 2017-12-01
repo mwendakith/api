@@ -194,7 +194,7 @@ class SiteController extends BaseController
 					}
 				})
 				->whereBetween('month', [$month, $month2])
-				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode', 'year')
+				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.DHISCode', 'facilitys.facilitycode', 'year')
 				->get();
 			}
 
@@ -208,7 +208,7 @@ class SiteController extends BaseController
 						return $query->where($key, $site);
 					}
 				})
-				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode')
+				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.DHISCode', 'facilitys.facilitycode')
 				->get();
 
 				
@@ -358,7 +358,7 @@ class SiteController extends BaseController
 					}
 				})
 				->whereBetween('month', [$month, $month2])
-				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode', 'year')
+				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.DHISCode', 'facilitys.facilitycode', 'year')
 				->get();
 			}
 			
@@ -373,7 +373,7 @@ class SiteController extends BaseController
 						return $query->where($key, $site);
 					}
 				})
-				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode')
+				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.DHISCode', 'facilitys.facilitycode')
 				->get();
 
 				
@@ -523,7 +523,7 @@ class SiteController extends BaseController
 					}
 				})
 				->whereBetween('month', [$month, $month2])
-				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode', 'year')
+				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.DHISCode', 'facilitys.facilitycode', 'year')
 				->get();
 			}
 
@@ -537,7 +537,7 @@ class SiteController extends BaseController
 						return $query->where($key, $site);
 					}
 				})
-				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode')
+				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.DHISCode', 'facilitys.facilitycode')
 				->get();
 
 				
