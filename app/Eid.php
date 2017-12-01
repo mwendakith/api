@@ -61,7 +61,7 @@ class Eid extends Model
 			->where('samples.eqa', 0)
 			->first();
 
-			if(!$d->isEmpty()){
+			if($d != null){
 				$result[$i]['laboratory'] = $patient->lab;
 				$result[$i]['facility'] = $patient->facility;
 				$result[$i]['patient_id'] = $patient->patient;
@@ -138,7 +138,7 @@ class Eid extends Model
 			->where('samples.eqa', 0)
 			->first();
 
-			if(!$d->isEmpty()){
+			if($d != null){
 				$result[$i]['laboratory'] = $patient->lab;
 				$result[$i]['facility'] = $patient->facility;
 				$result[$i]['patient_id'] = $patient->patient;
