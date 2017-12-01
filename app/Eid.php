@@ -25,8 +25,8 @@ class Eid extends Model
 		->select(DB::raw($raw))
 		->join('facilitys', 'samples.facility', '=', 'facilitys.ID')
 		->join('labs', 'samples.labtestedin', '=', 'labs.ID')
-		->orderBy('facility', 'desc')
-		->groupBy('patient', 'facility') 
+		->orderBy('samples.facility', 'desc')
+		->groupBy('patient', 'samples.facility') 
 		->whereYear('datetested', $year)
 		->when($month, function($query) use ($month){
 			if($month != null || $month != 0){
@@ -52,7 +52,7 @@ class Eid extends Model
 			->select(DB::raw($raw))
 			->join('facilitys', 'samples.facility', '=', 'facilitys.ID')
 			->join('labs', 'samples.labtestedin', '=', 'labs.ID')
-			->where('facility', $patient->facility)
+			->where('samples.facility', $patient->facility)
 			->where('patient', $patient->patient)
 			->where('datetested', '<', $patient->datetested)
 			->where('result', 1)
@@ -102,8 +102,8 @@ class Eid extends Model
 		->select(DB::raw($raw))
 		->join('facilitys', 'samples.facility', '=', 'facilitys.ID')
 		->join('labs', 'samples.labtestedin', '=', 'labs.ID')
-		->orderBy('facility', 'desc')
-		->groupBy('patient', 'facility') 
+		->orderBy('samples.facility', 'desc')
+		->groupBy('patient', 'samples.facility') 
 		->whereYear('datetested', $year)
 		->when($month, function($query) use ($month){
 			if($month != null || $month != 0){
@@ -129,7 +129,7 @@ class Eid extends Model
 			->select(DB::raw($raw))
 			->join('facilitys', 'samples.facility', '=', 'facilitys.ID')
 			->join('labs', 'samples.labtestedin', '=', 'labs.ID')
-			->where('facility', $patient->facility)
+			->where('samples.facility', $patient->facility)
 			->where('patient', $patient->patient)
 			->where('datetested', '<', $patient->datetested)
 			->where('result', 2)
