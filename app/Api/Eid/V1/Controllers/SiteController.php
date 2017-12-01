@@ -188,9 +188,9 @@ class SiteController extends BaseController
 				->select('year', DB::raw($raw))
 				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 				->where('year', $year)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
+				->when($site, function($query) use ($site, $key){
+					if($site != "0" || $site != 0){
+						return $query->where($key, $site);
 					}
 				})
 				->whereBetween('month', [$month, $month2])
@@ -203,9 +203,9 @@ class SiteController extends BaseController
 				->select( DB::raw($raw))
 				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 				->whereRaw($q)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
+				->when($site, function($query) use ($site, $key){
+					if($site != "0" || $site != 0){
+						return $query->where($key, $site);
 					}
 				})
 				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode')
@@ -352,24 +352,25 @@ class SiteController extends BaseController
 				->select('year', DB::raw($raw))
 				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 				->where('year', $year)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
+				->when($site, function($query) use ($site, $key){
+					if($site != "0" || $site != 0){
+						return $query->where($key, $site);
 					}
 				})
 				->whereBetween('month', [$month, $month2])
 				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode', 'year')
 				->get();
 			}
+			
 
 			if($year < $year2){
 				$d = DB::table('site_summary')
 				->select( DB::raw($raw))
 				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 				->whereRaw($q)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
+				->when($site, function($query) use ($site, $key){
+					if($site != "0" || $site != 0){
+						return $query->where($key, $site);
 					}
 				})
 				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode')
@@ -516,9 +517,9 @@ class SiteController extends BaseController
 				->select('year', DB::raw($raw))
 				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 				->where('year', $year)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
+				->when($site, function($query) use ($site, $key){
+					if($site != "0" || $site != 0){
+						return $query->where($key, $site);
 					}
 				})
 				->whereBetween('month', [$month, $month2])
@@ -531,9 +532,9 @@ class SiteController extends BaseController
 				->select( DB::raw($raw))
 				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 				->whereRaw($q)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
+				->when($site, function($query) use ($site, $key){
+					if($site != "0" || $site != 0){
+						return $query->where($key, $site);
 					}
 				})
 				->groupBy('facilitys.ID', 'facilitys.name', 'facilitys.CountyDHISCode', 'facilitys.CountyMFLCode')
