@@ -79,7 +79,7 @@ class SiteController extends BaseController
 
 			$data = DB::table('site_summary')
 			->select('year', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
 				if($site != "0" || $site != 0){
@@ -98,7 +98,7 @@ class SiteController extends BaseController
 		else if($type == 2){
 			$data = DB::table('site_summary')
 			->select('year', 'month', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
 				if($site != "0" || $site != 0){
@@ -119,7 +119,7 @@ class SiteController extends BaseController
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('site_summary')
 			->select('year', 'month', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
 				if($site != "0" || $site != 0){
@@ -147,7 +147,7 @@ class SiteController extends BaseController
 
 			$d = DB::table('site_summary')
 			->select('year', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
 				if($site != "0" || $site != 0){
@@ -186,7 +186,7 @@ class SiteController extends BaseController
 			if($year == $year2 && $month < $month2){
 				$d = DB::table('site_summary')
 				->select('year', DB::raw($raw))
-				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+				->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 				->where('year', $year)
 				->when($site, function($query) use ($site, $key){
 					if($site != "0" || $site != 0){
@@ -201,7 +201,7 @@ class SiteController extends BaseController
 			if($year < $year2){
 				$d = DB::table('site_summary')
 				->select( DB::raw($raw))
-				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+				->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 				->whereRaw($q)
 				->when($site, function($query) use ($site, $key){
 					if($site != "0" || $site != 0){
@@ -247,7 +247,7 @@ class SiteController extends BaseController
 
 			$data = DB::table('site_summary')
 			->select('year', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->when($site, function($query) use ($site){
 				if($site != 0) return $query->where('facilitys.ID', $site);
 
@@ -265,7 +265,7 @@ class SiteController extends BaseController
 		else if($type == 2){
 			$data = DB::table('site_summary')
 			->select('year', 'month', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
 			->when($site, function($query) use ($site){
 				if($site != 0) return $query->where('facilitys.ID', $site);
@@ -285,7 +285,7 @@ class SiteController extends BaseController
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('site_summary')
 			->select('year', 'month', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
 			->when($site, function($query) use ($site){
 				if($site != 0) return $query->where('facilitys.ID', $site);
@@ -311,7 +311,7 @@ class SiteController extends BaseController
 			$greater = $my_range[1];
 
 			$d = DB::table('site_summary')
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
 			->when($site, function($query) use ($site){
@@ -350,7 +350,7 @@ class SiteController extends BaseController
 			if($year == $year2 && $month < $month2){
 				$d = DB::table('site_summary')
 				->select('year', DB::raw($raw))
-				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+				->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 				->where('year', $year)
 				->when($site, function($query) use ($site, $key){
 					if($site != "0" || $site != 0){
@@ -366,7 +366,7 @@ class SiteController extends BaseController
 			if($year < $year2){
 				$d = DB::table('site_summary')
 				->select( DB::raw($raw))
-				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+				->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 				->whereRaw($q)
 				->when($site, function($query) use ($site, $key){
 					if($site != "0" || $site != 0){
@@ -412,7 +412,7 @@ class SiteController extends BaseController
 
 			$data = DB::table('site_summary')
 			->select('year', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->when($site, function($query) use ($site){
 				if($site != 0) return $query->where('facilitys.ID', $site);
 
@@ -430,7 +430,7 @@ class SiteController extends BaseController
 		else if($type == 2){
 			$data = DB::table('site_summary')
 			->select('year', 'month', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
 			->when($site, function($query) use ($site){
 				if($site != 0) return $query->where('facilitys.ID', $site);
@@ -450,7 +450,7 @@ class SiteController extends BaseController
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('site_summary')
 			->select('year', 'month', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->where('year', $year)
 			->when($site, function($query) use ($site){
 				if($site != 0) return $query->where('facilitys.ID', $site);
@@ -476,7 +476,7 @@ class SiteController extends BaseController
 			$greater = $my_range[1];
 
 			$d = DB::table('site_summary')
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
 			->when($site, function($query) use ($site){
@@ -515,7 +515,7 @@ class SiteController extends BaseController
 			if($year == $year2 && $month < $month2){
 				$d = DB::table('site_summary')
 				->select('year', DB::raw($raw))
-				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+				->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 				->where('year', $year)
 				->when($site, function($query) use ($site, $key){
 					if($site != "0" || $site != 0){
@@ -530,7 +530,7 @@ class SiteController extends BaseController
 			if($year < $year2){
 				$d = DB::table('site_summary')
 				->select( DB::raw($raw))
-				->leftJoin('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
+				->join('facilitys', 'facilitys.ID', '=', 'site_summary.facility')
 				->whereRaw($q)
 				->when($site, function($query) use ($site, $key){
 					if($site != "0" || $site != 0){

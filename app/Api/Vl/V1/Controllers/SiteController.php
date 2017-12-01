@@ -76,7 +76,7 @@ class SiteController extends BaseController
 
 			$data = DB::table('vl_site_summary')
 			->select('year', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_summary.facility')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
 				if($site != "0" || $site != 0){
@@ -93,7 +93,7 @@ class SiteController extends BaseController
 		else if($type == 2){
 			$data = DB::table('vl_site_summary')
 			->select('year', 'month', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_summary.facility')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
 				if($site != "0" || $site != 0){
@@ -112,7 +112,7 @@ class SiteController extends BaseController
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('vl_site_summary')
 			->select('year', 'month', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_summary.facility')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
 				if($site != "0" || $site != 0){
@@ -138,7 +138,7 @@ class SiteController extends BaseController
 
 			$d = DB::table('vl_site_summary')
 			->select('year', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_summary.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_summary.facility')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
 				if($site != "0" || $site != 0){
@@ -175,7 +175,7 @@ class SiteController extends BaseController
 			if($year == $year2 && $month < $month2){
 				$d = DB::table('vl_site_summary')
 				->select('year', DB::raw($raw))
-				->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_summary.facility')
+				->join('facilitys', 'facilitys.ID', '=', 'vl_site_summary.facility')
 				->where('year', $year)
 				->where('tat4', '!=', 0)
 				->when($site, function($query) use ($site, $key){
@@ -192,7 +192,7 @@ class SiteController extends BaseController
 			if($year < $year2){
 				$d = DB::table('vl_site_summary')
 				->select( DB::raw($raw))
-				->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_summary.facility')
+				->join('facilitys', 'facilitys.ID', '=', 'vl_site_summary.facility')
 				->whereRaw($q)
 				->when($site, function($query) use ($site, $key){
 					if($site != "0" || $site != 0){
@@ -239,7 +239,7 @@ class SiteController extends BaseController
 
 			$data = DB::table('vl_site_regimen')
 			->select('year', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_regimen.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_regimen.facility')
 			->leftJoin('viralprophylaxis', 'viralprophylaxis.ID', '=', 'vl_site_regimen.regimen')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
@@ -258,7 +258,7 @@ class SiteController extends BaseController
 		else if($type == 2){
 			$data = DB::table('vl_site_regimen')
 			->select('year', 'month', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_regimen.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_regimen.facility')
 			->leftJoin('viralprophylaxis', 'viralprophylaxis.ID', '=', 'vl_site_regimen.regimen')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
@@ -279,7 +279,7 @@ class SiteController extends BaseController
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('vl_site_regimen')
 			->select('year', 'month', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_regimen.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_regimen.facility')
 			->leftJoin('viralprophylaxis', 'viralprophylaxis.ID', '=', 'vl_site_regimen.regimen')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
@@ -307,7 +307,7 @@ class SiteController extends BaseController
 
 			$d = DB::table('vl_site_regimen')
 			->select('year', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_regimen.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_regimen.facility')
 			->leftJoin('viralprophylaxis', 'viralprophylaxis.ID', '=', 'vl_site_regimen.regimen')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
@@ -346,7 +346,7 @@ class SiteController extends BaseController
 			if($year == $year2 && $month < $month2){
 				$d = DB::table('vl_site_regimen')
 				->select('year', DB::raw($raw))
-				->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_regimen.facility')
+				->join('facilitys', 'facilitys.ID', '=', 'vl_site_regimen.facility')
 				->leftJoin('viralprophylaxis', 'viralprophylaxis.ID', '=', 'vl_site_regimen.regimen')
 				->where('year', $year)
 				->when($site, function($query) use ($site, $key){
@@ -364,7 +364,7 @@ class SiteController extends BaseController
 			if($year < $year2){
 				$d = DB::table('vl_site_regimen')
 				->select( DB::raw($raw))
-				->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_regimen.facility')
+				->join('facilitys', 'facilitys.ID', '=', 'vl_site_regimen.facility')
 				->leftJoin('viralprophylaxis', 'viralprophylaxis.ID', '=', 'vl_site_regimen.regimen')
 				->whereRaw($q)
 				->when($site, function($query) use ($site, $key){
@@ -412,7 +412,7 @@ class SiteController extends BaseController
 
 			$data = DB::table('vl_site_gender')
 			->select('year', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_gender.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_gender.facility')
 			->leftJoin('gender', 'gender.ID', '=', 'vl_site_gender.gender')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
@@ -431,7 +431,7 @@ class SiteController extends BaseController
 		else if($type == 2){
 			$data = DB::table('vl_site_gender')
 			->select('year', 'month', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_gender.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_gender.facility')
 			->leftJoin('gender', 'gender.ID', '=', 'vl_site_gender.gender')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
@@ -452,7 +452,7 @@ class SiteController extends BaseController
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('vl_site_gender')
 			->select('year', 'month', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_gender.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_gender.facility')
 			->leftJoin('gender', 'gender.ID', '=', 'vl_site_gender.gender')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
@@ -480,7 +480,7 @@ class SiteController extends BaseController
 
 			$d = DB::table('vl_site_gender')
 			->select('year', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_gender.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_gender.facility')
 			->leftJoin('gender', 'gender.ID', '=', 'vl_site_gender.gender')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
@@ -519,7 +519,7 @@ class SiteController extends BaseController
 			if($year == $year2 && $month < $month2){
 				$d = DB::table('vl_site_gender')
 				->select('year', DB::raw($raw))
-				->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_gender.facility')
+				->join('facilitys', 'facilitys.ID', '=', 'vl_site_gender.facility')
 				->leftJoin('gender', 'gender.ID', '=', 'vl_site_gender.gender')
 				->where('year', $year)
 				->when($site, function($query) use ($site, $key){
@@ -537,7 +537,7 @@ class SiteController extends BaseController
 			if($year < $year2){
 				$d = DB::table('vl_site_gender')
 				->select( DB::raw($raw))
-				->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_gender.facility')
+				->join('facilitys', 'facilitys.ID', '=', 'vl_site_gender.facility')
 				->leftJoin('gender', 'gender.ID', '=', 'vl_site_gender.gender')
 				->whereRaw($q)
 				->when($site, function($query) use ($site, $key){
@@ -585,7 +585,7 @@ $desc = $this->describe_multiple($year, $month, $year2, $month2);
 
 			$data = DB::table('vl_site_age')
 			->select('year', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_age.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_age.facility')
 			->leftJoin('agecategory', 'agecategory.ID', '=', 'vl_site_age.age')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
@@ -604,7 +604,7 @@ $desc = $this->describe_multiple($year, $month, $year2, $month2);
 		else if($type == 2){
 			$data = DB::table('vl_site_age')
 			->select('year', 'month', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_age.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_age.facility')
 			->leftJoin('agecategory', 'agecategory.ID', '=', 'vl_site_age.age')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
@@ -625,7 +625,7 @@ $desc = $this->describe_multiple($year, $month, $year2, $month2);
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
 			$data = DB::table('vl_site_age')
 			->select('year', 'month', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_age.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_age.facility')
 			->leftJoin('agecategory', 'agecategory.ID', '=', 'vl_site_age.age')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
@@ -653,7 +653,7 @@ $desc = $this->describe_multiple($year, $month, $year2, $month2);
 
 			$d = DB::table('vl_site_age')
 			->select('year', DB::raw($raw))
-			->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_age.facility')
+			->join('facilitys', 'facilitys.ID', '=', 'vl_site_age.facility')
 			->leftJoin('agecategory', 'agecategory.ID', '=', 'vl_site_age.age')
 			->where('year', $year)
 			->when($site, function($query) use ($site, $key){
@@ -692,7 +692,7 @@ $desc = $this->describe_multiple($year, $month, $year2, $month2);
 			if($year == $year2 && $month < $month2){
 				$d = DB::table('vl_site_age')
 				->select('year', DB::raw($raw))
-				->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_age.facility')
+				->join('facilitys', 'facilitys.ID', '=', 'vl_site_age.facility')
 				->leftJoin('agecategory', 'agecategory.ID', '=', 'vl_site_age.age')
 				->where('year', $year)
 				->when($site, function($query) use ($site, $key){
@@ -710,7 +710,7 @@ $desc = $this->describe_multiple($year, $month, $year2, $month2);
 			if($year < $year2){
 				$d = DB::table('vl_site_age')
 				->select( DB::raw($raw))
-				->leftJoin('facilitys', 'facilitys.ID', '=', 'vl_site_age.facility')
+				->join('facilitys', 'facilitys.ID', '=', 'vl_site_age.facility')
 				->leftJoin('agecategory', 'agecategory.ID', '=', 'vl_site_age.age')
 				->whereRaw($q)
 				->when($site, function($query) use ($site, $key){

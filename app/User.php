@@ -18,6 +18,14 @@ class User extends Authenticatable
     protected $table = "administrators";
 
     /**
+     * The connection name for the model.
+     *
+     * @var string
+     */
+    protected $table = "mysql_write";
+
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var array
