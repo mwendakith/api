@@ -39,7 +39,7 @@ class Eid extends Model
 		->where('samples.eqa', 0)
 		->first();
 
-		$result = $data->toArray();
+		// $result = $data->toArray();
 
 		// return $data;
 
@@ -49,7 +49,7 @@ class Eid extends Model
 
 		    $excel->sheet('Sheetname', function($sheet) use($result) {
 
-		        $sheet->fromArray($result);
+		        $sheet->fromModel($result);
 
 		    });
 
