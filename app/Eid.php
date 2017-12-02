@@ -58,7 +58,7 @@ class Eid extends Model
 			->where('result', 1)
 			->where('samples.repeatt', 0)
 			->where('samples.Flag', 1)
-			->where('samples.eqa', 0);
+			->where('samples.eqa', 0)
 			->first();
 
 			// if($d != null){
