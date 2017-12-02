@@ -19,7 +19,7 @@ class Eid extends Model
     		$year = Date('Y');
     	}
 
-    	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, facilitys.name as facility, samples.pcrtype,  datetested";
+    	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, facilitys.name as facility, samples.pcrtype, datetested";
 
     	$data = DB::connection('eid')
 		->table("samples")
@@ -62,6 +62,8 @@ class Eid extends Model
 			->where('samples.Flag', 1)
 			->where('samples.eqa', 0)
 			->first();
+
+			echo "Found 1 \n";
 
 
 
