@@ -43,13 +43,13 @@ class Eid extends Model
 
 		// return $data;
 
-		Excel::create('Negative_to_Positive', function($excel) use($result)  {
+		Excel::create('Negative_to_Positive', function($excel) use($data)  {
 
 		    // Set sheets
 
-		    $excel->sheet('Sheetname', function($sheet) use($result) {
+		    $excel->sheet('Sheetname', function($sheet) use($data) {
 
-		        $sheet->fromModel($result);
+		        $sheet->fromModel($data);
 
 		    });
 
