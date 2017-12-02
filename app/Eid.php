@@ -130,6 +130,20 @@ class Eid extends Model
 
 		// return $data;
 
+		Excel::create('Positive_to_Negative', function($excel) use($data)  {
+
+		    // Set sheets
+
+		    $excel->sheet('Sheetname', function($sheet) use($data) {
+
+		        $sheet->fromArray($data->toArray());
+
+		    });
+
+		})->store('csv');
+
+		return "";
+
 		$i = 0;
 		$result = null;
 
