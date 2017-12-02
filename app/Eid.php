@@ -27,7 +27,6 @@ class Eid extends Model
 		->join('facilitys', 'samples.facility', '=', 'facilitys.ID')
 		->join('labs', 'samples.labtestedin', '=', 'labs.ID')
 		->orderBy('samples.facility', 'desc')
-		->groupBy('patient', 'samples.facility') 
 		->whereYear('datetested', $year)
 		->when($month, function($query) use ($month){
 			if($month != null || $month != 0){
@@ -113,7 +112,6 @@ class Eid extends Model
 		->join('facilitys', 'samples.facility', '=', 'facilitys.ID')
 		->join('labs', 'samples.labtestedin', '=', 'labs.ID')
 		->orderBy('samples.facility', 'desc')
-		->groupBy('patient', 'samples.facility') 
 		->whereYear('datetested', $year)
 		->when($month, function($query) use ($month){
 			if($month != null || $month != 0){
