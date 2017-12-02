@@ -37,13 +37,13 @@ class Eid extends Model
 		->where('samples.repeatt', 0)
 		->where('samples.Flag', 1)
 		->where('samples.eqa', 0)
-		->get();
+		->first();
 
 		echo "Total {$data->count()} \n";
 
 
 
-		$result = $data->first();
+		$result = $data->toArray();
 
 		// return $data;
 
@@ -53,7 +53,7 @@ class Eid extends Model
 
 		    $excel->sheet('Sheetname', function($sheet) use($result) {
 
-		        $sheet->fromModel($result);
+		        $sheet->fromArray($result);
 
 		    });
 
