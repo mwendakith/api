@@ -126,15 +126,17 @@ class Eid extends Model
 
 		echo "Total {$data->count()} \n";
 
+		$result = $data->toArray();
+
 		// return $data;
 
-		Excel::create('Positive_to_Negative', function($excel) use($data)  {
+		Excel::create('Positive_to_Negative', function($excel) use($result)  {
 
 		    // Set sheets
 
-		    $excel->sheet('Sheetname', function($sheet) use($data) {
+		    $excel->sheet('Sheetname', function($sheet) use($result) {
 
-		        $sheet->fromModel($data);
+		        $sheet->fromArray($result);
 
 		    });
 
