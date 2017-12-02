@@ -40,6 +40,8 @@ class Eid extends Model
 		->where('samples.eqa', 0)
 		->get();
 
+		echo "Total {$data->count()} \n";
+
 		// return $data;
 
 		$i = 0;
@@ -123,6 +125,8 @@ class Eid extends Model
 		->where('samples.Flag', 1)
 		->where('samples.eqa', 0)
 		->get();
+
+		echo "Total {$data->count()} \n";
 
 		// return $data;
 
