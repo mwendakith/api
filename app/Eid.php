@@ -37,25 +37,7 @@ class Eid extends Model
 		->where('samples.repeatt', 0)
 		->where('samples.Flag', 1)
 		->where('samples.eqa', 0)
-		->first();
-
-		// $result = $data->toArray();
-
-		// return $data;
-
-		Excel::create('Negative_to_Positive', function($excel) use($data)  {
-
-		    // Set sheets
-
-		    $excel->sheet('Sheetname', function($sheet) use($data) {
-
-		        $sheet->fromArray(['test' => 'test', 'data' => 'data']);
-
-		    });
-
-		})->store('csv');
-
-		return "";
+		->get();
 
 		// return $data;
 
@@ -76,8 +58,10 @@ class Eid extends Model
 			->where('result', 1)
 			->where('samples.repeatt', 0)
 			->where('samples.Flag', 1)
-			->where('samples.eqa', 0)
-			->first();
+			->where('samples.eqa', 0);
+			// ->first();
+
+			echo $d;
 
 			if($d != null){
 				$result[$i]['laboratory'] = $patient->lab;
@@ -96,6 +80,8 @@ class Eid extends Model
 
 
 		}
+
+		die();
 
 		Excel::create('Negative_to_Positive', function($excel) use($result)  {
 
