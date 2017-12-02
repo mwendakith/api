@@ -41,9 +41,9 @@ class Eid extends Model
 
 		echo "Total {$data->count()} \n";
 
-		dd($data);
 
-		$result = $data->toArray();
+
+		$result = $data->first()->toArray();
 
 		// return $data;
 
