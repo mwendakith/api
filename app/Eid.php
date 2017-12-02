@@ -61,7 +61,7 @@ class Eid extends Model
 			->where('samples.eqa', 0);
 			// ->first();
 
-			echo $d;
+			dd($d);
 
 			if($d != null){
 				$result[$i]['laboratory'] = $patient->lab;
@@ -80,8 +80,6 @@ class Eid extends Model
 
 
 		}
-
-		die();
 
 		Excel::create('Negative_to_Positive', function($excel) use($result)  {
 
