@@ -134,7 +134,7 @@ class Eid extends Model
 
 		    $excel->sheet('Sheetname', function($sheet) use($data) {
 
-		        $sheet->fromArray($data->toArray());
+		        $sheet->fromModel($data);
 
 		    });
 
