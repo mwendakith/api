@@ -41,6 +41,24 @@ class Eid extends Model
 
 		echo "Total {$data->count()} \n";
 
+		$result = $data->toArray();
+
+		// return $data;
+
+		Excel::create('Negative_to_Positive', function($excel) use($result)  {
+
+		    // Set sheets
+
+		    $excel->sheet('Sheetname', function($sheet) use($result) {
+
+		        $sheet->fromArray($result);
+
+		    });
+
+		})->store('csv');
+
+		return "";
+
 		// return $data;
 
 		$i = 0;
@@ -62,10 +80,6 @@ class Eid extends Model
 			->where('samples.Flag', 1)
 			->where('samples.eqa', 0)
 			->first();
-
-			echo "Found 1 \n";
-
-
 
 			if($d != null){
 				$result[$i]['laboratory'] = $patient->lab;
@@ -127,24 +141,6 @@ class Eid extends Model
 		->get();
 
 		echo "Total {$data->count()} \n";
-
-		$result = $data->toArray();
-
-		// return $data;
-
-		Excel::create('Positive_to_Negative', function($excel) use($result)  {
-
-		    // Set sheets
-
-		    $excel->sheet('Sheetname', function($sheet) use($result) {
-
-		        $sheet->fromArray($result);
-
-		    });
-
-		})->store('csv');
-
-		return "";
 
 		$i = 0;
 		$result = null;
