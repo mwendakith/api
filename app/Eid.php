@@ -59,24 +59,22 @@ class Eid extends Model
 			->where('samples.repeatt', 0)
 			->where('samples.Flag', 1)
 			->where('samples.eqa', 0);
-			// ->first();
+			->first();
 
-			dd($d);
-
-			if($d != null){
+			// if($d != null){
 				$result[$i]['laboratory'] = $patient->lab;
 				$result[$i]['facility'] = $patient->facility;
 				$result[$i]['patient_id'] = $patient->patient;
-				$result[$i]['negative_sample_id'] = $d->ID;
-				$result[$i]['negative_date'] = $d->datetested;
-				$result[$i]['negative_pcr'] = $d->pcrtype;
+				// $result[$i]['negative_sample_id'] = $d->ID;
+				// $result[$i]['negative_date'] = $d->datetested;
+				// $result[$i]['negative_pcr'] = $d->pcrtype;
 				$result[$i]['positive_sample_id'] = $patient->ID;
 				$result[$i]['positive_date'] = $patient->datetested;
 				$result[$i]['positive_pcr'] = $patient->pcrtype;
 				$i++;
 
 				echo "Found 1 \n";
-			}
+			// }
 
 
 		}
