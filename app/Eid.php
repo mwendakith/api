@@ -43,7 +43,7 @@ class Eid extends Model
 
 
 
-		$result = $data->first()->toArray();
+		$result = $data->first();
 
 		// return $data;
 
@@ -53,7 +53,7 @@ class Eid extends Model
 
 		    $excel->sheet('Sheetname', function($sheet) use($result) {
 
-		        $sheet->fromArray($result);
+		        $sheet->fromModel($result);
 
 		    });
 
