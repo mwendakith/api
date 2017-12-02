@@ -20,6 +20,7 @@ class Eid extends Model
     	}
 
     	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, facilitys.name as facility, samples.pcrtype, datetested";
+    	$raw2 = "samples.ID, samples.patient, samples.facility, samples.pcrtype, datetested";
 
     	$data = DB::connection('eid')
 		->table("samples")
@@ -45,36 +46,35 @@ class Eid extends Model
 		$result = null;
 
 		foreach ($data as $patient) {
-			$d = null;
+			
 
 	    	$d = DB::connection('eid')
 			->table("samples")
-			->select(DB::raw($raw))
-			->join('facilitys', 'samples.facility', '=', 'facilitys.ID')
-			->join('labs', 'samples.labtestedin', '=', 'labs.ID')
-			->where('samples.facility', $patient->facility)
+			->select(DB::raw($raw2))
+			->where('facility', $patient->facility)
 			->where('patient', $patient->patient)
 			->where('datetested', '<', $patient->datetested)
 			->where('result', 1)
-			->where('samples.repeatt', 0)
-			->where('samples.Flag', 1)
-			->where('samples.eqa', 0)
+			->where('repeatt', 0)
+			->where('Flag', 1)
+			->where('eqa', 0)
 			->first();
 
-			// if($d != null){
+			if($d){
 				$result[$i]['laboratory'] = $patient->lab;
 				$result[$i]['facility'] = $patient->facility;
 				$result[$i]['patient_id'] = $patient->patient;
-				// $result[$i]['negative_sample_id'] = $d->ID;
-				// $result[$i]['negative_date'] = $d->datetested;
-				// $result[$i]['negative_pcr'] = $d->pcrtype;
+				$result[$i]['negative_sample_id'] = $d->ID;
+				$result[$i]['negative_date'] = $d->datetested;
+				$result[$i]['negative_pcr'] = $d->pcrtype;
 				$result[$i]['positive_sample_id'] = $patient->ID;
 				$result[$i]['positive_date'] = $patient->datetested;
 				$result[$i]['positive_pcr'] = $patient->pcrtype;
 				$i++;
 
 				echo "Found 1 \n";
-			// }
+				$d = null;
+			}
 
 
 		}
@@ -101,6 +101,7 @@ class Eid extends Model
     	}
 
     	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, facilitys.name as facility, samples.pcrtype,  datetested";
+    	$raw2 = "samples.ID, samples.patient, samples.facility, samples.pcrtype, datetested";
 
     	$data = DB::connection('eid')
 		->table("samples")
@@ -126,23 +127,20 @@ class Eid extends Model
 		$result = null;
 
 		foreach ($data as $patient) {
-			$d = null;
 
 	    	$d = DB::connection('eid')
 			->table("samples")
-			->select(DB::raw($raw))
-			->join('facilitys', 'samples.facility', '=', 'facilitys.ID')
-			->join('labs', 'samples.labtestedin', '=', 'labs.ID')
-			->where('samples.facility', $patient->facility)
+			->select(DB::raw($raw2))
+			->where('facility', $patient->facility)
 			->where('patient', $patient->patient)
 			->where('datetested', '<', $patient->datetested)
 			->where('result', 2)
-			->where('samples.repeatt', 0)
-			->where('samples.Flag', 1)
-			->where('samples.eqa', 0)
+			->where('repeatt', 0)
+			->where('Flag', 1)
+			->where('eqa', 0)
 			->first();
 
-			if($d != null){
+			if($d){
 				$result[$i]['laboratory'] = $patient->lab;
 				$result[$i]['facility'] = $patient->facility;
 				$result[$i]['patient_id'] = $patient->patient;
@@ -157,6 +155,7 @@ class Eid extends Model
 				$i++;
 
 				echo "Found 1 \n";
+				$d = null;
 			}
 
 
