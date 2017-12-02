@@ -39,10 +39,6 @@ class Eid extends Model
 		->where('samples.eqa', 0)
 		->first();
 
-		echo "Total {$data->count()} \n";
-
-
-
 		$result = $data->toArray();
 
 		// return $data;
