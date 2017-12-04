@@ -19,13 +19,13 @@ class Eid extends Model
     		$year = Date('Y');
     	}
 
-    	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, facilitys.name as facility, samples.pcrtype, datetested";
+    	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, view_facilitys.name as facility_name, samples.pcrtype, datetested";
     	$raw2 = "samples.ID, samples.patient, samples.facility, samples.pcrtype, datetested";
 
     	$data = DB::connection('eid')
 		->table("samples")
 		->select(DB::raw($raw))
-		->join('facilitys', 'samples.facility', '=', 'facilitys.ID')
+		->join('view_facilitys', 'samples.facility', '=', 'view_facilitys.ID')
 		->join('labs', 'samples.labtestedin', '=', 'labs.ID')
 		->orderBy('samples.facility', 'desc')
 		->whereYear('datetested', $year)
@@ -41,6 +41,7 @@ class Eid extends Model
 		->get();
 
 		// return $data;
+
 
 		$i = 0;
 		$result = null;
@@ -100,13 +101,13 @@ class Eid extends Model
     		$year = Date('Y');
     	}
 
-    	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, facilitys.name as facility, samples.pcrtype,  datetested";
+    	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, view_facilitys.name as facility_name, samples.pcrtype,  datetested";
     	$raw2 = "samples.ID, samples.patient, samples.facility, samples.pcrtype, datetested";
 
     	$data = DB::connection('eid')
 		->table("samples")
 		->select(DB::raw($raw))
-		->join('facilitys', 'samples.facility', '=', 'facilitys.ID')
+		->join('view_facilitys', 'samples.facility', '=', 'view_facilitys.ID')
 		->join('labs', 'samples.labtestedin', '=', 'labs.ID')
 		->orderBy('samples.facility', 'desc')
 		->whereYear('datetested', $year)
