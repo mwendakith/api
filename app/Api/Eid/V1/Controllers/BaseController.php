@@ -31,7 +31,8 @@ class BaseController extends Controller
      //            'error' => 500,
      //            'message' =>  $message
      //        ]);
-        return Response::make(['error' => $message], 400);
+        // return Response::make(['error' => $message], 400);
+        return response()->error('message', 400);
     }
 
     protected function invalid_month($month){
