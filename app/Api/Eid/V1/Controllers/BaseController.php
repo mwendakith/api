@@ -32,7 +32,7 @@ class BaseController extends Controller
      //            'message' =>  $message
      //        ]);
         // return Response::make(['error' => $message], 400);
-        return response()->error('message', 400);
+        return $this->response->errorBadRequest($message);
     }
 
     protected function invalid_month($month){
