@@ -5,6 +5,7 @@ namespace App\Api\Vl\V1\Controllers;
 
 
 use App\Http\Controllers\Controller;
+use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
 
 
@@ -27,35 +28,27 @@ class BaseController extends Controller
 
 
 	protected function pass_error($message){
-    	return response()
-            ->json([
-                'error' => 500,
-                'message' =>  $message
-            ]);
+    	// return response()
+     //        ->json([
+     //            'error' => 500,
+     //            'message' =>  $message
+     //        ]);
+        return $this->response->errorBadRequest($message);
     }
 
     protected function invalid_month($month){
-		return response()
-            ->json([
-                'error' => 500,
-                'message' => 'Month ' . $month . ' is invalid. Value must be between 1 and 12.'
-            ]);
+    	$message = 'Month ' . $month . ' is invalid. Value must be between 1 and 12.';
+        return $this->pass_error($month);
 	}
 
 	protected function invalid_quarter($quarter){
-		return response()
-            ->json([
-                'error' => 500,
-                'message' => 'Quarter ' . $quarter . ' is invalid. Value must be between 1 and 4.'
-            ]);
+		$message = 'Quarter ' . $quarter . ' is invalid. Value must be between 1 and 4.';
+        return $this->pass_error($message);
 	}
 
 	protected function invalid_type($type){
-		return response()
-            ->json([
-                'error' => 500,
-                'message' => 'Type ' . $type . ' is invalid. Value must be between 1 and 4. 1 is for the total for the whole year. 2 is for the year with data grouped by month. 3 is for the a particular month. 4 for a particular quarter.'
-            ]);
+        $message = 'Type ' . $type . ' is invalid. Value must be between 1 and 4. 1 is for the total for the whole year. 2 is for the year with data grouped by month. 3 is for the a particular month. 4 for a particular quarter.';
+        return $this->pass_error($message);
 	}
 
 	protected function quarter_range($month){
