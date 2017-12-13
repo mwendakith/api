@@ -31,7 +31,7 @@ $api->version('v1', function (Router $api) {
 //$api->group(['middleware' => 'api.auth'], function(Router $api) {
 // $api->group(['middleware' => 'api.throttle', 'limit' => 5, 'expires' => 1], function(Router $api) {
 
-$api->get('/', function(){ return 'Hello World'; });
+$api->get('/', 'App\Http\Controllers\HomeController@home');
 
 $api->group(['prefix' => 'eid'], function(Router $api) {
     $api->group(['prefix' => 'ver2.0', 'namespace' => 'App\\Api\\Eid\\V1\\Controllers'], function(Router $api) {
