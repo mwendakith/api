@@ -89,7 +89,7 @@ class Vl extends Model
 
 		}
 
-		
+
 
 		Excel::create('Vl_Standard_Report', function($excel) use($return_data)  {
 
@@ -112,5 +112,11 @@ class Vl extends Model
     	else{
     		return 0;
     	}
+    }
+
+    public function send_report(){
+    	$mail_array = array('joelkith@gmail.com', 'tngugi@gmail.com', 'jbatuka@usaid.gov');
+    	$up = new VlReport;
+    	Mail::to($mail_array)->send($up);
     }
 }

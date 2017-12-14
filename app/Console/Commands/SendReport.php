@@ -12,14 +12,14 @@ class SendReport extends Command
      *
      * @var string
      */
-    protected $signature = 'report:send';
+    protected $signature = 'report:send {type=EID}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Send the report.';
+    protected $description = 'Send the report. Default is EID. Pass VL for viralload.';
 
     /**
      * Create a new command instance.
@@ -39,7 +39,19 @@ class SendReport extends Command
     public function handle()
     {
         //
-        $eid = new Eid;
-        $eid->send_report();
+        $type = $this->argument('type');
+
+        if($type == "EID"){
+            $eid = new Eid;
+            $eid->send_report();
+        }
+
+        if($type == "VL"){
+            $vl = new Vl;
+            $vl->send_report();
+
+        }
+
+
     }
 }
