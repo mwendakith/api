@@ -42,7 +42,7 @@ class Vl extends Model
 		$data = DB::connection('vl')->select($sql);
 
 		$return_data = null;
-		$i = 0;
+		// $i = 0;
 
 		echo "\n Begin looping at " . date('d/m/Y h:i:s a', time());
 
@@ -79,21 +79,33 @@ class Vl extends Model
 			}
 
 			if(($max - $min) > 500){
-				$return_data['lab'] = $value->lab;
-				$return_data['facility'] = $value->facility;
-				$return_data['patient'] = $value->patient;
-				$return_data['viral_difference'] = ($max - $min);
+				// $return_data[$i]['lab'] = $value->lab;
+				// $return_data[$i]['facility'] = $value->facility;
+				// $return_data[$i]['patient'] = $value->patient;
+				// $return_data[$i]['viral_difference'] = ($max - $min);
 
-				$return_data['max_datetested'] = $max_date;
-				$return_data['min_datetested'] = $min_date;
+				// $return_data[$i]['max_datetested'] = $max_date;
+				// $return_data[$i]['min_datetested'] = $min_date;
 
-				$return_data['max_result'] = $max;
-				$return_data['min_result'] = $min;
+				// $return_data[$i]['max_result'] = $max;
+				// $return_data[$i]['min_result'] = $min;
 
-				$return_data['max_justification'] = $max_justification;
-				$return_data['min_justification'] = $min_justification;
-				$i++;
+				// $return_data[$i]['max_justification'] = $max_justification;
+				// $return_data[$i]['min_justification'] = $min_justification;
+				// $i++;
 
+				$return_data[] = array(
+					'lab' => $value->lab,
+					'facility' => $value->facility,
+					'patient' => $value->patient,
+					'viral_difference' => ($max - $min),
+					'max_datetested' => $max_date,
+					'min_datetested' => $max_date,
+					'max_result' => $max,
+					'min_result' => $min,
+					'max_justification' => $max_justification,
+					'min_justification' => $min_justification
+				);
 			}			
 
 
