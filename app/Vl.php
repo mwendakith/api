@@ -74,8 +74,8 @@ class Vl extends Model
 				$return_data['facility'] = $value->facility;
 				$return_data['patient'] = $value->patient;
 
-				$return_data['max_datetested'] = $maxdate;
-				$return_data['min_datetested'] = $mindate;
+				$return_data['max_datetested'] = $max_date;
+				$return_data['min_datetested'] = $min_date;
 
 				$return_data['max_result'] = $max;
 				$return_data['min_result'] = $min;
