@@ -17,6 +17,8 @@ class Kernel extends ConsoleKernel
         
         Commands\EidNegatives::class,
         Commands\EidPositives::class,
+        
+        Commands\VlReport::class,
 
         Commands\SendReport::class,
     ];

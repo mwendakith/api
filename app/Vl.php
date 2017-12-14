@@ -12,7 +12,7 @@ class Vl extends Model
 {
     //
 
-    public function new_report(){
+    public function new_report($year = null){
     	ini_set("memory_limit", "-1");
 
     	$sql = "select count(*) as `tests`, facility, patient, labs.name as lab
