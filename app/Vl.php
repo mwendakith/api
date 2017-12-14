@@ -56,22 +56,23 @@ class Vl extends Model
 			$max_justification = $min_justification = 0;
 
 			foreach ($results as $key2 => $value2) {
+				$test_val = $this->check_int($value2->result);
 				if($first){
-					$max = $min = $this->check_int($value2->result);
+					$max = $min = $test_val;
 					$max_date = $min_date = $value2->datetested;
 					$max_justification = $min_justification = $value2->justification;
 					$first = false;
 					continue;
 				}
 
-				if($value2->result > $max){
-					$max = $value2->result;
+				if($test_val > $max){
+					$max = $test_val;
 					$max_justification = $value2->justification;
 					$max_date = $value2->datetested;
 				}
 
-				if($value2->result < $min){
-					$min = $value2->result;
+				if($test_val < $min){
+					$min = $test_val;
 					$min_justification = $value2->justification;
 					$min_date = $value2->datetested;
 				}
@@ -81,6 +82,7 @@ class Vl extends Model
 				$return_data['lab'] = $value->lab;
 				$return_data['facility'] = $value->facility;
 				$return_data['patient'] = $value->patient;
+				$return_data['viral_difference'] = ($max - $min);
 
 				$return_data['max_datetested'] = $max_date;
 				$return_data['min_datetested'] = $min_date;
@@ -117,7 +119,7 @@ class Vl extends Model
 
     private function check_int($var){
     	if(is_numeric($var)){
-    		return $var;
+    		return  (int) $var;
     	}
     	else{
     		return 0;
