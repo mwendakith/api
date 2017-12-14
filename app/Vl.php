@@ -106,9 +106,7 @@ class Vl extends Model
 					'max_justification' => $max_justification,
 					'min_justification' => $min_justification
 				);
-			}			
-
-
+			}
 		}
 
 		echo "\n Complete looping at " . date('d/m/Y h:i:s a', time());
