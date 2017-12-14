@@ -14,6 +14,11 @@ class Vl extends Model
     //
 
     public function new_report($year = null){
+    	echo "\n Method start at " . date('d/m/Y h:i:s a', time());
+    	if($year==null){
+    		$year = Date('Y');
+    	}
+
     	ini_set("memory_limit", "-1");
 
     	$sql = "select count(*) as `tests`, facility, patient, labs.name as lab
@@ -23,7 +28,7 @@ class Vl extends Model
         $sql .= " where viralsamples.rcategory between 1 and 4 ";
         $sql .= " and viralsamples.flag=1 and viralsamples.repeatt=0 ";
 		$sql .= " and patient != '' and patient != 'null' and patient is not null and facility != 7148 ";
-		$sql .= " and year(datetested) = 2017 ";
+		$sql .= " and year(datetested) = {$year} ";
 		$sql .= " group by facility, patient ";
 		$sql .= " having tests > 1 ";
 
@@ -38,6 +43,8 @@ class Vl extends Model
 
 		$return_data = null;
 		$i = 0;
+
+		echo "\n Begin looping at " . date('d/m/Y h:i:s a', time());
 
 		foreach ($data as $key => $value) {
 			$results = DB::connection('vl')->select($get_patients, [$value->patient, $value->facility]);
@@ -90,7 +97,7 @@ class Vl extends Model
 
 		}
 
-
+		echo "\n Complete looping at " . date('d/m/Y h:i:s a', time());
 
 		Excel::create('Vl_Standard_Report', function($excel) use($return_data)  {
 
@@ -103,6 +110,8 @@ class Vl extends Model
 		    });
 
 		})->store('csv');
+
+		echo "\n Complete method at " . date('d/m/Y h:i:s a', time());
 
     }
 
