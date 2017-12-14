@@ -39,7 +39,7 @@ class Vl extends Model
 		$i = 0;
 
 		foreach ($data as $key => $value) {
-			$results = DB::connection('vl')->select($get_patients, [$value['patient'], $value['facility']]);
+			$results = DB::connection('vl')->select($get_patients, [$value->patient, $value->facility]);
 			// $results = collect($results);
 
 			$first = true;
