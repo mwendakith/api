@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\Eid;
+use App\Vl;
 
 class SendReport extends Command
 {

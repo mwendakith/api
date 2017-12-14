@@ -3,7 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Mail\EidReport;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\VlReport;
 
 use DB;
 use Excel;
