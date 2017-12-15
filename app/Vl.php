@@ -21,9 +21,10 @@ class Vl extends Model
 
     	ini_set("memory_limit", "-1");
 
-    	$sql = "SELECT count(*) AS `tests`, facility, patient, labs.name AS lab
+    	$sql = "SELECT count(*) AS `tests`, facility, patient, labs.name AS lab, view_facilitys.name AS facility_name
 				FROM viralsamples 
-				JOIN labs on viralsamples.labtestedin=labs.ID ";
+				JOIN labs on viralsamples.labtestedin=labs.ID 
+				LEFT JOIN view_facilitys on viralsamples.facility=view_facilitys.ID ";
 
         $sql .= " where viralsamples.rcategory between 1 AND 4 ";
         $sql .= " AND viralsamples.flag=1 AND viralsamples.repeatt=0 ";
@@ -96,6 +97,7 @@ class Vl extends Model
 
 				$return_data[] = array(
 					'lab' => $value->lab,
+					'facility_name' => $value->facility_name,
 					'facility' => $value->facility,
 					'patient' => $value->patient,
 					'viral_difference' => ($max - $min),
