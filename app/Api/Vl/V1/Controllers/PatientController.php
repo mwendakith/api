@@ -97,7 +97,7 @@ class PatientController extends BaseController
 		}
 
         $sql .= " where viralsamples.rcategory between 1 and 4 ";
-        $sql .= " and viralsamples.flag=1 and viralsamples.repeatt=0 ";
+        $sql .= " and viralsamples.flag=1 and viralsamples.repeatt=0 and viralsamples.facility != 7148 ";
 		$sql .= " and patient != '' and patient != 'null' and patient is not null ";
 
 		switch ($type) {

@@ -101,7 +101,8 @@ class PatientController extends BaseController
 			$sql .= " join view_facilitys ON samples.facility=view_facilitys.id ";
 		}
 
-		$sql .= " where pcrtype=1 and result between 1 and 2 and patients.age between 0.00001 and 24 ";
+        $sql .= " where pcrtype=1 and result between 1 and 2 and patients.age between 0.00001 and 24 ";
+		$sql .= " and samples.flag = 1 and samples.repeatt = 0 and samples.facility != 7148  ";
 
 		switch ($type) {
 			case 1:
@@ -181,6 +182,8 @@ class PatientController extends BaseController
         if($pcrtype != 0){
             $sql .= " and pcrtype = {$pcrtype} ";
         }
+        
+        $sql .= " and samples.flag = 1 and samples.repeatt = 0 and samples.facility != 7148  ";
 
         if($age != 0){
             $age_range = DB::connection('eid')->table('age_bands')->where('ID', $age)->first();
