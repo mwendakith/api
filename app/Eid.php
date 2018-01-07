@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\EidReport;
+use App\Mail\Template;
 
 use DB;
 use Excel;
@@ -178,70 +179,109 @@ class Eid extends Model
     }
 
 
+    public function confirmatory_report(){
 
-  //   public function negatives_report($year=null, $month=null){
-  //   	if($year==null){
-  //   		$year = Date('Y');
-  //   	}
+    	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, view_facilitys.name as facility_name, samples.pcrtype,  datetested, results.Name as test_result";
+    	$raw2 = "samples.ID, samples.patient, samples.facility, samples.pcrtype, datetested";
 
-  //   	$raw = "FacilityMFLcode, patientID, datetested";
+    	$data = DB::connection('eid')
+		->table("samples")
+		->select(DB::raw($raw))
+		->join('view_facilitys', 'samples.facility', '=', 'view_facilitys.ID')
+		->join('labs', 'samples.labtestedin', '=', 'labs.ID')
+		->join('results', 'samples.result', '=', 'results.Name')
+		->orderBy('samples.facility', 'desc')
+		->whereYear('datetested', '>', 2016)
+		->where('pcrtype', 3)
+		->where('samples.repeatt', 0)
+		->where('samples.Flag', 1)
+		->where('samples.facility', '!=', 7148)
+		->get();
 
-  //   	$data = DB::table('patients_eid')
-		// ->select(DB::raw($raw))
-		// ->orderBy('FacilityMFLcode', 'desc')
-		// ->groupBy('FacilityMFLcode', 'patientID')
-		// ->whereYear('datetested', $year)
-		// ->when($month, function($query) use ($month){
-		// 	if($month != null || $month != 0){
-		// 		return $query->whereMonth('datetested', $month);
-		// 	}
-		// })
-		// ->where('result', 1)
-		// ->where('receivedstatus', '!=', 2)
-		// ->get();
+		echo "Total {$data->count()} \n";
 
-		// $i = 0;
-		// $result = null;
+		$i = 0;
+		$result = null;
 
-		// foreach ($data as $patient) {
-		// 	$d = null;
+		foreach ($data as $patient) {
 
-		// 	$d = DB::table('patients_eid')
-		// 	->select(DB::raw($raw ))
-		// 	->where('FacilityMFLcode', $patient->FacilityMFLcode)
-		// 	->where('patientID', $patient->patientID)
-		// 	->where('result', 2)
-		// 	->where('datetested', '>', $patient->datetested)
-		// 	->where('receivedstatus', '!=', 2)
-		// 	->first();
+	    	$d = DB::connection('eid')
+			->table("samples")
+			->select(DB::raw($raw2))
+			->where('facility', $patient->facility)
+			->where('patient', $patient->patient)
+			->whereDate('datetested', '<', $patient->datetested)
+			->where('result', 1)
+			->where('repeatt', 0)
+			->where('Flag', 1)
+			->where('eqa', 0)
+			->where('pcrtype', '<', 3)
+			->first();
 
-		// 	if($d != null){
-		// 		$result[$i]['FacilityMFLcode'] = $patient->FacilityMFLcode;
-		// 		$result[$i]['patientID'] = $patient->patientID;
-		// 		$result[$i]['positive_result'] = "Positive";
-		// 		$result[$i]['positive_date'] = $patient->datetested;
-		// 		$result[$i]['negative_result'] = "Negative";
-		// 		$result[$i]['negative_date'] = $d->datetested;
-		// 		$i++;
-		// 	}
+			if($d == null){
+				$result[$i]['laboratory'] = $patient->lab;
+				$result[$i]['facility'] = $patient->facility;
+				$result[$i]['patient_id'] = $patient->patient;
+
+				$result[$i]['sample_id'] = $patient->ID; 
+				$result[$i]['date_of_test'] = $patient->datetested;
+				$result[$i]['result'] = $patient->test_result;
+				$i++;
+
+				$d = null;
+			}
 
 
-		// }
+		}
 
-		// Excel::create('Positive_to_Negative', function($excel) use($result)  {
+		Excel::create('Confirmatory_Report', function($excel) use($result)  {
 
-		//     // Set sheets
+		    // Set sheets
 
-		//     $excel->sheet('Sheetname', function($sheet) use($result) {
+		    $excel->sheet('Sheetname', function($sheet) use($result) {
 
-		//         $sheet->fromArray($result);
+		        $sheet->fromArray($result);
 
-		//     });
+		    });
 
-		// })->store('csv');
+		})->store('csv');
+    }
 
-		// // return $result;
-  //   }
+    public function confirmatory_positives_report(){
+
+    	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, view_facilitys.name as facility_name, samples.pcrtype,  datetested";
+    	$raw2 = "samples.ID, samples.patient, samples.facility, samples.pcrtype, datetested";
+
+    	$data = DB::connection('eid')
+		->table("samples")
+		->select(DB::raw($raw))
+		->join('view_facilitys', 'samples.facility', '=', 'view_facilitys.ID')
+		->join('labs', 'samples.labtestedin', '=', 'labs.ID')
+		->orderBy('samples.facility', 'desc')
+		->whereYear('datetested', '>', 2016)
+		->where('result', 1)
+		->where('pcrtype', 3)
+		->where('samples.repeatt', 0)
+		->where('samples.Flag', 1)
+		->where('samples.facility', '!=', 7148)
+		->get();
+
+		echo "Total {$data->count()} \n";
+
+		Excel::create('Confirmatory_Negatives', function($excel) use($result)  {
+
+		    // Set sheets
+
+		    $excel->sheet('Sheetname', function($sheet) use($result) {
+
+		        $sheet->fromModel($result);
+
+		    });
+
+		})->store('csv');
+    }
+
+
 
     public function report($year=null, $month=null){
     	if($year==null){
@@ -276,6 +316,12 @@ class Eid extends Model
     public function send_report(){
     	$mail_array = array('joelkith@gmail.com', 'tngugi@gmail.com', 'jbatuka@usaid.gov');
     	$up = new EidReport;
+    	Mail::to($mail_array)->send($up);
+    }
+
+    public function send_confirm(){
+    	$mail_array = array('joelkith@gmail.com', 'tngugi@gmail.com', 'baksajoshua09@gmail.com', 'jbatuka@usaid.gov');
+    	$up = new Template;
     	Mail::to($mail_array)->send($up);
     }
 }

@@ -53,6 +53,11 @@ class SendReport extends Command
 
         }
 
+        if($type == "Confirmatory"){
+            $eid = new Eid;
+            $eid->send_confirm();            
+        }
+
 
     }
 }
