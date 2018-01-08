@@ -272,7 +272,7 @@ class Eid extends Model
 		$result = null;
 
 
-		foreach ($variable as $key => $value) {
+		foreach ($data as $key => $value) {
 			$result[$key] = $value;
 		}
 
