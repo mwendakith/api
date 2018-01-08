@@ -30,6 +30,8 @@ class Template extends Mailable
     {
         $filePath = storage_path('exports/Confirmatory_Report.csv');
         $filePath2 = storage_path('exports/Confirmatory_Negatives.csv');
-        return $this->view('report')->attach($filePath)->attach($filePath2);
+        $filePath3 = storage_path('exports/Confirmatory_Tests_Without_Previous_Test.csv');
+        $filePath4 = storage_path('exports/Patients_With_Multiple_Confirmatory_Tests.csv');
+        return $this->view('report')->attach($filePath)->attach($filePath2)->attach($filePath3)->attach($filePath4);
     }
 }

@@ -250,6 +250,119 @@ class Eid extends Model
 		})->store('csv');
     }
 
+    public function confirmatory_report_two(){
+
+    	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, view_facilitys.name as facility_name, samples.pcrtype,  datetested, results.Name as test_result";
+    	$raw2 = "samples.ID, samples.patient, samples.facility, samples.pcrtype, datetested";
+
+    	$data = DB::connection('eid')
+		->table("samples")
+		->select(DB::raw($raw))
+		->join('view_facilitys', 'samples.facility', '=', 'view_facilitys.ID')
+		->join('labs', 'samples.labtestedin', '=', 'labs.ID')
+		->join('results', 'samples.result', '=', 'results.ID')
+		->orderBy('samples.facility', 'desc')
+		->whereYear('datetested', '>', 2016)
+		->where('pcrtype', 3)
+		->where('samples.repeatt', 0)
+		->where('samples.Flag', 1)
+		->where('samples.facility', '!=', 7148)
+		->get();
+
+		echo "Begin confirmatory report two \n";
+		echo "Total {$data->count()} \n";
+
+		$i = 0;
+		$result = null;
+
+		foreach ($data as $patient) {
+
+	    	$d = DB::connection('eid')
+			->table("samples")
+			->select(DB::raw($raw2))
+			->where('facility', $patient->facility)
+			->where('patient', $patient->patient)
+			->whereDate('datetested', '<', $patient->datetested)
+			->whereBetween('result', [1, 2])
+			->where('repeatt', 0)
+			->where('Flag', 1)
+			->where('eqa', 0)
+			->where('pcrtype', '<', 3)
+			->first();
+
+			if($d == null){
+				$result[$i]['laboratory'] = $patient->lab;
+				$result[$i]['facility'] = $patient->facility;
+				$result[$i]['patient_id'] = $patient->patient;
+
+				$result[$i]['sample_id'] = $patient->ID; 
+				$result[$i]['date_of_test'] = $patient->datetested;
+				$result[$i]['result'] = $patient->test_result;
+				$i++;
+
+				$d = null;
+			}
+
+
+		}
+
+		echo "Found {$i} records \n";
+
+		Excel::create('Confirmatory_Tests_Without_Previous_Test', function($excel) use($result)  {
+
+		    // Set sheets
+
+		    $excel->sheet('Sheetname', function($sheet) use($result) {
+
+		        $sheet->fromArray($result);
+
+		    });
+
+		})->store('csv');
+    }
+
+    public function confirmatory_multiple(){
+
+    	$raw = "count(*) as `tests`, samples.patient, samples.facility, labs.name as lab, view_facilitys.name as facility_name";
+    	$raw2 = "samples.ID, samples.patient, samples.facility, samples.pcrtype, datetested";
+
+    	$data = DB::connection('eid')
+		->table("samples")
+		->select(DB::raw($raw))
+		->join('view_facilitys', 'samples.facility', '=', 'view_facilitys.ID')
+		->join('labs', 'samples.labtestedin', '=', 'labs.ID')
+		->join('results', 'samples.result', '=', 'results.ID')
+		->orderBy('samples.facility', 'desc')
+		->whereYear('datetested', '>', 2016)
+		->where('pcrtype', 3)
+		->where('samples.repeatt', 0)
+		->where('samples.Flag', 1)
+		->where('samples.facility', '!=', 7148)
+		->groupBy('samples.patient', 'samples.facility')
+		->having('tests', '>', 1)
+		->get()->toArray();
+
+		$result = null;
+
+
+		foreach ($data as $key => $value) {
+			$value = collect($value);
+			$result[$key] = $value->toArray();
+		}
+
+		Excel::create('Patients_With_Multiple_Confirmatory_Tests', function($excel) use($result)  {
+
+		    // Set sheets
+
+		    $excel->sheet('Sheetname', function($sheet) use($result) {
+
+		        $sheet->fromArray($result);
+
+		    });
+
+		})->store('csv');
+    }
+
     public function confirmatory_positives_report(){
 
     	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, view_facilitys.name as facility_name, samples.pcrtype,  datetested";

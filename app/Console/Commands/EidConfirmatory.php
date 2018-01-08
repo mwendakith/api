@@ -40,7 +40,9 @@ class EidConfirmatory extends Command
     {
         $eid = new Eid;
         $output = $eid->confirmatory_report();
+        $output = $eid->confirmatory_report_two();
         $output .= $eid->confirmatory_positives_report();
+        $output .= $eid->confirmatory_multiple();
 
         $this->info($output);
         $eid->send_confirm();   
