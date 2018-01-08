@@ -264,8 +264,7 @@ class Eid extends Model
 		->where('samples.repeatt', 0)
 		->where('samples.Flag', 1)
 		->where('samples.facility', '!=', 7148)
-		->get()
-		->toArray();
+		->get();
 
 		echo "Total {$data->count()} \n";
 
@@ -275,7 +274,7 @@ class Eid extends Model
 
 		    $excel->sheet('Sheetname', function($sheet) use($data) {
 
-		        $sheet->fromArray($data);
+		        $sheet->fromArray($data->toArray());
 
 		    });
 
