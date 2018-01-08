@@ -221,7 +221,7 @@ class Eid extends Model
 
 			if($d == null){
 				$result[$i]['laboratory'] = $patient->lab;
-				$result[$i]['facility'] = $patient->facility;
+				$result[$i]['facility'] = $patient->facility_name;
 				$result[$i]['patient_id'] = $patient->patient;
 
 				$result[$i]['sample_id'] = $patient->ID; 
@@ -292,7 +292,7 @@ class Eid extends Model
 
 			if($d == null){
 				$result[$i]['laboratory'] = $patient->lab;
-				$result[$i]['facility'] = $patient->facility;
+				$result[$i]['facility'] = $patient->facility_name;
 				$result[$i]['patient_id'] = $patient->patient;
 
 				$result[$i]['sample_id'] = $patient->ID; 
