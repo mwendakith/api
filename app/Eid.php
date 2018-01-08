@@ -276,6 +276,8 @@ class Eid extends Model
 			$result[$key] = $value;
 		}
 
+		dd($result);
+
 		// $out = fopen('php://memory', 'w');
 		// fputcsv($out, array_keys($data[1]));
 
