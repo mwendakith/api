@@ -267,20 +267,35 @@ class Eid extends Model
 		->where('samples.repeatt', 0)
 		->where('samples.Flag', 1)
 		->where('samples.facility', '!=', 7148)
-		->get()
-		->toArray();
+		->get()->toArray();
 
-		// echo "Total {$data->count()} \n";
+		$result = null;
 
-		// $result = $data->toArray();
 
-		Excel::create('Confirmatory_Negatives', function($excel) use($data)  {
+		foreach ($variable as $key => $value) {
+			$result[$key] = $value;
+		}
+
+		// $out = fopen('php://memory', 'w');
+		// fputcsv($out, array_keys($data[1]));
+
+		// foreach ($data as $value) {
+		// 	fputcsv($out, $value);
+		// }
+		// fseek($out, 0);
+
+
+
+	 //    header('Content-Type: application/csv');
+	 //    header('Content-Disposition: attachement; filename="Confirmatory_Negatives.csv";');
+
+		Excel::create('Confirmatory_Negatives', function($excel) use($result)  {
 
 		    // Set sheets
 
-		    $excel->sheet('Sheetname', function($sheet) use($data) {
+		    $excel->sheet('Sheetname', function($sheet) use($result) {
 
-		        $sheet->fromArray($data);
+		        $sheet->fromArray($result);
 
 		    });
 
