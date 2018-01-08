@@ -189,7 +189,7 @@ class Eid extends Model
 		->select(DB::raw($raw))
 		->join('view_facilitys', 'samples.facility', '=', 'view_facilitys.ID')
 		->join('labs', 'samples.labtestedin', '=', 'labs.ID')
-		->join('results', 'samples.result', '=', 'results.Name')
+		->join('results', 'samples.result', '=', 'results.ID')
 		->orderBy('samples.facility', 'desc')
 		->whereYear('datetested', '>', 2016)
 		->where('pcrtype', 3)
@@ -268,13 +268,13 @@ class Eid extends Model
 
 		echo "Total {$data->count()} \n";
 
-		Excel::create('Confirmatory_Negatives', function($excel) use($result)  {
+		Excel::create('Confirmatory_Negatives', function($excel) use($data)  {
 
 		    // Set sheets
 
-		    $excel->sheet('Sheetname', function($sheet) use($result) {
+		    $excel->sheet('Sheetname', function($sheet) use($data) {
 
-		        $sheet->fromModel($result);
+		        $sheet->fromModel($data);
 
 		    });
 
