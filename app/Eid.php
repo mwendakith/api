@@ -198,6 +198,7 @@ class Eid extends Model
 		->where('samples.facility', '!=', 7148)
 		->get();
 
+		echo "Begin confirmatory report \n";
 		echo "Total {$data->count()} \n";
 
 		$i = 0;
@@ -234,6 +235,8 @@ class Eid extends Model
 
 		}
 
+		echo "Found {$i} records \n";
+
 		Excel::create('Confirmatory_Report', function($excel) use($result)  {
 
 		    // Set sheets
@@ -264,9 +267,12 @@ class Eid extends Model
 		->where('samples.repeatt', 0)
 		->where('samples.Flag', 1)
 		->where('samples.facility', '!=', 7148)
-		->get();
+		->get()
+		->toArray();
 
-		echo "Total {$data->count()} \n";
+		// echo "Total {$data->count()} \n";
+
+		// $result = $data->toArray();
 
 		Excel::create('Confirmatory_Negatives', function($excel) use($data)  {
 
@@ -274,7 +280,7 @@ class Eid extends Model
 
 		    $excel->sheet('Sheetname', function($sheet) use($data) {
 
-		        $sheet->fromArray($data->toArray());
+		        $sheet->fromArray($data);
 
 		    });
 
