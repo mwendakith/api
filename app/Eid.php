@@ -273,10 +273,11 @@ class Eid extends Model
 
 
 		foreach ($data as $key => $value) {
-			$result[$key] = $value;
+			$value = collect($value);
+			$result[$key] = $value->toArray();
 		}
 
-		dd($result);
+		// dd($result);
 
 		// $out = fopen('php://memory', 'w');
 		// fputcsv($out, array_keys($data[1]));
