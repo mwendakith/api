@@ -181,7 +181,7 @@ class Eid extends Model
 
     public function confirmatory_report(){
 
-    	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, view_facilitys.name as facility_name, samples.pcrtype,  datetested, results.Name as test_result";
+    	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, view_facilitys.name as facility_name, view_facilitys.facilitycode as facilitycode, view_facilitys.countyname, view_facilitys.subcounty, view_facilitys.partnername, samples.pcrtype, datetested, datecollected, results.Name as test_result";
     	$raw2 = "samples.ID, samples.patient, samples.facility, samples.pcrtype, datetested";
 
     	$data = DB::connection('eid')
@@ -221,11 +221,16 @@ class Eid extends Model
 
 			if($d == null){
 				$result[$i]['laboratory'] = $patient->lab;
+				$result[$i]['facilityMFLCode'] = $patient->facilitycode;
 				$result[$i]['facility'] = $patient->facility_name;
+				$result[$i]['subcounty'] = $patient->subcounty;
+				$result[$i]['county'] = $patient->countyname;
+				$result[$i]['partner'] = $patient->partnername;
 				$result[$i]['patient_id'] = $patient->patient;
 
 				$result[$i]['sample_id'] = $patient->ID; 
 				$result[$i]['date_of_test'] = $patient->datetested;
+				$result[$i]['date_collected'] = $patient->datecollected;
 				$result[$i]['result'] = $patient->test_result;
 				$i++;
 
@@ -237,7 +242,7 @@ class Eid extends Model
 
 		echo "Found {$i} records \n";
 
-		Excel::create('Confirmatory_Report', function($excel) use($result)  {
+		Excel::create('Confirmatories_Without_Previous_Positive', function($excel) use($result)  {
 
 		    // Set sheets
 
@@ -252,7 +257,7 @@ class Eid extends Model
 
     public function confirmatory_report_two(){
 
-    	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, view_facilitys.name as facility_name, samples.pcrtype,  datetested, results.Name as test_result";
+    	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, view_facilitys.name as facility_name, view_facilitys.facilitycode as facilitycode, view_facilitys.countyname, view_facilitys.subcounty, view_facilitys.partnername, samples.pcrtype, datetested, datecollected, results.Name as test_result";
     	$raw2 = "samples.ID, samples.patient, samples.facility, samples.pcrtype, datetested";
 
     	$data = DB::connection('eid')
@@ -292,11 +297,16 @@ class Eid extends Model
 
 			if($d == null){
 				$result[$i]['laboratory'] = $patient->lab;
+				$result[$i]['facilityMFLCode'] = $patient->facilitycode;
 				$result[$i]['facility'] = $patient->facility_name;
+				$result[$i]['subcounty'] = $patient->subcounty;
+				$result[$i]['county'] = $patient->countyname;
+				$result[$i]['partner'] = $patient->partnername;
 				$result[$i]['patient_id'] = $patient->patient;
 
 				$result[$i]['sample_id'] = $patient->ID; 
 				$result[$i]['date_of_test'] = $patient->datetested;
+				$result[$i]['date_collected'] = $patient->datecollected;
 				$result[$i]['result'] = $patient->test_result;
 				$i++;
 
@@ -323,8 +333,7 @@ class Eid extends Model
 
     public function confirmatory_multiple(){
 
-    	$raw = "count(*) as `tests`, samples.patient, samples.facility, labs.name as lab, view_facilitys.name as facility_name";
-    	$raw2 = "samples.ID, samples.patient, samples.facility, samples.pcrtype, datetested";
+    	$raw = "count(*) as `tests`, samples.patient, samples.facility, labs.name as lab, view_facilitys.name as facility_name, view_facilitys.facilitycode as facilitycode, view_facilitys.countyname as county, view_facilitys.subcounty, view_facilitys.partnername as partner";
 
     	$data = DB::connection('eid')
 		->table("samples")
@@ -365,7 +374,7 @@ class Eid extends Model
 
     public function confirmatory_positives_report(){
 
-    	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, view_facilitys.name as facility_name, samples.pcrtype,  datetested";
+    	$raw = "samples.ID, samples.patient, samples.facility, labs.name as lab, view_facilitys.name as facility_name, samples.pcrtype,  datetested, datecollected";
     	$raw2 = "samples.ID, samples.patient, samples.facility, samples.pcrtype, datetested";
 
     	$data = DB::connection('eid')

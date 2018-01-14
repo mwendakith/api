@@ -28,7 +28,7 @@ class Template extends Mailable
      */
     public function build()
     {
-        $filePath = storage_path('exports/Confirmatory_Report.csv');
+        $filePath = storage_path('exports/Confirmatories_Without_Previous_Positive.csv');
         $filePath2 = storage_path('exports/Confirmatory_Negatives.csv');
         $filePath3 = storage_path('exports/Confirmatory_Tests_Without_Previous_Test.csv');
         $filePath4 = storage_path('exports/Patients_With_Multiple_Confirmatory_Tests.csv');
