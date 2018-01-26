@@ -384,27 +384,27 @@ class PatientController extends BaseController
 
 
     public function national_tests3($type, $pcrtype, $age_lower, $age_upper, $year, $month=NULL, $year2=NULL, $month2=NULL){
-        return $this->get_patients_details(0, $type, $pcrtype, $age, $year, [0, 0], $month, $year2, $month2);
+        return $this->get_patients_details(0, $type, $pcrtype, $age_lower, $age_upper, $year, [0, 0], $month, $year2, $month2);
     }
 
     public function county_tests3($county, $type, $pcrtype, $age_lower, $age_upper, $year, $month=NULL, $year2=NULL, $month2=NULL){
         $div = $this->set_county($county);
-        return $this->get_patients_details(1, $type, $pcrtype, $age, $year, $div, $month, $year2, $month2);
+        return $this->get_patients_details(1, $type, $pcrtype, $age_lower, $age_upper, $year, $div, $month, $year2, $month2);
     }
 
     public function subcounty_tests3($subcounty, $type, $pcrtype, $age_lower, $age_upper, $year, $month=NULL, $year2=NULL, $month2=NULL){
         $div = $this->set_subcounty($subcounty);
-        return $this->get_patients_details(2, $type, $pcrtype, $age, $year, $div, $month, $year2, $month2);
+        return $this->get_patients_details(2, $type, $pcrtype, $age_lower, $age_upper, $year, $div, $month, $year2, $month2);
     }
 
     public function partner_tests3($partner, $type, $pcrtype, $age_lower, $age_upper, $year, $month=NULL, $year2=NULL, $month2=NULL){
         $div = [$partner, 'view_facilitys.partner'];
-        return $this->get_patients_details(3, $type, $pcrtype, $age, $year, $div, $month, $year2, $month2);
+        return $this->get_patients_details(3, $type, $pcrtype, $age_lower, $age_upper, $year, $div, $month, $year2, $month2);
     }
 
     public function facility_tests3($site, $type, $pcrtype, $age_lower, $age_upper, $year, $month=NULL, $year2=NULL, $month2=NULL){
         $div = $this->set_site($site);
-        return $this->get_patients_details(4, $type, $pcrtype, $age, $year, $div, $month, $year2, $month2);
+        return $this->get_patients_details(4, $type, $pcrtype, $age_lower, $age_upper, $year, $div, $month, $year2, $month2);
     }
 
     public function format_return(&$data=null){
