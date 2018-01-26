@@ -197,6 +197,20 @@ $api->group(['prefix' => 'eid'], function(Router $api) {
             $api->get('partner/{site}/{type}/{pcrtype}/{age}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@partner_tests2');
 
         });
+
+        $api->group(['prefix' => 'patient3'], function(Router $api) {
+
+            $api->get('national/{type}/{pcrtype}/{age_lower}/{age_upper}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@national_tests2');
+
+            $api->get('county/{county}/{type}/{pcrtype}/{age_lower}/{age_upper}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@county_tests2');
+
+            $api->get('subcounty/{subcounty}/{type}/{pcrtype}/{age_lower}/{age_upper}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@subcounty_tests2');
+
+            $api->get('facility/{site}/{type}/{pcrtype}/{age_lower}/{age_upper}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@facility_tests2');
+
+            $api->get('partner/{site}/{type}/{pcrtype}/{age_lower}/{age_upper}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@partner_tests2');
+
+        });
         
     });
 });
