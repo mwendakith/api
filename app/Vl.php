@@ -245,6 +245,16 @@ class Vl extends Model
 
     }
 
+    public function update_art()
+    {
+    	$file = public_path('fac.csv');
+    	$data = Excel::load($file, function($reader){})->get();
+
+    	foreach ($data as $key => $value) {
+    		DB::table('facilitys')->where('facilitycode', $value->facility)->update(['totalartsep17' => $value->current]);
+    	}
+    }
+
     private function check_int($var){
     	if(is_numeric($var)){
     		return  (int) $var;
