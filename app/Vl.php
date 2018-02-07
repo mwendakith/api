@@ -253,7 +253,7 @@ class Vl extends Model
     	$query = '';
 
     	foreach ($data as $key => $value) {
-    		$query .= DB::table('facilitys')->where('facilitycode', $value->facility)->update(['totalartsep17' => $value->current])->toSql();
+    		DB::table('facilitys')->where('facilitycode', $value->facility)->update(['totalartsep17' => $value->current]);
     	}
 
     	echo $query;
