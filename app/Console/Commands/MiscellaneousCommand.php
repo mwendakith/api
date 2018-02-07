@@ -39,6 +39,7 @@ class MiscellaneousCommand extends Command
     public function handle()
     {
         $vl = new Vl;
-        $vl->update_art();
+        $output = $vl->update_art();
+        $this->info($output);
     }
 }
