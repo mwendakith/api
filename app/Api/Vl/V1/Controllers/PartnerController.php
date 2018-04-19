@@ -160,7 +160,7 @@ class PartnerController extends BaseController
 
 				
 			}
-$desc = $this->describe_multiple($year, $month, $year2, $month2);
+			$desc = $this->describe_multiple($year, $month, $year2, $month2);
 
 			for ($i=0; $i < sizeof($d); $i++) { 
 				$data[$i]['Period'] = $desc;

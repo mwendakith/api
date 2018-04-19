@@ -472,13 +472,15 @@ class PartnerController extends BaseController
 		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('ip_agebreakdown')
-			->leftJoin('partners', 'partners.ID', '=', 'ip_agebreakdown.partner')
+			$data = DB::table('ip_age_breakdown')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_age_breakdown.partner')
+			->leftJoin('age_bands', 'age_bands.ID', '=', 'ip_age_breakdown.age_band_id')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
+			->groupBy('age_bands.name')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
 
@@ -486,13 +488,15 @@ class PartnerController extends BaseController
 
 		// For the whole year but has per month
 		else if($type == 2){
-			$data = DB::table('ip_agebreakdown')
-			->leftJoin('partners', 'partners.ID', '=', 'ip_agebreakdown.partner')
+			$data = DB::table('ip_age_breakdown')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_age_breakdown.partner')
+			->leftJoin('age_bands', 'age_bands.ID', '=', 'ip_age_breakdown.age_band_id')
 			->select('year', 'month', DB::raw($raw))
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
+			->groupBy('age_bands.name')
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -502,14 +506,16 @@ class PartnerController extends BaseController
 		else if($type == 3){
 
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
-			$data = DB::table('ip_agebreakdown')
-			->leftJoin('partners', 'partners.ID', '=', 'ip_agebreakdown.partner')
+			$data = DB::table('ip_age_breakdown')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_age_breakdown.partner')
+			->leftJoin('age_bands', 'age_bands.ID', '=', 'ip_age_breakdown.age_band_id')
 			->select('year', 'month', DB::raw($raw))
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
 			->where('month', $month)
+			->groupBy('age_bands.name')
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -525,8 +531,9 @@ class PartnerController extends BaseController
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$d = DB::table('ip_agebreakdown')
-			->leftJoin('partners', 'partners.ID', '=', 'ip_agebreakdown.partner')
+			$d = DB::table('ip_age_breakdown')
+			->leftJoin('partners', 'partners.ID', '=', 'ip_age_breakdown.partner')
+			->leftJoin('age_bands', 'age_bands.ID', '=', 'ip_age_breakdown.age_band_id')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
 			->when($partner, function($query) use ($partner){
@@ -534,6 +541,7 @@ class PartnerController extends BaseController
 			})
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
+			->groupBy('age_bands.name')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
 			
@@ -559,9 +567,10 @@ class PartnerController extends BaseController
 			// return $this->pass_error($q);
 
 			if($year == $year2 && $month < $month2){
-				$d = DB::table('ip_agebreakdown')
+				$d = DB::table('ip_age_breakdown')
 				->select('year', DB::raw($raw))
-				->leftJoin('partners', 'partners.ID', '=', 'ip_agebreakdown.partner')
+				->leftJoin('partners', 'partners.ID', '=', 'ip_age_breakdown.partner')
+				->leftJoin('age_bands', 'age_bands.ID', '=', 'ip_age_breakdown.age_band_id')
 				->where('year', $year)
 				->when($partner, function($query) use ($partner, $key){
 					if($partner != "0" || $partner != 0){
@@ -569,20 +578,23 @@ class PartnerController extends BaseController
 					}
 				})
 				->whereBetween('month', [$month, $month2])
+				->groupBy('age_bands.name')
 				->groupBy('partners.ID', 'partners.name', 'year')
 				->get();
 			}
 
 			if($year < $year2){
-				$d = DB::table('ip_agebreakdown')
+				$d = DB::table('ip_age_breakdown')
 				->select( DB::raw($raw))
-				->leftJoin('partners', 'partners.ID', '=', 'ip_agebreakdown.partner')
+				->leftJoin('partners', 'partners.ID', '=', 'ip_age_breakdown.partner')
+				->leftJoin('age_bands', 'age_bands.ID', '=', 'ip_age_breakdown.age_band_id')
 				->whereRaw($q)
 				->when($partner, function($query) use ($partner, $key){
 					if($partner != "0" || $partner != 0){
 						return $query->where('partners.ID', $partner);
 					}
 				})
+				->groupBy('age_bands.name')
 				->groupBy('partners.ID', 'partners.name')
 				->get();
 
@@ -626,7 +638,7 @@ class PartnerController extends BaseController
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
-			->groupBy('name')
+			->groupBy('entry_points.name')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
 
@@ -643,7 +655,7 @@ class PartnerController extends BaseController
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
-			->groupBy('name')
+			->groupBy('entry_points.name')
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -664,7 +676,7 @@ class PartnerController extends BaseController
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
 			->where('month', $month)
-			->groupBy('name')
+			->groupBy('entry_points.name')
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -689,9 +701,9 @@ class PartnerController extends BaseController
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
-			->groupBy('name')
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
+			->groupBy('entry_points.name')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
 			
@@ -728,6 +740,7 @@ class PartnerController extends BaseController
 					}
 				})
 				->whereBetween('month', [$month, $month2])
+				->groupBy('entry_points.name')
 				->groupBy('partners.ID', 'partners.name', 'year')
 				->get();
 			}
@@ -743,6 +756,7 @@ class PartnerController extends BaseController
 						return $query->where('partners.ID', $partner);
 					}
 				})
+				->groupBy('entry_points.name')
 				->groupBy('partners.ID', 'partners.name')
 				->get();
 
@@ -784,7 +798,7 @@ class PartnerController extends BaseController
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
-			->groupBy('name')
+			->groupBy('prophylaxis.name')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
 
@@ -801,7 +815,7 @@ class PartnerController extends BaseController
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
-			->groupBy('name')
+			->groupBy('prophylaxis.name')
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -822,7 +836,7 @@ class PartnerController extends BaseController
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
 			->where('month', $month)
-			->groupBy('name')
+			->groupBy('prophylaxis.name')
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -847,7 +861,7 @@ class PartnerController extends BaseController
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
-			->groupBy('name')
+			->groupBy('prophylaxis.name')
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
 			->groupBy('partners.ID', 'partners.name', 'year')
@@ -886,6 +900,7 @@ class PartnerController extends BaseController
 					}
 				})
 				->whereBetween('month', [$month, $month2])
+				->groupBy('prophylaxis.name')
 				->groupBy('partners.ID', 'partners.name', 'year')
 				->get();
 			}
@@ -901,6 +916,7 @@ class PartnerController extends BaseController
 						return $query->where('partners.ID', $partner);
 					}
 				})
+				->groupBy('prophylaxis.name')
 				->groupBy('partners.ID', 'partners.name')
 				->get();
 
@@ -943,7 +959,7 @@ class PartnerController extends BaseController
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
-			->groupBy('name')
+			->groupBy('prophylaxis.name')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
 
@@ -960,7 +976,7 @@ class PartnerController extends BaseController
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
-			->groupBy('name')
+			->groupBy('prophylaxis.name')
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -981,7 +997,7 @@ class PartnerController extends BaseController
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
 			->where('month', $month)
-			->groupBy('name')
+			->groupBy('prophylaxis.name')
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -1006,7 +1022,7 @@ class PartnerController extends BaseController
 			->when($partner, function($query) use ($partner){
 				if($partner != 0) return $query->where('partners.ID', $partner);
 			})
-			->groupBy('name')->where('month', '>', $lesser)
+			->groupBy('prophylaxis.name')->where('month', '>', $lesser)
 			->where('month', '<', $greater)
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -1044,6 +1060,7 @@ class PartnerController extends BaseController
 					}
 				})
 				->whereBetween('month', [$month, $month2])
+				->groupBy('prophylaxis.name')
 				->groupBy('partners.ID', 'partners.name', 'year')
 				->get();
 			}
@@ -1059,6 +1076,7 @@ class PartnerController extends BaseController
 						return $query->where('partners.ID', $partner);
 					}
 				})
+				->groupBy('prophylaxis.name')
 				->groupBy('partners.ID', 'partners.name')
 				->get();
 

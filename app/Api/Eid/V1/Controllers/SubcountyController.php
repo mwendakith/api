@@ -510,8 +510,9 @@ class SubcountyController extends BaseController
 		// Totals for the whole year
 		if($type == 1){
 
-			$data = DB::table('subcounty_agebreakdown')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_agebreakdown.subcounty')
+			$data = DB::table('subcounty_age_breakdown')
+			->leftJoin('districts', 'districts.ID', '=', 'subcounty_age_breakdown.subcounty')
+			->leftJoin('age_bands', 'age_bands.ID', '=', 'subcounty_age_breakdown.age_band_id')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
 			->when($subcounty, function($query) use ($subcounty, $key){
@@ -519,6 +520,7 @@ class SubcountyController extends BaseController
 					return $query->where($key, $subcounty);
 				}					
 			})
+			->groupBy('age_bands.name')
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 			->get();
 
@@ -526,8 +528,9 @@ class SubcountyController extends BaseController
 
 		// For the whole year but has per month
 		else if($type == 2){
-			$data = DB::table('subcounty_agebreakdown')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_agebreakdown.subcounty')
+			$data = DB::table('subcounty_age_breakdown')
+			->leftJoin('districts', 'districts.ID', '=', 'subcounty_age_breakdown.subcounty')
+			->leftJoin('age_bands', 'age_bands.ID', '=', 'subcounty_age_breakdown.age_band_id')
 			->select('year', 'month', DB::raw($raw))
 			->where('year', $year)
 			->when($subcounty, function($query) use ($subcounty, $key){
@@ -535,6 +538,7 @@ class SubcountyController extends BaseController
 					return $query->where($key, $subcounty);
 				}					
 			})
+			->groupBy('age_bands.name')
 			->groupBy('month')
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 			->get();
@@ -544,8 +548,9 @@ class SubcountyController extends BaseController
 		else if($type == 3){
 
 			if($month < 1 || $month > 12) return $this->invalid_month($month);
-			$data = DB::table('subcounty_agebreakdown')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_agebreakdown.subcounty')
+			$data = DB::table('subcounty_age_breakdown')
+			->leftJoin('districts', 'districts.ID', '=', 'subcounty_age_breakdown.subcounty')
+			->leftJoin('age_bands', 'age_bands.ID', '=', 'subcounty_age_breakdown.age_band_id')
 			->select('year', 'month', DB::raw($raw))
 			->where('year', $year)
 			->when($subcounty, function($query) use ($subcounty, $key){
@@ -554,6 +559,7 @@ class SubcountyController extends BaseController
 				}					
 			})
 			->where('month', $month)
+			->groupBy('age_bands.name')
 			->groupBy('month')
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 			->get();
@@ -569,8 +575,9 @@ class SubcountyController extends BaseController
 			$lesser = $my_range[0];
 			$greater = $my_range[1];
 
-			$d = DB::table('subcounty_agebreakdown')
-			->leftJoin('districts', 'districts.ID', '=', 'subcounty_agebreakdown.subcounty')
+			$d = DB::table('subcounty_age_breakdown')
+			->leftJoin('districts', 'districts.ID', '=', 'subcounty_age_breakdown.subcounty')
+			->leftJoin('age_bands', 'age_bands.ID', '=', 'subcounty_age_breakdown.age_band_id')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
 			->when($subcounty, function($query) use ($subcounty, $key){
@@ -580,6 +587,7 @@ class SubcountyController extends BaseController
 			})
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
+			->groupBy('age_bands.name')
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 			->get();
 			
@@ -605,9 +613,10 @@ class SubcountyController extends BaseController
 			// return $this->pass_error($q);
 
 			if($year == $year2 && $month < $month2){
-				$d = DB::table('subcounty_agebreakdown')
+				$d = DB::table('subcounty_age_breakdown')
 				->select('year', DB::raw($raw))
-				->leftJoin('districts', 'districts.ID', '=', 'subcounty_agebreakdown.subcounty')
+				->leftJoin('districts', 'districts.ID', '=', 'subcounty_age_breakdown.subcounty')
+				->leftJoin('age_bands', 'age_bands.ID', '=', 'subcounty_age_breakdown.age_band_id')
 				->where('year', $year)
 				->when($subcounty, function($query) use ($subcounty, $key){
 					if($subcounty != "0" || $subcounty != 0){
@@ -615,20 +624,23 @@ class SubcountyController extends BaseController
 					}
 				})
 				->whereBetween('month', [$month, $month2])
+				->groupBy('age_bands.name')
 				->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 				->get();
 			}
 
 			if($year < $year2){
-				$d = DB::table('subcounty_agebreakdown')
+				$d = DB::table('subcounty_age_breakdown')
 				->select( DB::raw($raw))
-				->leftJoin('districts', 'districts.ID', '=', 'subcounty_agebreakdown.subcounty')
+				->leftJoin('districts', 'districts.ID', '=', 'subcounty_age_breakdown.subcounty')
+				->leftJoin('age_bands', 'age_bands.ID', '=', 'subcounty_age_breakdown.age_band_id')
 				->whereRaw($q)
 				->when($subcounty, function($query) use ($subcounty, $key){
 					if($subcounty != "0" || $subcounty != 0){
 						return $query->where($key, $subcounty);
 					}
 				})
+				->groupBy('age_bands.name')
 				->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode')
 				->get();
 
@@ -676,7 +688,7 @@ class SubcountyController extends BaseController
 					return $query->where($key, $subcounty);
 				}					
 			})
-			->groupBy('name')
+			->groupBy('entry_points.name')
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 			->get();
 
@@ -695,7 +707,7 @@ class SubcountyController extends BaseController
 					return $query->where($key, $subcounty);
 				}					
 			})
-			->groupBy('name')
+			->groupBy('entry_points.name')
 			->groupBy('month')
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 			->get();
@@ -718,7 +730,7 @@ class SubcountyController extends BaseController
 				}					
 			})
 			->where('month', $month)
-			->groupBy('name')
+			->groupBy('entry_points.name')
 			->groupBy('month')
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 			->get();
@@ -745,9 +757,9 @@ class SubcountyController extends BaseController
 					return $query->where($key, $subcounty);
 				}					
 			})
-			->groupBy('name')
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
+			->groupBy('entry_points.name')
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 			->get();
 			
@@ -784,6 +796,7 @@ class SubcountyController extends BaseController
 					}
 				})
 				->whereBetween('month', [$month, $month2])
+				->groupBy('entry_points.name')
 				->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 				->get();
 			}
@@ -800,6 +813,7 @@ class SubcountyController extends BaseController
 					}
 				})
 				->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode')
+				->groupBy('entry_points.name')
 				->get();
 
 				
@@ -844,7 +858,7 @@ class SubcountyController extends BaseController
 					return $query->where($key, $subcounty);
 				}					
 			})
-			->groupBy('name')
+			->groupBy('prophylaxis.name')
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 			->get();
 
@@ -863,7 +877,7 @@ class SubcountyController extends BaseController
 					return $query->where($key, $subcounty);
 				}					
 			})
-			->groupBy('name')
+			->groupBy('prophylaxis.name')
 			->groupBy('month')
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 			->get();
@@ -886,7 +900,7 @@ class SubcountyController extends BaseController
 				}					
 			})
 			->where('month', $month)
-			->groupBy('name')
+			->groupBy('prophylaxis.name')
 			->groupBy('month')
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 			->get();
@@ -913,7 +927,7 @@ class SubcountyController extends BaseController
 					return $query->where($key, $subcounty);
 				}					
 			})
-			->groupBy('name')
+			->groupBy('prophylaxis.name')
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
@@ -952,6 +966,7 @@ class SubcountyController extends BaseController
 					}
 				})
 				->whereBetween('month', [$month, $month2])
+				->groupBy('prophylaxis.name')
 				->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 				->get();
 			}
@@ -967,6 +982,7 @@ class SubcountyController extends BaseController
 						return $query->where($key, $subcounty);
 					}
 				})
+				->groupBy('prophylaxis.name')
 				->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode')
 				->get();
 
@@ -1013,7 +1029,7 @@ class SubcountyController extends BaseController
 					return $query->where($key, $subcounty);
 				}					
 			})
-			->groupBy('name')
+			->groupBy('prophylaxis.name')
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 			->get();
 
@@ -1032,7 +1048,7 @@ class SubcountyController extends BaseController
 					return $query->where($key, $subcounty);
 				}					
 			})
-			->groupBy('name')
+			->groupBy('prophylaxis.name')
 			->groupBy('month')
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 			->get();
@@ -1055,7 +1071,7 @@ class SubcountyController extends BaseController
 				}					
 			})
 			->where('month', $month)
-			->groupBy('name')
+			->groupBy('prophylaxis.name')
 			->groupBy('month')
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 			->get();
@@ -1082,7 +1098,8 @@ class SubcountyController extends BaseController
 					return $query->where($key, $subcounty);
 				}					
 			})
-			->groupBy('name')->where('month', '>', $lesser)
+			->groupBy('prophylaxis.name')
+			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
 			->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 			->get();
@@ -1120,6 +1137,7 @@ class SubcountyController extends BaseController
 					}
 				})
 				->whereBetween('month', [$month, $month2])
+				->groupBy('prophylaxis.name')
 				->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode', 'year')
 				->get();
 			}
@@ -1135,6 +1153,7 @@ class SubcountyController extends BaseController
 						return $query->where($key, $subcounty);
 					}
 				})
+				->groupBy('prophylaxis.name')
 				->groupBy('districts.ID', 'districts.name', 'districts.SubCountyMFLCode', 'districts.SubCountyDHISCode')
 				->get();
 

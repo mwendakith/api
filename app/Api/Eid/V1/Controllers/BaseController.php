@@ -173,19 +173,25 @@ class BaseController extends Controller
 		  SUM(other) as other';
 	}
 
+
 	protected function age_breakdown_query(){
-		return 'SUM(nodatapos) as no_data_pos,
-		 SUM(nodataneg) as no_data_neg, 
-		 SUM(sixweekspos) as six_weeks_pos, 
-		 SUM(sixweeksneg) as six_weeks_neg, 
-		 SUM(sevento3mpos) as seven_to_3m_pos, 
-		 SUM(sevento3mneg) as seven_to_3m_neg, 
-		 SUM(threemto9mpos) as three_to_9m_pos, 
-		 SUM(threemto9mneg) as three_to_9m_neg, 
-		 SUM(ninemto18mpos) as nine_to_18m_pos, 
-		 SUM(ninemto18mneg) as nine_to_18m_neg, 
-		 SUM(above18mpos) as above_18m_pos, 
-		 SUM(above18mneg) as above_18m_neg';
+
+		return 'SUM(pos) as positives, 
+		 SUM(neg) as negatives,
+		  age_bands.name as age_range';
+
+		// return 'SUM(nodatapos) as no_data_pos,
+		//  SUM(nodataneg) as no_data_neg, 
+		//  SUM(sixweekspos) as six_weeks_pos, 
+		//  SUM(sixweeksneg) as six_weeks_neg, 
+		//  SUM(sevento3mpos) as seven_to_3m_pos, 
+		//  SUM(sevento3mneg) as seven_to_3m_neg, 
+		//  SUM(threemto9mpos) as three_to_9m_pos, 
+		//  SUM(threemto9mneg) as three_to_9m_neg, 
+		//  SUM(ninemto18mpos) as nine_to_18m_pos, 
+		//  SUM(ninemto18mneg) as nine_to_18m_neg, 
+		//  SUM(above18mpos) as above_18m_pos, 
+		//  SUM(above18mneg) as above_18m_neg';
 	}
 
 
