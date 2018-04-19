@@ -12,6 +12,13 @@ class PartnerController extends BaseController
 {
     //
 
+	private function get_when_callback($partner)
+	{
+		return function($query) use ($partner){
+				if($partner != 0) return $query->where('partners.ID', $partner);
+			};
+	}
+
     public function partners(){
     	return DB::table('partners')->orderBy('ID')->get();
     }
@@ -34,9 +41,7 @@ class PartnerController extends BaseController
 			->select('year', DB::raw($raw))
 			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
 
@@ -48,9 +53,7 @@ class PartnerController extends BaseController
 			->select('year', 'month', DB::raw($raw))
 			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -64,9 +67,7 @@ class PartnerController extends BaseController
 			->select('year', 'month', DB::raw($raw))
 			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->where('month', $month)
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
@@ -87,9 +88,7 @@ class PartnerController extends BaseController
 			->select('year', DB::raw($raw))
 			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
 			->groupBy('partners.ID', 'partners.name', 'year')
@@ -121,11 +120,7 @@ class PartnerController extends BaseController
 				->select('year', DB::raw($raw))
 				->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 				->where('year', $year)
-				->when($partner, function($query) use ($partner, $key){
-					if($partner != "0" || $partner != 0){
-						return $query->where('partners.ID', $partner);
-					}
-				})
+				->when($partner, $this->get_when_callback($partner))
 				->whereBetween('month', [$month, $month2])
 				->groupBy('partners.ID', 'partners.name', 'year')
 				->get();
@@ -136,11 +131,7 @@ class PartnerController extends BaseController
 				->select( DB::raw($raw))
 				->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 				->whereRaw($q)
-				->when($partner, function($query) use ($partner, $key){
-					if($partner != "0" || $partner != 0){
-						return $query->where('partners.ID', $partner);
-					}
-				})
+				->when($partner, $this->get_when_callback($partner))
 				->groupBy('partners.ID', 'partners.name')
 				->get();
 
@@ -180,9 +171,7 @@ class PartnerController extends BaseController
 			$data = DB::table('ip_summary')
 			->select('year', DB::raw($raw))
 			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->where('year', $year)
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -195,9 +184,7 @@ class PartnerController extends BaseController
 			->select('year', 'month', DB::raw($raw))
 			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -211,9 +198,7 @@ class PartnerController extends BaseController
 			->select('year', 'month', DB::raw($raw))
 			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->where('month', $month)
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
@@ -234,9 +219,7 @@ class PartnerController extends BaseController
 			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
 			->groupBy('partners.ID', 'partners.name', 'year')
@@ -268,11 +251,7 @@ class PartnerController extends BaseController
 				->select('year', DB::raw($raw))
 				->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 				->where('year', $year)
-				->when($partner, function($query) use ($partner, $key){
-					if($partner != "0" || $partner != 0){
-						return $query->where('partners.ID', $partner);
-					}
-				})
+				->when($partner, $this->get_when_callback($partner))
 				->whereBetween('month', [$month, $month2])
 				->groupBy('partners.ID', 'partners.name', 'year')
 				->get();
@@ -283,11 +262,7 @@ class PartnerController extends BaseController
 				->select( DB::raw($raw))
 				->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 				->whereRaw($q)
-				->when($partner, function($query) use ($partner, $key){
-					if($partner != "0" || $partner != 0){
-						return $query->where('partners.ID', $partner);
-					}
-				})
+				->when($partner, $this->get_when_callback($partner))
 				->groupBy('partners.ID', 'partners.name')
 				->get();
 
@@ -327,9 +302,7 @@ class PartnerController extends BaseController
 			$data = DB::table('ip_summary')
 			->select('year', DB::raw($raw))
 			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->where('year', $year)
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -342,9 +315,7 @@ class PartnerController extends BaseController
 			->select('year', 'month', DB::raw($raw))
 			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -358,9 +329,7 @@ class PartnerController extends BaseController
 			->select('year', 'month', DB::raw($raw))
 			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->where('month', $month)
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
@@ -381,9 +350,7 @@ class PartnerController extends BaseController
 			->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
 			->groupBy('partners.ID', 'partners.name', 'year')
@@ -415,11 +382,7 @@ class PartnerController extends BaseController
 				->select('year', DB::raw($raw))
 				->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 				->where('year', $year)
-				->when($partner, function($query) use ($partner, $key){
-					if($partner != "0" || $partner != 0){
-						return $query->where('partners.ID', $partner);
-					}
-				})
+				->when($partner, $this->get_when_callback($partner))
 				->whereBetween('month', [$month, $month2])
 				->groupBy('partners.ID', 'partners.name', 'year')
 				->get();
@@ -430,11 +393,7 @@ class PartnerController extends BaseController
 				->select( DB::raw($raw))
 				->leftJoin('partners', 'partners.ID', '=', 'ip_summary.partner')
 				->whereRaw($q)
-				->when($partner, function($query) use ($partner, $key){
-					if($partner != "0" || $partner != 0){
-						return $query->where('partners.ID', $partner);
-					}
-				})
+				->when($partner, $this->get_when_callback($partner))
 				->groupBy('partners.ID', 'partners.name')
 				->get();
 
@@ -477,9 +436,7 @@ class PartnerController extends BaseController
 			->leftJoin('age_bands', 'age_bands.ID', '=', 'ip_age_breakdown.age_band_id')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->groupBy('age_bands.name')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -493,9 +450,7 @@ class PartnerController extends BaseController
 			->leftJoin('age_bands', 'age_bands.ID', '=', 'ip_age_breakdown.age_band_id')
 			->select('year', 'month', DB::raw($raw))
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->groupBy('age_bands.name')
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
@@ -511,9 +466,7 @@ class PartnerController extends BaseController
 			->leftJoin('age_bands', 'age_bands.ID', '=', 'ip_age_breakdown.age_band_id')
 			->select('year', 'month', DB::raw($raw))
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->where('month', $month)
 			->groupBy('age_bands.name')
 			->groupBy('month')
@@ -536,9 +489,7 @@ class PartnerController extends BaseController
 			->leftJoin('age_bands', 'age_bands.ID', '=', 'ip_age_breakdown.age_band_id')
 			->select('year', DB::raw($raw))
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
 			->groupBy('age_bands.name')
@@ -572,11 +523,7 @@ class PartnerController extends BaseController
 				->leftJoin('partners', 'partners.ID', '=', 'ip_age_breakdown.partner')
 				->leftJoin('age_bands', 'age_bands.ID', '=', 'ip_age_breakdown.age_band_id')
 				->where('year', $year)
-				->when($partner, function($query) use ($partner, $key){
-					if($partner != "0" || $partner != 0){
-						return $query->where('partners.ID', $partner);
-					}
-				})
+				->when($partner, $this->get_when_callback($partner))
 				->whereBetween('month', [$month, $month2])
 				->groupBy('age_bands.name')
 				->groupBy('partners.ID', 'partners.name', 'year')
@@ -589,11 +536,7 @@ class PartnerController extends BaseController
 				->leftJoin('partners', 'partners.ID', '=', 'ip_age_breakdown.partner')
 				->leftJoin('age_bands', 'age_bands.ID', '=', 'ip_age_breakdown.age_band_id')
 				->whereRaw($q)
-				->when($partner, function($query) use ($partner, $key){
-					if($partner != "0" || $partner != 0){
-						return $query->where('partners.ID', $partner);
-					}
-				})
+				->when($partner, $this->get_when_callback($partner))
 				->groupBy('age_bands.name')
 				->groupBy('partners.ID', 'partners.name')
 				->get();
@@ -635,9 +578,7 @@ class PartnerController extends BaseController
 			->leftJoin('entry_points', 'entry_points.ID', '=', 'ip_entrypoint.entrypoint')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_entrypoint.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->groupBy('entry_points.name')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -652,9 +593,7 @@ class PartnerController extends BaseController
 			->leftJoin('entry_points', 'entry_points.ID', '=', 'ip_entrypoint.entrypoint')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_entrypoint.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->groupBy('entry_points.name')
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
@@ -672,9 +611,7 @@ class PartnerController extends BaseController
 			->leftJoin('entry_points', 'entry_points.ID', '=', 'ip_entrypoint.entrypoint')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_entrypoint.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->where('month', $month)
 			->groupBy('entry_points.name')
 			->groupBy('month')
@@ -698,9 +635,7 @@ class PartnerController extends BaseController
 			->leftJoin('entry_points', 'entry_points.ID', '=', 'ip_entrypoint.entrypoint')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_entrypoint.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
 			->groupBy('entry_points.name')
@@ -734,11 +669,7 @@ class PartnerController extends BaseController
 				->leftJoin('entry_points', 'entry_points.ID', '=', 'ip_entrypoint.entrypoint')
 				->leftJoin('partners', 'partners.ID', '=', 'ip_entrypoint.partner')
 				->where('year', $year)
-				->when($partner, function($query) use ($partner, $key){
-					if($partner != "0" || $partner != 0){
-						return $query->where('partners.ID', $partner);
-					}
-				})
+				->when($partner, $this->get_when_callback($partner))
 				->whereBetween('month', [$month, $month2])
 				->groupBy('entry_points.name')
 				->groupBy('partners.ID', 'partners.name', 'year')
@@ -751,11 +682,7 @@ class PartnerController extends BaseController
 				->leftJoin('entry_points', 'entry_points.ID', '=', 'ip_entrypoint.entrypoint')
 				->leftJoin('partners', 'partners.ID', '=', 'ip_entrypoint.partner')
 				->whereRaw($q)
-				->when($partner, function($query) use ($partner, $key){
-					if($partner != "0" || $partner != 0){
-						return $query->where('partners.ID', $partner);
-					}
-				})
+				->when($partner, $this->get_when_callback($partner))
 				->groupBy('entry_points.name')
 				->groupBy('partners.ID', 'partners.name')
 				->get();
@@ -795,9 +722,7 @@ class PartnerController extends BaseController
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_mprophylaxis.prophylaxis')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_mprophylaxis.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->groupBy('prophylaxis.name')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -812,9 +737,7 @@ class PartnerController extends BaseController
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_mprophylaxis.prophylaxis')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_mprophylaxis.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->groupBy('prophylaxis.name')
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
@@ -832,9 +755,7 @@ class PartnerController extends BaseController
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_mprophylaxis.prophylaxis')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_mprophylaxis.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->where('month', $month)
 			->groupBy('prophylaxis.name')
 			->groupBy('month')
@@ -858,9 +779,7 @@ class PartnerController extends BaseController
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_mprophylaxis.prophylaxis')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_mprophylaxis.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->groupBy('prophylaxis.name')
 			->where('month', '>', $lesser)
 			->where('month', '<', $greater)
@@ -894,11 +813,7 @@ class PartnerController extends BaseController
 				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_mprophylaxis.prophylaxis')
 				->leftJoin('partners', 'partners.ID', '=', 'ip_mprophylaxis.partner')
 				->where('year', $year)
-				->when($partner, function($query) use ($partner, $key){
-					if($partner != "0" || $partner != 0){
-						return $query->where('partners.ID', $partner);
-					}
-				})
+				->when($partner, $this->get_when_callback($partner))
 				->whereBetween('month', [$month, $month2])
 				->groupBy('prophylaxis.name')
 				->groupBy('partners.ID', 'partners.name', 'year')
@@ -911,11 +826,7 @@ class PartnerController extends BaseController
 				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_mprophylaxis.prophylaxis')
 				->leftJoin('partners', 'partners.ID', '=', 'ip_mprophylaxis.partner')
 				->whereRaw($q)
-				->when($partner, function($query) use ($partner, $key){
-					if($partner != "0" || $partner != 0){
-						return $query->where('partners.ID', $partner);
-					}
-				})
+				->when($partner, $this->get_when_callback($partner))
 				->groupBy('prophylaxis.name')
 				->groupBy('partners.ID', 'partners.name')
 				->get();
@@ -956,9 +867,7 @@ class PartnerController extends BaseController
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_iprophylaxis.prophylaxis')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_iprophylaxis.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->groupBy('prophylaxis.name')
 			->groupBy('partners.ID', 'partners.name', 'year')
 			->get();
@@ -973,9 +882,7 @@ class PartnerController extends BaseController
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_iprophylaxis.prophylaxis')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_iprophylaxis.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->groupBy('prophylaxis.name')
 			->groupBy('month')
 			->groupBy('partners.ID', 'partners.name', 'year')
@@ -993,9 +900,7 @@ class PartnerController extends BaseController
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_iprophylaxis.prophylaxis')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_iprophylaxis.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->where('month', $month)
 			->groupBy('prophylaxis.name')
 			->groupBy('month')
@@ -1019,9 +924,7 @@ class PartnerController extends BaseController
 			->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_iprophylaxis.prophylaxis')
 			->leftJoin('partners', 'partners.ID', '=', 'ip_iprophylaxis.partner')
 			->where('year', $year)
-			->when($partner, function($query) use ($partner){
-				if($partner != 0) return $query->where('partners.ID', $partner);
-			})
+			->when($partner, $this->get_when_callback($partner))
 			->groupBy('prophylaxis.name')->where('month', '>', $lesser)
 			->where('month', '<', $greater)
 			->groupBy('partners.ID', 'partners.name', 'year')
@@ -1054,11 +957,7 @@ class PartnerController extends BaseController
 				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_iprophylaxis.prophylaxis')
 				->leftJoin('partners', 'partners.ID', '=', 'ip_iprophylaxis.partner')
 				->where('year', $year)
-				->when($partner, function($query) use ($partner, $key){
-					if($partner != "0" || $partner != 0){
-						return $query->where('partners.ID', $partner);
-					}
-				})
+				->when($partner, $this->get_when_callback($partner))
 				->whereBetween('month', [$month, $month2])
 				->groupBy('prophylaxis.name')
 				->groupBy('partners.ID', 'partners.name', 'year')
@@ -1071,11 +970,7 @@ class PartnerController extends BaseController
 				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'ip_iprophylaxis.prophylaxis')
 				->leftJoin('partners', 'partners.ID', '=', 'ip_iprophylaxis.partner')
 				->whereRaw($q)
-				->when($partner, function($query) use ($partner, $key){
-					if($partner != "0" || $partner != 0){
-						return $query->where('partners.ID', $partner);
-					}
-				})
+				->when($partner, $this->get_when_callback($partner))
 				->groupBy('prophylaxis.name')
 				->groupBy('partners.ID', 'partners.name')
 				->get();

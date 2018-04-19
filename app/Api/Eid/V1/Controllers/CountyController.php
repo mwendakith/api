@@ -142,11 +142,7 @@ class CountyController extends BaseController
 				->select('year', DB::raw($raw))
 				->leftJoin('countys', 'countys.ID', '=', 'county_summary.county')
 				->where('year', $year)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
-					}
-				})
+				->when($county, $this->get_when_callback($county, $key))
 				->whereBetween('month', [$month, $month2])
 				->groupBy('countys.ID', 'countys.name', 'countys.CountyDHISCode', 'countys.CountyMFLCode', 'year')
 				->get();
@@ -157,11 +153,7 @@ class CountyController extends BaseController
 				->select( DB::raw($raw))
 				->leftJoin('countys', 'countys.ID', '=', 'county_summary.county')
 				->whereRaw($q)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
-					}
-				})
+				->when($county, $this->get_when_callback($county, $key))
 				->groupBy('countys.ID', 'countys.name', 'countys.CountyDHISCode', 'countys.CountyMFLCode')
 				->get();
 
@@ -285,11 +277,7 @@ class CountyController extends BaseController
 				->select('year', DB::raw($raw))
 				->leftJoin('countys', 'countys.ID', '=', 'county_summary.county')
 				->where('year', $year)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
-					}
-				})
+				->when($county, $this->get_when_callback($county, $key))
 				->whereBetween('month', [$month, $month2])
 				->groupBy('countys.ID', 'countys.name', 'countys.CountyDHISCode', 'countys.CountyMFLCode', 'year')
 				->get();
@@ -300,11 +288,7 @@ class CountyController extends BaseController
 				->select( DB::raw($raw))
 				->leftJoin('countys', 'countys.ID', '=', 'county_summary.county')
 				->whereRaw($q)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
-					}
-				})
+				->when($county, $this->get_when_callback($county, $key))
 				->groupBy('countys.ID', 'countys.name', 'countys.CountyDHISCode', 'countys.CountyMFLCode')
 				->get();
 
@@ -426,11 +410,7 @@ class CountyController extends BaseController
 				->select('year', DB::raw($raw))
 				->leftJoin('countys', 'countys.ID', '=', 'county_summary.county')
 				->where('year', $year)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
-					}
-				})
+				->when($county, $this->get_when_callback($county, $key))
 				->whereBetween('month', [$month, $month2])
 				->groupBy('countys.ID', 'countys.name', 'countys.CountyDHISCode', 'countys.CountyMFLCode', 'year')
 				->get();
@@ -441,11 +421,7 @@ class CountyController extends BaseController
 				->select( DB::raw($raw))
 				->leftJoin('countys', 'countys.ID', '=', 'county_summary.county')
 				->whereRaw($q)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
-					}
-				})
+				->when($county, $this->get_when_callback($county, $key))
 				->groupBy('countys.ID', 'countys.name', 'countys.CountyDHISCode', 'countys.CountyMFLCode')
 				->get();
 
@@ -576,11 +552,7 @@ class CountyController extends BaseController
 				->leftJoin('countys', 'countys.ID', '=', 'county_age_breakdown.county')
 				->leftJoin('age_bands', 'age_bands.ID', '=', 'county_age_breakdown.age_band_id')
 				->where('year', $year)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
-					}
-				})
+				->when($county, $this->get_when_callback($county, $key))
 				->whereBetween('month', [$month, $month2])
 				->groupBy('age_bands.name')
 				->groupBy('countys.ID', 'countys.name', 'countys.CountyDHISCode', 'countys.CountyMFLCode', 'year')
@@ -593,11 +565,7 @@ class CountyController extends BaseController
 				->leftJoin('countys', 'countys.ID', '=', 'county_age_breakdown.county')
 				->leftJoin('age_bands', 'age_bands.ID', '=', 'county_age_breakdown.age_band_id')
 				->whereRaw($q)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
-					}
-				})
+				->when($county, $this->get_when_callback($county, $key))
 				->groupBy('age_bands.name')
 				->groupBy('countys.ID', 'countys.name', 'countys.CountyDHISCode', 'countys.CountyMFLCode')
 				->get();
@@ -732,11 +700,7 @@ class CountyController extends BaseController
 				->leftJoin('entry_points', 'entry_points.ID', '=', 'county_entrypoint.entrypoint')
 				->leftJoin('countys', 'countys.ID', '=', 'county_entrypoint.county')
 				->where('year', $year)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
-					}
-				})
+				->when($county, $this->get_when_callback($county, $key))
 				->whereBetween('month', [$month, $month2])
 				->groupBy('entry_points.name')
 				->groupBy('countys.ID', 'countys.name', 'countys.CountyDHISCode', 'countys.CountyMFLCode', 'year')
@@ -749,11 +713,7 @@ class CountyController extends BaseController
 				->leftJoin('entry_points', 'entry_points.ID', '=', 'county_entrypoint.entrypoint')
 				->leftJoin('countys', 'countys.ID', '=', 'county_entrypoint.county')
 				->whereRaw($q)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
-					}
-				})
+				->when($county, $this->get_when_callback($county, $key))
 				->groupBy('entry_points.name')
 				->groupBy('countys.ID', 'countys.name', 'countys.CountyDHISCode', 'countys.CountyMFLCode')
 				->get();
@@ -886,11 +846,7 @@ class CountyController extends BaseController
 				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'county_mprophylaxis.prophylaxis')
 				->leftJoin('countys', 'countys.ID', '=', 'county_mprophylaxis.county')
 				->where('year', $year)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
-					}
-				})
+				->when($county, $this->get_when_callback($county, $key))
 				->whereBetween('month', [$month, $month2])
 				->groupBy('prophylaxis.name')
 				->groupBy('countys.ID', 'countys.name', 'countys.CountyDHISCode', 'countys.CountyMFLCode', 'year')
@@ -903,11 +859,7 @@ class CountyController extends BaseController
 				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'county_mprophylaxis.prophylaxis')
 				->leftJoin('countys', 'countys.ID', '=', 'county_mprophylaxis.county')
 				->whereRaw($q)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
-					}
-				})
+				->when($county, $this->get_when_callback($county, $key))
 				->groupBy('prophylaxis.name')
 				->groupBy('countys.ID', 'countys.name', 'countys.CountyDHISCode', 'countys.CountyMFLCode')
 				->get();
@@ -1045,11 +997,7 @@ class CountyController extends BaseController
 				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'county_iprophylaxis.prophylaxis')
 				->leftJoin('countys', 'countys.ID', '=', 'county_iprophylaxis.county')
 				->where('year', $year)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
-					}
-				})
+				->when($county, $this->get_when_callback($county, $key))
 				->whereBetween('month', [$month, $month2])
 				->groupBy('prophylaxis.name')
 				->groupBy('countys.ID', 'countys.name', 'countys.CountyDHISCode', 'countys.CountyMFLCode', 'year')
@@ -1062,11 +1010,7 @@ class CountyController extends BaseController
 				->leftJoin('prophylaxis', 'prophylaxis.ID', '=', 'county_iprophylaxis.prophylaxis')
 				->leftJoin('countys', 'countys.ID', '=', 'county_iprophylaxis.county')
 				->whereRaw($q)
-				->when($county, function($query) use ($county, $key){
-					if($county != "0" || $county != 0){
-						return $query->where($key, $county);
-					}
-				})
+				->when($county, $this->get_when_callback($county, $key))
 				->groupBy('prophylaxis.name')
 				->groupBy('countys.ID', 'countys.name', 'countys.CountyDHISCode', 'countys.CountyMFLCode')
 				->get();
