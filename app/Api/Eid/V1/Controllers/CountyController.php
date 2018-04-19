@@ -12,7 +12,7 @@ class CountyController extends BaseController
 {
     //
 
-    protected $when_clause = function($query) use ($county, $key){
+    public $when_clause = function($query) use ($county, $key){
 				if($county != "0" || $county != 0){
 					return $query->where($key, $county);
 				}
