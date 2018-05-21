@@ -14,7 +14,11 @@ $api->version('v1', function (Router $api) {
             $api->group(['middleware' => 'jwt.auth'], function(Router $api) {
                 $api->get('users', 'SignUpController@users');
                 $api->get('user_types', 'SignUpController@user_types');
+
+                $api->post('profile', 'SignUpController@profile');
             });
+
+
 
             $api->post('signup', 'SignUpController@signUp');
             $api->post('login', 'LoginController@login');

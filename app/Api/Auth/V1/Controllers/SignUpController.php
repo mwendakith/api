@@ -56,6 +56,15 @@ class SignUpController extends Controller
         throw new AccessDeniedHttpException();
     }
 
+    public function profile(EditUserRequest $request, JWTAuth $JWTAuth)
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+        $user->email = $request->input('email');
+        $user->password = $request->input('password');
+        $user->save();
+        return $user;
+    }
+
     public function test(){
             return User::all();
     }
