@@ -9,6 +9,7 @@ use App\UserType;
 use JWTAuth;
 use App\Http\Controllers\Controller;
 use App\Api\Auth\V1\Requests\SignUpRequest;
+use App\Api\Auth\V1\Requests\EditUserRequest;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
