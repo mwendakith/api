@@ -21,14 +21,8 @@ class PatientController extends BaseController
     }
 
     private function set_site($site){
-    	$c;
-    	if(is_numeric($site)){
-			$c = "facilitycode"; 
-		}
-		else{
-			$c = "DHIScode";
-		}
-		return [$site, $c];
+        $data = DB::table('facilitys')->select('ID')->where('facilitycode', $site)->orWhere('DHISCode', $site)->first();
+		return [$data->ID, 'facility'];
     }
 
     private function set_county($county){
@@ -38,7 +32,7 @@ class PatientController extends BaseController
 
     private function set_subcounty($subcounty){
 		$data = DB::table('districts')->select('ID')->where('SubCountyMFLCode', $subcounty)->orWhere('SubCountyDHISCode', $subcounty)->first();
-		return [$data->ID, 'district'];
+		return [$data->ID, 'subcounty'];
     }
 
     private function store_raw($year){
@@ -87,7 +81,7 @@ class PatientController extends BaseController
     		return $this->invalid_type($type);
     	}
 
-    	$sql = "select count(gp.tests) as totals, gp.tests
+    	/*$sql = "select count(gp.tests) as totals, gp.tests
 				from (
 				select count(*) as `tests`, facility, patient
 				from viralsamples "; 
@@ -117,11 +111,39 @@ class PatientController extends BaseController
 		}
 
 		$sql .= " group by facility, patient) gp ";
-		$sql .= " group by gp.tests order by tests asc ";
+		$sql .= " group by gp.tests order by tests asc ";*/
+
+
+
+        $sql = "select count(gp.tests) as totals, gp.tests
+                from (
+                select count(*) as `tests`, patient_id
+                from viralsample_synch_view ";
+
+        $sql .= " where rcategory IN (1, 2, 3, 4) and flag=1 and repeatt=0 and facility != 7148 ";
+        $sql .= " and flag = 1 and repeatt = 0 and facility_id != 7148 ";
+        $sql .= " and patient != '' and patient != 'null' and patient is not null ";
+
+        switch ($type) {
+            case 1:
+                $sql .= " and year(datetested) = {$year} ";
+                break;
+            case 3:
+                $sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
+                break;
+            default:
+                $sql .= $multiple_param;
+                break;
+        }
+
+        if($division != 0) $sql .= " and {$div[1]} = {$div[0]} ";
+
+        $sql .= " group by patient_id) gp ";
+        $sql .= " group by gp.tests order by tests asc ";
 
         // $sql = "call proc_get_vl_longitudinal_tracking({$division}, {$type}, '{$div[1]}', {$div[0]}, {$year}, {$month}, {$year2}, {$month2})";
 
-		$data = DB::connection('vl')->select($sql);
+		$data = DB::connection('national')->select($sql);
 
 		// $data = collect($data);
 

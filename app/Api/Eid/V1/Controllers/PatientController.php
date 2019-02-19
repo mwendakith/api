@@ -15,13 +15,14 @@ class PatientController extends BaseController
     private function store_raw(){
     	$sql = 'select count(gp.tests) as totals, gp.tests
 				from (
-				select count(*) as `tests`, FacilityMFLcode, patientID
-				from patients_eid 
+				select count(*) as `tests`, facility, patient
+				from samples 
 				where year(datetested) = {$year}
-				and pcrtype=1
+				and pcrtype in (1, 2, 3)
 				and result between 1 and 2
 				and age between 0.00001 and 24
-				group by FacilityMFLcode, patientID
+                and repeatt=0
+				group by facility, patient
 				) gp
 				group by gp.tests
 				order by totals desc';
@@ -37,24 +38,18 @@ class PatientController extends BaseController
     }
 
     private function set_site($site){
-    	$c;
-    	if(is_numeric($site)){
-			$c = "patients_eid.FacilityMFLcode"; 
-		}
-		else{
-			$c = "patients_eid.FacilityDHIScode";
-		}
-		return [$site, $c];
+        $data = DB::table('facilitys')->select('ID')->where('facilitycode', $site)->orWhere('DHISCode', $site)->first();
+		return [$data->ID, 'facility'];
     }
 
     private function set_county($county){
 		$data = DB::table('countys')->select('ID')->where('CountyMFLCode', $county)->orWhere('CountyDHISCode', $county)->first();
-		return [$data->ID, 'view_facilitys.county'];
+		return [$data->ID, 'county'];
     }
 
     private function set_subcounty($subcounty){
 		$data = DB::table('districts')->select('ID')->where('SubCountyMFLCode', $subcounty)->orWhere('SubCountyDHISCode', $subcounty)->first();
-		return [$data->ID, 'view_facilitys.district'];
+		return [$data->ID, 'subcounty'];
     }
 
     private function get_patients($division, $type, $year, $div, $month=null, $year2=null, $month2=null){
@@ -91,7 +86,7 @@ class PatientController extends BaseController
     		return $this->invalid_type($type);
     	}
 
-    	$sql = "select count(gp.tests) as totals, gp.tests
+    	/*$sql = "select count(gp.tests) as totals, gp.tests
 				from (
 				select count(*) as `tests`, samples.facility, samples.patient
 				from samples
@@ -112,7 +107,7 @@ class PatientController extends BaseController
 				$sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
 				break;
 			default:
-				$sql .= $multiple_param;;
+				$sql .= $multiple_param;
 				break;
 		}
 
@@ -121,9 +116,39 @@ class PatientController extends BaseController
 		}
 
 		$sql .= " group by samples.facility, samples.patient) gp ";
-		$sql .= " group by gp.tests order by tests asc ";
+		$sql .= " group by gp.tests order by tests asc ";*/
 
-		$data = DB::connection('eid')->select($sql);
+
+
+        $sql = "select count(gp.tests) as totals, gp.tests
+                from (
+                select count(*) as `tests`, patient_id
+                from sample_synch_view ";
+
+        $sql .= " where pcrtype=1 and result IN (1, 2) and age between 0.00001 and 24 ";
+        $sql .= " and flag = 1 and repeatt = 0 and facility_id != 7148  ";
+
+        switch ($type) {
+            case 1:
+                $sql .= " and year(datetested) = {$year} ";
+                break;
+            case 3:
+                $sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
+                break;
+            default:
+                $sql .= $multiple_param;
+                break;
+        }
+
+        if($division != 0){
+            $sql .= " and {$div[1]} = {$div[0]} ";
+        }
+
+        $sql .= " group by patient_id) gp ";
+        $sql .= " group by gp.tests order by tests asc ";
+
+
+		$data = DB::connection('national')->select($sql);
 
 		$data = collect($data);
 
@@ -167,7 +192,7 @@ class PatientController extends BaseController
             return $this->invalid_type($type);
         }
 
-        $sql = "select count(gp.tests) as totals, gp.tests
+        /*$sql = "select count(gp.tests) as totals, gp.tests
                 from (
                 select count(*) as `tests`, samples.facility, samples.patient
                 from samples
@@ -198,7 +223,7 @@ class PatientController extends BaseController
                 $sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
                 break;
             default:
-                $sql .= $multiple_param;;
+                $sql .= $multiple_param;
                 break;
         }
 
@@ -207,9 +232,46 @@ class PatientController extends BaseController
         }
 
         $sql .= " group by samples.facility, samples.patient) gp ";
+        $sql .= " group by gp.tests order by tests asc ";*/
+
+
+
+
+        $sql = "select count(gp.tests) as totals, gp.tests
+                from (
+                select count(*) as `tests`, patient_id
+                from sample_synch_view ";
+
+        $sql .= " where pcrtype=1 and result IN (1, 2) and age between 0.00001 and 24 ";
+        $sql .= " and flag = 1 and repeatt = 0 and facility_id != 7148  ";
+
+        switch ($type) {
+            case 1:
+                $sql .= " and year(datetested) = {$year} ";
+                break;
+            case 3:
+                $sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
+                break;
+            default:
+                $sql .= $multiple_param;
+                break;
+        }
+
+        if($age != 0){
+            $age_range = DB::table('age_bands')->where('ID', $age)->first();
+            $sql .= " and age between {$age_range->lower} and {$age_range->upper} ";
+        }
+
+        if($pcrtype != 0) $sql .= " and pcrtype = {$pcrtype} ";
+
+        if($division != 0) $sql .= " and {$div[1]} = {$div[0]} ";
+
+        $sql .= " group by patient_id) gp ";
         $sql .= " group by gp.tests order by tests asc ";
 
-        $data = DB::connection('eid')->select($sql);
+
+
+        $data = DB::connection('national')->select($sql);
 
         $data = collect($data);
 
@@ -253,7 +315,7 @@ class PatientController extends BaseController
             return $this->invalid_type($type);
         }
 
-        $sql = "select count(gp.tests) as totals, gp.tests
+        /*$sql = "select count(gp.tests) as totals, gp.tests
                 from (
                 select count(*) as `tests`, samples.facility, samples.patient
                 from samples
@@ -283,7 +345,7 @@ class PatientController extends BaseController
                 $sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
                 break;
             default:
-                $sql .= $multiple_param;;
+                $sql .= $multiple_param;
                 break;
         }
 
@@ -292,9 +354,42 @@ class PatientController extends BaseController
         }
 
         $sql .= " group by samples.facility, samples.patient) gp ";
+        $sql .= " group by gp.tests order by tests asc ";*/
+
+
+
+
+        $sql = "select count(gp.tests) as totals, gp.tests
+                from (
+                select count(*) as `tests`, patient_id
+                from sample_synch_view ";
+
+        $sql .= " where pcrtype=1 and result IN (1, 2) and age between 0.00001 and 24 ";
+        $sql .= " and flag = 1 and repeatt = 0 and facility_id != 7148  ";
+
+        switch ($type) {
+            case 1:
+                $sql .= " and year(datetested) = {$year} ";
+                break;
+            case 3:
+                $sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
+                break;
+            default:
+                $sql .= $multiple_param;
+                break;
+        }
+
+        if($age_lower != 0 && $age_upper != 0) $sql .= " and age between {$age_lower} and {$age_upper} ";
+
+        if($pcrtype != 0) $sql .= " and pcrtype = {$pcrtype} ";
+
+        if($division != 0) $sql .= " and {$div[1]} = {$div[0]} ";
+
+        $sql .= " group by patient_id) gp ";
         $sql .= " group by gp.tests order by tests asc ";
 
-        $data = DB::connection('eid')->select($sql);
+
+        $data = DB::connection('national')->select($sql);
 
         $data = collect($data);
 
