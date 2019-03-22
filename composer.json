@@ -4,6 +4,7 @@
     "keywords": ["laravel", "api", "boilerplate", "jwt"],
     "license": "MIT",
     "type": "project",
+    "prefer-stable": true,
     "minimum-stability": "dev", 
     "require": {
         "php": ">=7.1.3",
