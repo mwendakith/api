@@ -167,7 +167,7 @@ return [
          * Package Service Providers...
          */
 
-        Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
         Dingo\Api\Provider\LaravelServiceProvider::class,
         Barryvdh\Cors\ServiceProvider::class,
         Maatwebsite\Excel\ExcelServiceProvider::class,
@@ -228,13 +228,13 @@ return [
         'URL' => Illuminate\Support\Facades\URL::class,
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
-        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
 
         /*
          * Package Facades...
          */
         'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
         'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class,
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];
