@@ -401,7 +401,7 @@ class BaseController extends Controller
 		$min = Carbon::createFromFormat('Y-m-d', "{$year}-{$month}-01")->toDateString();
 		$max = Carbon::createFromFormat('Y-m-d', "{$year2}-{$month2}-01")->addMonth()->subDay()->toDateString();
 
-		return array($min, $max);
+		return [$min, $max];
 	}
 
 	public function set_quarters($year, $quarter){

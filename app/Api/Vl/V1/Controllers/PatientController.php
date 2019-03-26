@@ -73,6 +73,8 @@ class PatientController extends BaseController
         $sql .= " group by patient_id) gp ";
         $sql .= " group by gp.tests order by tests asc ";
 
+        return ['sql' => $sql];
+
         // $sql = "call proc_get_vl_longitudinal_tracking({$division}, {$type}, '{$div[1]}', {$div[0]}, {$year}, {$month}, {$year2}, {$month2})";
 
 		$data = DB::connection('national')->select($sql);
