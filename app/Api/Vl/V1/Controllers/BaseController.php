@@ -7,6 +7,7 @@ namespace App\Api\Vl\V1\Controllers;
 use App\Http\Controllers\Controller;
 use Dingo\Api\Routing\Helpers;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 
 class BaseController extends Controller
@@ -47,7 +48,7 @@ class BaseController extends Controller
 	}
 
 	protected function invalid_type($type){
-        $message = 'Type ' . $type . ' is invalid. Value must be between 1 and 4. 1 is for the total for the whole year. 2 is for the year with data grouped by month. 3 is for the a particular month. 4 for a particular quarter.';
+        $message = 'Type ' . $type . ' is invalid. Value must be between 1 and 5. 1 is for the total for the whole year. 2 is for the year with data grouped by month. 3 is for the a particular month. 4 for a particular quarter. 5 for a date range.';
         return $this->pass_error($message);
 	}
 
@@ -395,15 +396,12 @@ class BaseController extends Controller
 
 	}
 
-	public function set_date($year, $month, $year2, $month2){
-
-		
-		$min = $year . '-' . $month . '-01';
-
-		$max = $year2 . '-' . ($month2+1) . '-01';
+	public function set_date($year, $month, $year2, $month2)
+	{		
+		$min = Carbon::createFromFormat('Y-m-d', "{$year}-{$month}-01")->toDateString();
+		$max = Carbon::createFromFormat('Y-m-d', "{$year2}-{$month2}-01")->addMonth()->subDay()->toDateString();
 
 		return array($min, $max);
-
 	}
 
 	public function set_quarters($year, $quarter){
@@ -434,6 +432,26 @@ class BaseController extends Controller
 		}
 
 		return $this->set_date($year, $lesser, $year, $greater);
+	}
+
+	public function set_date_range($type, $year, $month=0, $year2=0, $month2=0)
+	{
+		$dates = [];
+		if($type == 5){
+			if($year > $year2) return ['error' => 'From year is greater'];
+			if($year == $year2 && $month > $month2 ) return ['error' => 'From month is greater'];
+
+			$dates = $this->set_date($year, $month, $year2, $month2);
+		}
+		else if($type == 4) $dates = $this->set_quarters($year, $month);
+		else if($type == 3) $dates = $this->set_date($year, $month, $year, $month);
+		else if($type == 1) $dates = $this->set_date($year, 1, $year, 12);
+		else{
+	        $message = 'Type ' . $type . ' is invalid. Value must be between 1 and 5. 1 is for the total for the whole year. 2 is for the year with data grouped by month. 3 is for the a particular month. 4 for a particular quarter. 5 for a date range.';
+	        return ['error' => $message];
+		}
+
+		return ' datetested BETWEEN ' . $dates[0] . ' AND ' . $dates[1] . ' ';
 	}
 
 

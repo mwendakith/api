@@ -5,6 +5,8 @@ namespace App\Api\Vl\V1\Controllers;
 use App\National;
 use App\Api\Vl\V1\Controllers\BaseController;
 
+use Carbon\Carbon;
+
 use DB;
 
 class PatientController extends BaseController
@@ -47,72 +49,13 @@ class PatientController extends BaseController
 				order by totals desc';
     }
 
-    private function get_patients($division, $type, $year, $div, $month=0, $year2=0, $month2=0){
+    private function get_patients($division, $type, $year, $div, $month=0, $year2=0, $month2=0)
+    {
+    	if($type == 4) if($month < 1 || $month > 4) return $this->invalid_quarter($month);
 
-    	$my_range;
+        $daterange = $this->set_date_range($type, $year, $month, $year2, $month2);
 
-    	if($type == 4){
-    		if($month < 1 || $month > 4) return $this->invalid_quarter($month);
-			
-			$my_range = $this->set_quarters($year, $month);
-    	}
-
-        $multiple_param;
-
-    	if($type == 5){
-    		if($year > $year2){return $this->pass_error('From year is greater');}
-            else{
-                $multiple_param = " and ((year(datetested)={$year} and month(datetested)>={$month})
-                     or (year(datetested)={$year2} and month(datetested)<={$month2} )
-                    or (year(datetested)>{$year} and year(datetested)<{$year2}  )) ";
-            }
-
-			if($year == $year2){ 
-                if($month >= $month2){return $this->pass_error('From month is greater');}
-                else{
-                    $multiple_param = " and year(datetested)={$year} and month(datetested) between {$month} and {$month2}  ";
-                }
-            }
-
-			$my_range = $this->set_date($year, $month, $year2, $month2);
-    	}
-
-    	if($type == 2 || $type > 5){
-    		return $this->invalid_type($type);
-    	}
-
-    	/*$sql = "select count(gp.tests) as totals, gp.tests
-				from (
-				select count(*) as `tests`, facility, patient
-				from viralsamples "; 
-
-		if($division > 0){
-			$sql .= " join view_facilitys ON viralsamples.facility=view_facilitys.ID ";
-		}
-
-        $sql .= " where viralsamples.rcategory between 1 and 4 ";
-        $sql .= " and viralsamples.flag=1 and viralsamples.repeatt=0 and viralsamples.facility != 7148 ";
-		$sql .= " and patient != '' and patient != 'null' and patient is not null ";
-
-		switch ($type) {
-			case 1:
-				$sql .= " and year(datetested) = {$year} ";
-				break;
-			case 3:
-				$sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
-				break;
-			default:
-				$sql .= $multiple_param;
-				break;
-		}
-
-		if($division != 0){
-			$sql .= " and {$div[1]} = {$div[0]} ";
-		}
-
-		$sql .= " group by facility, patient) gp ";
-		$sql .= " group by gp.tests order by tests asc ";*/
-
+        if(is_array($daterange)) return $this->pass_error($daterange['error']);
 
 
         $sql = "select count(gp.tests) as totals, gp.tests
@@ -123,18 +66,7 @@ class PatientController extends BaseController
         $sql .= " where rcategory IN (1, 2, 3, 4) and flag=1 and repeatt=0 and facility != 7148 ";
         $sql .= " and flag = 1 and repeatt = 0 and facility_id != 7148 ";
         $sql .= " and patient != '' and patient != 'null' and patient is not null ";
-
-        switch ($type) {
-            case 1:
-                $sql .= " and year(datetested) = {$year} ";
-                break;
-            case 3:
-                $sql .= " and year(datetested) = {$year} and month(datetested) = {$month} ";
-                break;
-            default:
-                $sql .= $multiple_param;
-                break;
-        }
+        $sql .= " and {$daterange} ";
 
         if($division != 0) $sql .= " and {$div[1]} = {$div[0]} ";
 
