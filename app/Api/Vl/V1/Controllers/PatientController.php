@@ -64,7 +64,6 @@ class PatientController extends BaseController
                 from viralsample_synch_view ";
 
         $sql .= " where rcategory IN (1, 2, 3, 4) and flag=1 and repeatt=0 and facility != 7148 ";
-        $sql .= " and flag = 1 and repeatt = 0 and facility_id != 7148 ";
         $sql .= " and patient != '' and patient != 'null' and patient is not null ";
         $sql .= " and {$daterange} ";
 
@@ -73,7 +72,7 @@ class PatientController extends BaseController
         $sql .= " group by patient_id) gp ";
         $sql .= " group by gp.tests order by tests asc ";
 
-        return ['sql' => $sql];
+        // return ['sql' => $sql];
 
         // $sql = "call proc_get_vl_longitudinal_tracking({$division}, {$type}, '{$div[1]}', {$div[0]}, {$year}, {$month}, {$year2}, {$month2})";
 
