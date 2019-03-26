@@ -451,7 +451,7 @@ class BaseController extends Controller
 	        return ['error' => $message];
 		}
 
-		return ' datetested BETWEEN ' . $dates[0] . ' AND ' . $dates[1] . ' ';
+		return " datetested BETWEEN '" . $dates[0] . "' AND '" . $dates[1] . "' ";
 	}
 
 
