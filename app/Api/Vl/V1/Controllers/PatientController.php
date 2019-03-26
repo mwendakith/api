@@ -77,7 +77,7 @@ class PatientController extends BaseController
 
 		$data = DB::connection('national')->select($sql);
 
-		// $data = collect($data);
+		$data = collect($data);
 
 		return $data;
 
