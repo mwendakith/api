@@ -115,7 +115,12 @@ class PatientController extends BaseController
 
         $data = collect($data);
 
-        return $data;
+        return [
+            'rcategory1' => $data->where('rcategory', 1)->first()->totals ?? 0,
+            'rcategory2' => $data->where('rcategory', 2)->first()->totals ?? 0,
+            'rcategory3' => $data->where('rcategory', 3)->first()->totals ?? 0,
+            'rcategory4' => $data->where('rcategory', 4)->first()->totals ?? 0,
+        ];
     }
 
     public function get_results($site, $patientID){
@@ -166,7 +171,7 @@ class PatientController extends BaseController
     }
 
 
-    
+
 
     public function national_suppression($type, $year, $month=NULL, $year2=NULL, $month2=NULL){
         return $this->get_current_suppression(0, $type, $year, [0, ''], $month, $year2, $month2); 
