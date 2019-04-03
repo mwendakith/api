@@ -12,6 +12,7 @@ use Carbon\Carbon;
 
 class BaseController extends Controller
 {
+	use Helpers;
 
 	protected $county_string = 'countys.ID as county_id, CountyDHISCode as CountyDHISCode, CountyMFLCode as CountyMFLCode, CountyDHISCode as CountyDHISCode, CountyMFLCode as CountyMFLCode, countys.name as county, ';
 
