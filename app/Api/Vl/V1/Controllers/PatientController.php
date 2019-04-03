@@ -86,6 +86,38 @@ class PatientController extends BaseController
 
     }
 
+    private function get_current_suppression($division, $type, $year, $div, $month=0, $year2=0, $month2=0)
+    {
+        if($type == 4) if($month < 1 || $month > 4) return $this->invalid_quarter($month);
+
+        $daterange = $this->set_date_range($type, $year, $month, $year2, $month2);
+
+        if(is_array($daterange)) return $this->pass_error($daterange['error']);
+
+        $sql = 'SELECT rcategory, count(*) as totals ';
+        $sql .= 'FROM ';
+        $sql .= '(SELECT v.id, v.rcategory ';
+        $sql .= 'FROM viralsample_synch_view v ';
+        $sql .= 'RIGHT JOIN ';
+        $sql .= '(SELECT id, patient_id, max(datetested) as maxdate ';
+        $sql .= 'FROM viralsample_synch_view ';
+        $sql .= "WHERE patient != '' AND patient != 'null' AND patient is not null ";
+        if($division != 0) $sql .= " and {$div[1]} = {$div[0]} ";
+        $sql .= " and {$daterange} ";
+        $sql .= 'AND flag=1 AND repeatt=0 AND rcategory in (1, 2, 3, 4) ';
+        $sql .= 'AND justification != 10 AND facility_id != 7148 ';
+        $sql .= 'GROUP BY patient_id) gv ';
+        $sql .= 'ON v.id=gv.id) tb ';
+        $sql .= 'GROUP BY rcategory ';
+        $sql .= 'ORDER BY rcategory ';
+
+        $data = DB::connection('national')->select($sql);
+
+        $data = collect($data);
+
+        return $data;
+    }
+
     public function get_results($site, $patientID){
     	$key = $this->set_key($site);
     	$query = $this->patient_query();
@@ -131,6 +163,33 @@ class PatientController extends BaseController
     public function partner_viralloads($partner, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
     	$div = [$partner, 'partner'];
     	return $this->get_patients(3, $type, $year, $div, $month, $year2, $month2); 
+    }
+
+
+    
+
+    public function national_suppression($type, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        return $this->get_current_suppression(0, $type, $year, [0, ''], $month, $year2, $month2); 
+    }
+
+    public function county_suppression($county, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = $this->set_county($county);
+        return $this->get_current_suppression(1, $type, $year, $div, $month, $year2, $month2);
+    }
+
+    public function subcounty_suppression($subcounty, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = $this->set_subcounty($subcounty);
+        return $this->get_current_suppression(2, $type, $year, $div, $month, $year2, $month2);
+    }
+
+    public function facility_suppression($site, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = $this->set_site($site);
+        return $this->get_current_suppression(4, $type, $year, $div, $month, $year2, $month2);
+    }
+
+    public function partner_suppression($partner, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = [$partner, 'partner'];
+        return $this->get_current_suppression(3, $type, $year, $div, $month, $year2, $month2); 
     }
 
     public function format_return(&$data=null){

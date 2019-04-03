@@ -347,22 +347,24 @@ $api->group(['prefix' => 'vl'], function(Router $api) {
 
         $api->group(['prefix' => 'patient'], function(Router $api) {
             $api->group(['middleware' => 'jwt.auth'], function(Router $api) {
-
                 $api->get('results/{site}/{patientID}', 'PatientController@get_results')->where('patientID', '(.*)');
-
             });
 
             $api->get('viralloads', 'PatientController@viralloads');
 
             $api->get('national/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@national_viralloads');
-
             $api->get('county/{county}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@county_viralloads');
-
             $api->get('subcounty/{subcounty}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@subcounty_viralloads');
-
             $api->get('facility/{site}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@facility_viralloads');
+            $api->get('partner/{partner}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@partner_viralloads');
 
-            $api->get('partner/{site}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@partner_viralloads');
+            $api->group(['prefix' => 'suppression'], function(Router $api) {
+                $api->get('national/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@national_suppression');
+                $api->get('county/{county}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@county_suppression');
+                $api->get('subcounty/{subcounty}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@subcounty_suppression');
+                $api->get('facility/{site}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@facility_suppression');
+                $api->get('partner/{partner}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@partner_suppression');
+            });
 
             $api->get('test', 'PatientController@test');
 
