@@ -19,9 +19,9 @@ Route::get('reset_password/{token}', ['as' => 'password.reset', function($token)
 // Route::get('/', function () {
 //     return view('welcome');
 // });
-// Route::get('/test', function(){
-//     return phpinfo();
-// });
+Route::get('/test', function(){
+    return phpinfo();
+});
 // Route::get('/mine', function(){
 // dd(get_loaded_extensions());
 // });
