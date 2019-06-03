@@ -19,8 +19,14 @@ Route::get('reset_password/{token}', ['as' => 'password.reset', function($token)
 // Route::get('/', function () {
 //     return view('welcome');
 // });
+
+
 Route::get('/test', function(){
     return phpinfo();
+});
+
+Route::get('/test2', function(){
+    dd(url('') . ' ' . url()->full() . " " . url()->current() . " " . $_SERVER['HTTP_HOST'] . " " . $_SERVER['REQUEST_URI'] . " " . $_SERVER['SERVER_PORT']);
 });
 // Route::get('/mine', function(){
 // dd(get_loaded_extensions());
