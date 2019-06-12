@@ -56,8 +56,11 @@ class SiteController extends BaseController
 
 
     public function sites(){
-    	return DB::table('facilitys')
-    	->select(DB::raw($this->site_string . 'longitude, latitude'))->orderBy('ID')
+    	return DB::table('national_db.facilitys')
+    	->select(DB::raw($this->site_string . 'longitude, latitude, eid_lab_id, vl_lab_id, le.name AS eid_lab, lv.name as vl_lab '))
+    	->leftJoin('hcm.labs as le', 'le.id', '=', 'facilitys.eid_lab_id')
+    	->leftJoin('hcm.labs as lv', 'lv.id', '=', 'facilitys.vl_lab_id')
+    	->orderBy('facilitys.id')
     	->get();
     }
 
