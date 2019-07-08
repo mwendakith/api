@@ -315,7 +315,9 @@ class BaseController extends Controller
 	
 
 	protected function patient_query(){
-		return 'PatientID, facilitys.name as Facility, districts.name as Subcounty, countys.name as County, partners.name as Partner,  Age, Gender, PatientPhoneNo, viralsampletypedetails.name as SampleType, viraljustifications.name as Justification, viralprophylaxis.name as Regimen, datecollected, datereceived, datetested, result, datedispatched, labtestedin, labs.name as Lab, viralrejectedreasons.Name as RejectedReason, receivedstatus.name as ReceivedStatus';
+		// return 'PatientID, facilitys.name as Facility, districts.name as Subcounty, countys.name as County, partners.name as Partner,  Age, Gender, PatientPhoneNo, viralsampletypedetails.name as SampleType, viraljustifications.name as Justification, viralprophylaxis.name as Regimen, datecollected, datereceived, datetested, result, datedispatched, labtestedin, labs.name as Lab, viralrejectedreasons.Name as RejectedReason, receivedstatus.name as ReceivedStatus';
+
+		return 'patient as `PatientID`, view_facilitys.name as Facility, subcounty as Subcounty, county as County, partner as Partner, age as Age, gender_description as Gender, sampletype_name as SampleType, justification_name as Justification, prophylaxis.name as Regimen, datecollected as DateCollected, datereceived as DateReceived, datetested as DateTested, result as Result, datedispatched as DateDispatched, labs.name as Lab, rejected_name as RejectedReason, receivedstatus_name as ReceivedStatus';
 	}
 
 

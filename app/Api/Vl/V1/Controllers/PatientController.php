@@ -14,12 +14,12 @@ class PatientController extends BaseController
     //
 
     private function set_key($site){
-    	if(is_numeric($site)){
-			return "patients.FacilityMFLcode"; 
-		}
-		else{
-			return "patients.FacilityDHIScode";
-		}
+        if(is_numeric($site)){
+            return "facilitycode"; 
+        }
+        else{
+            return "DHIScode";
+        }
     }
 
     private function set_site($site){
@@ -127,19 +127,12 @@ class PatientController extends BaseController
     	$key = $this->set_key($site);
     	$query = $this->patient_query();
 
-    	$data = DB::table('patients')
+    	$data = DB::connection('national')
+        ->table('viralsample_complete_view')
+        ->join('view_facilitys', 'view_facilitys.id', '=', 'viralsample_complete_view.facility_id')
+        ->leftJoin('labs', 'labs.id', '=', 'viralsample_complete_view.lab_id')
 		->select(DB::raw($query))
-		->join('facilitys', 'facilitys.facilitycode', '=', 'patients.FacilityMFLcode')
-		->join('partners', 'partners.ID', '=', 'facilitys.partner')
-		->join('districts', 'districts.ID', '=', 'facilitys.district')
-		->join('countys', 'countys.ID', '=', 'districts.county')
-		->leftJoin('viralsampletypedetails', 'viralsampletypedetails.ID', '=', 'patients.SampleType')
-		->leftJoin('viralrejectedreasons', 'viralrejectedreasons.ID', '=', 'patients.rejectedreason')
-		->leftJoin('viraljustifications', 'viraljustifications.ID', '=', 'patients.Justification')
-		->leftJoin('viralprophylaxis', 'viralprophylaxis.ID', '=', 'patients.Regimen')
-		->leftJoin('labs', 'labs.ID', '=', 'patients.labtestedin')
-		->leftJoin('receivedstatus', 'receivedstatus.ID', '=', 'patients.receivedstatus')
-		->where('patientID', $patientID)
+		->where('patient', $patientID)
 		->where($key, $site)
 		->get();
 

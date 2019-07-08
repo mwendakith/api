@@ -30,10 +30,10 @@ class PatientController extends BaseController
 
     private function set_key($site){
     	if(is_numeric($site)){
-			return "patients_eid.FacilityMFLcode"; 
+			return "facilitycode"; 
 		}
 		else{
-			return "patients_eid.FacilityDHIScode";
+			return "DHIScode";
 		}
     }
 
@@ -170,21 +170,14 @@ class PatientController extends BaseController
     	$key = $this->set_key($site);
     	$query = $this->patient_query();
 
-    	$data = DB::table('patients_eid')
+    	$data = DB::connection('national')
+        ->table('sample_complete_view')
+        ->join('view_facilitys', 'view_facilitys.id', '=', 'sample_complete_view.facility_id')
+        ->leftJoin('labs', 'labs.id', '=', 'sample_complete_view.lab_id')
+        ->leftJoin('entry_points', 'entry_points.id', '=', 'sample_complete_view.lab_id')
+        ->leftJoin('results', 'results.id', '=', 'sample_complete_view.result')
 		->select(DB::raw($query))
-		->join('facilitys', 'facilitys.facilitycode', '=', 'patients_eid.FacilityMFLcode')
-		->join('partners', 'partners.ID', '=', 'facilitys.partner')
-		->join('districts', 'districts.ID', '=', 'facilitys.district')
-		->join('countys', 'countys.ID', '=', 'districts.county')
-		->leftJoin('prophylaxis AS mp', 'mp.ID', '=', 'patients_eid.motherregimen')
-		->leftJoin('prophylaxis AS ip', 'ip.ID', '=', 'patients_eid.infantregimen')
-		->leftJoin('entry_points', 'entry_points.ID', '=', 'patients_eid.entrypoint')
-		->leftJoin('feedings', 'feedings.ID', '=', 'patients_eid.feedingtype')
-		->leftJoin('results', 'results.ID', '=', 'patients_eid.result')
-		->leftJoin('rejectedreasons', 'rejectedreasons.ID', '=', 'patients_eid.rejectedreason')
-		->leftJoin('labs', 'labs.ID', '=', 'patients_eid.labtestedin')
-		->leftJoin('receivedstatus', 'receivedstatus.ID', '=', 'patients_eid.receivedstatus')
-		->where('patientID', $patientID)
+		->where('patient', $patientID)
 		->where($key, $site)
 		->get();
 
