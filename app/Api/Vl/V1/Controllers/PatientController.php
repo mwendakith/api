@@ -81,7 +81,6 @@ class PatientController extends BaseController
 		// $data = collect($data);
 
 		return $data;
-
 		// return $this->return_patients($data);
 
     }
