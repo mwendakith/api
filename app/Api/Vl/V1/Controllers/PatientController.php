@@ -78,11 +78,18 @@ class PatientController extends BaseController
 
 		$data = DB::connection('national')->select($sql);
 
+        $art = $this->get_art_total($division, $type, $year, $div, $month, $year2, $month2);
+
+        return [
+            'unique' => $data,
+            'art' => $art['art'],
+            'as_at' => $art['as_at'],
+        ];
+
 		// $data = collect($data);
 
 		return $data;
 		// return $this->return_patients($data);
-
     }
 
     private function get_current_suppression($division, $type, $year, $div, $month=0, $year2=0, $month2=0)
@@ -120,6 +127,42 @@ class PatientController extends BaseController
             'rcategory3' => $data->where('rcategory', 3)->first()->totals ?? 0,
             'rcategory4' => $data->where('rcategory', 4)->first()->totals ?? 0,
         ];
+    }
+
+    private function get_art_total($division, $type, $year, $div, $month=0, $year2=0, $month2=0)
+    {
+        if($year2){
+            $y = $year2;
+            $m = $month2;
+        }
+        else{
+            $y = $year;
+            $m = $month;
+            if(!$m) $m = 12;
+        }
+        $d = $y . '-' . $m . '-01';
+
+        if(strtotime('now') > strtotime($d)){
+            $day_of_month = date('j');
+            $y = date('Y', strtotime("-{$day_of_month} days"));
+            $m = date('Y', strtotime("-{$day_of_month} days"));
+        }
+
+        $d = $y . '-' . $m . '-01';        
+
+        $col = ['', 'county', 'subcounty_id', 'partner', 'view_facilitys.id'];
+
+        $row = DB::table('hcm.m_art')
+            ->join('hcm.view_facilitys', 'view_facilitys.id', '=', 'm_art.facility')
+            ->join('hcm.periods', 'periods.id', '=', 'm_art.period_id')
+            ->selectRaw('SUM(current_total) AS current_total ')
+            ->when($division, function($query) use($division, $div, $col){
+                return $query->where($col[$division], $div[0]);
+            })
+            ->where(['year' => $y, 'month' => $m])
+            ->first();
+
+        return ['art' => $row->current_total, 'as_at' => $d];
     }
 
     public function get_results($site, $patientID){
