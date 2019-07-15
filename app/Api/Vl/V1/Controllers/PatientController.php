@@ -142,7 +142,7 @@ class PatientController extends BaseController
         }
         $d = $y . '-' . $m . '-01';
 
-        if(strtotime('now') > strtotime($d)){
+        if(strtotime('now') < strtotime($d)){
             $day_of_month = date('j');
             $y = date('Y', strtotime("-{$day_of_month} days"));
             $m = date('m', strtotime("-{$day_of_month} days"));
