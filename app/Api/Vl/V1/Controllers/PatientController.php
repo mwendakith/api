@@ -88,7 +88,7 @@ class PatientController extends BaseController
 
 		// $data = collect($data);
 
-		return $data;
+		// return $data;
 		// return $this->return_patients($data);
     }
 
@@ -165,6 +165,43 @@ class PatientController extends BaseController
         return ['art' => $row->current_total, 'as_at' => $d];
     }
 
+
+    private function get_pmtct_total($division, $type, $year, $div, $month=0, $year2=0, $month2=0)
+    {
+        if($year2){
+            $y = $year2;
+            $m = $month2;
+        }
+        else{
+            $y = $year;
+            $m = $month;
+            if(!$m) $m = 12;
+        }
+        $d = $y . '-' . $m . '-01';
+
+        if(strtotime('now') < strtotime($d)){
+            $day_of_month = date('j');
+            $y = date('Y', strtotime("-{$day_of_month} days"));
+            $m = date('m', strtotime("-{$day_of_month} days"));
+        }
+
+        $d = $y . '-' . $m . '-01';        
+
+        $col = ['', 'county', 'subcounty_id', 'partner', 'view_facilitys.id'];
+
+        $row = DB::table('hcm.m_pmtct')
+            ->join('hcm.view_facilitys', 'view_facilitys.id', '=', 'm_art.facility')
+            ->join('hcm.periods', 'periods.id', '=', 'm_art.period_id')
+            ->selectRaw('SUM(COALESCE(on_haart_anc) + COALESCE(start_art_anc) + COALESCE(start_art_lnd) + COALESCE(start_art_pnc) +  COALESCE(start_art_pnc_6m)) AS pmtct ')
+            ->when($division, function($query) use($division, $div, $col){
+                return $query->where($col[$division], $div[0]);
+            })
+            ->where(['year' => $y, 'month' => $m])
+            ->first();
+
+        return ['pmtct' => $row->pmtct, 'as_at' => $d];
+    }
+
     public function get_results($site, $patientID){
     	$key = $this->set_key($site);
     	$query = $this->patient_query();
@@ -231,6 +268,35 @@ class PatientController extends BaseController
         $div = [$partner, 'partner'];
         return $this->get_current_suppression(3, $type, $year, $div, $month, $year2, $month2); 
     }
+
+
+
+
+    public function national_pmtct($type, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        return $this->get_pmtct_total(0, $type, $year, [0, ''], $month, $year2, $month2); 
+    }
+
+    public function county_pmtct($county, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = $this->set_county($county);
+        return $this->get_pmtct_total(1, $type, $year, $div, $month, $year2, $month2);
+    }
+
+    public function subcounty_pmtct($subcounty, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = $this->set_subcounty($subcounty);
+        return $this->get_pmtct_total(2, $type, $year, $div, $month, $year2, $month2);
+    }
+
+    public function facility_pmtct($site, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = $this->set_site($site);
+        return $this->get_pmtct_total(4, $type, $year, $div, $month, $year2, $month2);
+    }
+
+    public function partner_pmtct($partner, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = [$partner, 'partner'];
+        return $this->get_pmtct_total(3, $type, $year, $div, $month, $year2, $month2); 
+    }
+
+    
 
     public function format_return(&$data=null){
 
