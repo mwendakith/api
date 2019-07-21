@@ -271,7 +271,6 @@ class PatientController extends BaseController
 
 
 
-
     public function national_pmtct($type, $year, $month=NULL, $year2=NULL, $month2=NULL){
         return $this->get_pmtct_total(0, $type, $year, [0, ''], $month, $year2, $month2); 
     }
@@ -296,7 +295,7 @@ class PatientController extends BaseController
         return $this->get_pmtct_total(3, $type, $year, $div, $month, $year2, $month2); 
     }
 
-    
+
 
     public function format_return(&$data=null){
 
