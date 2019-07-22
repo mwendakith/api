@@ -148,7 +148,8 @@ class PatientController extends BaseController
             $m = date('m', strtotime("-{$day_of_month} days"));
         }
 
-        $d = $y . '-' . $m . '-01';        
+        $d = $y . '-' . $m . '-01';      
+        $d = date('Y-m-d', strtotime($d . ' +1month -1day'));        
 
         $col = ['', 'county', 'subcounty_id', 'partner', 'view_facilitys.id'];
 
@@ -185,7 +186,8 @@ class PatientController extends BaseController
             $m = date('m', strtotime("-{$day_of_month} days"));
         }
 
-        $d = $y . '-' . $m . '-01';        
+        $d = $y . '-' . $m . '-01';     
+        $d = date('Y-m-d', strtotime($d . ' +1month -1day'));   
 
         $col = ['', 'county', 'subcounty_id', 'partner', 'view_facilitys.id'];
 
