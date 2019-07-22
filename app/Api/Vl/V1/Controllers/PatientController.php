@@ -190,8 +190,8 @@ class PatientController extends BaseController
         $col = ['', 'county', 'subcounty_id', 'partner', 'view_facilitys.id'];
 
         $row = DB::table('hcm.m_pmtct')
-            ->join('hcm.view_facilitys', 'view_facilitys.id', '=', 'm_art.facility')
-            ->join('hcm.periods', 'periods.id', '=', 'm_art.period_id')
+            ->join('hcm.view_facilitys', 'view_facilitys.id', '=', 'm_pmtct.facility')
+            ->join('hcm.periods', 'periods.id', '=', 'm_pmtct.period_id')
             ->selectRaw('SUM(COALESCE(on_haart_anc) + COALESCE(start_art_anc) + COALESCE(start_art_lnd) + COALESCE(start_art_pnc) +  COALESCE(start_art_pnc_6m)) AS pmtct ')
             ->when($division, function($query) use($division, $div, $col){
                 return $query->where($col[$division], $div[0]);
