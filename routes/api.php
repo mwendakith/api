@@ -366,6 +366,14 @@ $api->group(['prefix' => 'vl'], function(Router $api) {
                 $api->get('partner/{partner}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@partner_suppression');
             });
 
+            $api->group(['prefix' => 'art'], function(Router $api) {
+                $api->get('national/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@national_art');
+                $api->get('county/{county}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@county_art');
+                $api->get('subcounty/{subcounty}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@subcounty_art');
+                $api->get('facility/{site}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@facility_art');
+                $api->get('partner/{partner}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@partner_art');
+            });
+
             $api->group(['prefix' => 'pmtct'], function(Router $api) {
                 $api->get('national/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@national_pmtct');
                 $api->get('county/{county}/{type}/{year}/{month?}/{year2?}/{month2?}', 'PatientController@county_pmtct');

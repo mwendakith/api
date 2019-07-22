@@ -276,6 +276,32 @@ class PatientController extends BaseController
 
 
 
+    public function national_art($type, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        return $this->get_art_total(0, $type, $year, [0, ''], $month, $year2, $month2); 
+    }
+
+    public function county_art($county, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = $this->set_county($county);
+        return $this->get_art_total(1, $type, $year, $div, $month, $year2, $month2);
+    }
+
+    public function subcounty_art($subcounty, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = $this->set_subcounty($subcounty);
+        return $this->get_art_total(2, $type, $year, $div, $month, $year2, $month2);
+    }
+
+    public function facility_art($site, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = $this->set_site($site);
+        return $this->get_art_total(4, $type, $year, $div, $month, $year2, $month2);
+    }
+
+    public function partner_art($partner, $type, $year, $month=NULL, $year2=NULL, $month2=NULL){
+        $div = [$partner, 'partner'];
+        return $this->get_art_total(3, $type, $year, $div, $month, $year2, $month2); 
+    }
+
+
+
     public function national_pmtct($type, $year, $month=NULL, $year2=NULL, $month2=NULL){
         return $this->get_pmtct_total(0, $type, $year, [0, ''], $month, $year2, $month2); 
     }
