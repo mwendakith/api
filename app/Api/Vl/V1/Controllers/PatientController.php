@@ -192,14 +192,17 @@ class PatientController extends BaseController
         $row = DB::table('hcm.m_pmtct')
             ->join('hcm.view_facilitys', 'view_facilitys.id', '=', 'm_pmtct.facility')
             ->join('hcm.periods', 'periods.id', '=', 'm_pmtct.period_id')
-            ->selectRaw('SUM(COALESCE(on_haart_anc) + COALESCE(start_art_anc) + COALESCE(start_art_lnd) + COALESCE(start_art_pnc) +  COALESCE(start_art_pnc_6m)) AS pmtct ')
+            // ->selectRaw('SUM(COALESCE(on_haart_anc) + COALESCE(start_art_anc) + COALESCE(start_art_lnd) + COALESCE(start_art_pnc) +  COALESCE(start_art_pnc_6m)) AS pmtct ')
+            ->selectRaw("SUM(on_haart_anc) AS on_haart_anc, SUM(start_art_anc) AS anc, SUM(start_art_lnd) AS lnd, SUM(start_art_pnc) AS pnc, SUM(start_art_pnc_6m) AS pnc_6m")
             ->when($division, function($query) use($division, $div, $col){
                 return $query->where($col[$division], $div[0]);
             })
             ->where(['year' => $y, 'month' => $m])
             ->first();
 
-        return ['pmtct' => $row->pmtct, 'as_at' => $d];
+        $pmtct = $row->on_haart_anc + $row->anc + $row->lnd + $row->pnc + $row->pnc_6m;
+
+        return ['pmtct' => $pmtct, 'as_at' => $d];
     }
 
     public function get_results($site, $patientID){
