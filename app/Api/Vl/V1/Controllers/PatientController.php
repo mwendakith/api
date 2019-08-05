@@ -131,25 +131,7 @@ class PatientController extends BaseController
 
     private function get_art_total($division, $type, $year, $div, $month=0, $year2=0, $month2=0)
     {
-        if($year2){
-            $y = $year2;
-            $m = $month2;
-        }
-        else{
-            $y = $year;
-            $m = $month;
-            if(!$m) $m = 12;
-        }
-        $d = $y . '-' . $m . '-01';
-
-        if(strtotime('now') < strtotime($d)){
-            $day_of_month = date('j');
-            $y = date('Y', strtotime("-{$day_of_month} days"));
-            $m = date('m', strtotime("-{$day_of_month} days"));
-        }
-
-        $d = $y . '-' . $m . '-01';      
-        $d = date('Y-m-d', strtotime($d . ' +1month -1day'));        
+        extract($this->get_date($year, $month, $year2, $month2));       
 
         $col = ['', 'county', 'subcounty_id', 'partner', 'view_facilitys.id'];
 
@@ -169,25 +151,7 @@ class PatientController extends BaseController
 
     private function get_pmtct_total($division, $type, $year, $div, $month=0, $year2=0, $month2=0)
     {
-        if($year2){
-            $y = $year2;
-            $m = $month2;
-        }
-        else{
-            $y = $year;
-            $m = $month;
-            if(!$m) $m = 12;
-        }
-        $d = $y . '-' . $m . '-01';
-
-        if(strtotime('now') < strtotime($d)){
-            $day_of_month = date('j');
-            $y = date('Y', strtotime("-{$day_of_month} days"));
-            $m = date('m', strtotime("-{$day_of_month} days"));
-        }
-
-        $d = $y . '-' . $m . '-01';     
-        $d = date('Y-m-d', strtotime($d . ' +1month -1day'));   
+        extract($this->get_date($year, $month, $year2, $month2)); 
 
         $col = ['', 'county', 'subcounty_id', 'partner', 'view_facilitys.id'];
 
@@ -205,6 +169,31 @@ class PatientController extends BaseController
         $pmtct = $row->on_haart_anc + $row->anc + $row->lnd + $row->pnc + $row->pnc_6m;
 
         return ['pmtct' => $pmtct, 'as_at' => $d];
+    }
+
+    private function get_date($year, $month, $year2, $month2)
+    {
+        if($year2){
+            $y = $year2;
+            $m = $month2;
+        }
+        else{
+            $y = $year;
+            $m = $month;
+            if(!$m) $m = 12;
+        }
+        $d = $y . '-' . $m . '-15';
+
+        if(strtotime('now') < strtotime($d)){
+            $day_of_month = date('j');
+            $y = date('Y', strtotime("-{$day_of_month} days -1 month"));
+            $m = date('m', strtotime("-{$day_of_month} days -1 month"));
+        }
+
+        $d = $y . '-' . $m . '-01';     
+        $d = date('Y-m-d', strtotime($d . ' +1month -1day'));  
+
+        return ['d' => $d, 'y' => $y, 'm' => $m];
     }
 
     public function get_results($site, $patientID){
