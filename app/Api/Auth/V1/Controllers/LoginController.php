@@ -15,6 +15,8 @@ class LoginController extends Controller
     public function login(LoginRequest $request, JWTAuth $JWTAuth)
     {
         $credentials = $request->only(['email', 'password']);
+        // 6 months
+        if(str_contains($request->input('email'), 'maryland')) $JWTAuth->factory()->setTTL(259200);
 
         try {
             $token = $JWTAuth->attempt($credentials);
