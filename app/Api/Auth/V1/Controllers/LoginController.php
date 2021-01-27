@@ -18,6 +18,7 @@ class LoginController extends Controller
         // 6 months
         if(str_contains($request->input('email'), 'maryland')) $JWTAuth->factory()->setTTL(259200);
 
+
         try {
             $token = $JWTAuth->attempt($credentials);
 
