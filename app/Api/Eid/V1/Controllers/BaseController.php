@@ -216,7 +216,7 @@ class BaseController extends Controller
 	protected function patient_query(){
 		// return 'PatientID, facilitys.name as Facility, districts.name as Subcounty, countys.name as County, partners.name as Partner, Age, Gender, mp.name as MotherProphylaxis, ip.name as InfantProphylaxis, entry_points.name as EntryPoint, feedings.name as FeedingType, datecollected, datereceived, datetested, results.Name as Result, datedispatched, labtestedin, labs.name as Lab, rejectedreasons.Name as RejectedReason, receivedstatus.name as ReceivedStatus';
 
-		return 'patient as PatientID, view_facilitys.name as Facility, subcounty as Subcounty, county as County, partner as Partner, age as Age, gender_description as Gender, mother_prophylaxis_name as MotherProphylaxis, regimen_name as InfantProphylaxis, entry_points.name as EntryPoint, feeding_name as FeedingType, datecollected as DateCollected, datereceived as DateReceived, datetested as DateTested, results.name as Result, datedispatched as DateDispatched, labs.name as Lab, rejected_name as RejectedReason, receivedstatus_name as ReceivedStatus';
+		return 'patient as PatientID, view_facilitys.name as Facility, subcounty as Subcounty, county as County, partner as Partner, age as Age, gender_description as Gender, mother_prophylaxis_name as MotherProphylaxis, regimen_name as InfantProphylaxis, entry_point_name as EntryPoint, feeding_name as FeedingType, datecollected as DateCollected, datereceived as DateReceived, datetested as DateTested, result_name as Result, datedispatched as DateDispatched, labs.name as Lab, rejectedreasons.Name as RejectedReason, receivedstatus_name as ReceivedStatus';
 	}
 
 
